@@ -1,0 +1,12 @@
+.gear__icon {
+    animation: gear_spin 2.5s infinite;
+}
+
+@keyframes gear_spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

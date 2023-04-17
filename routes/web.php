@@ -17,11 +17,6 @@ use App\Http\Controllers\NominalProductController;
 |
 */
 
-Route::get('dashboard', [DashboardController::class, 'index']);
-Route::post('add-product', [ProductController::class, 'store']);
-Route::get('nominal-product/{id}', [NominalProductController::class, 'index']);
-Route::post('add-nominal-item', [NominalProductController::class, 'addNominal']);
-
-Route::get('order', [OrderController::class, 'create']);
-Route::post('checkout', [OrderController::class, 'store']);
-Route::get('order-payment/{order:id}', [OrderController::class, 'show']);
+Route::get('/', function() {
+  return view('Main');
+});
