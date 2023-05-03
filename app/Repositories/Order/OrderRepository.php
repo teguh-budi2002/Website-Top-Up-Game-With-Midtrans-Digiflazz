@@ -8,9 +8,16 @@ use App\Repositories\Interfaces\Order\OrderRepositoryInterface;
 
 class OrderRepository implements OrderRepositoryInterface {
 
-  protected static $endpoint = 'https://app.sandbox.midtrans.com/snap/v1/transactions';
+  protected static $endpoint;
 
-  public function checkout($data) {
+  public function __construct() {
+      if (!config('midtrans.isProd')) {
+        self::$endpoint = config('midtrans.MIDTRANS_API_URL');
+      }
+      self::$endpoint = 'https://app.midtrans.com/snap/v1';
+  }
+
+  public static function checkout($data) {
     $total_amount = (int)$data['qty'] * (int)$data['price'];
     return Order::create([
       'product_id' => $data['product_id'],
@@ -24,7 +31,7 @@ class OrderRepository implements OrderRepositoryInterface {
     ]);
   }
 
-  public function getSnapToken($order) {
+  public static function getSnapToken($order) {
     $transaction_detail = [
             'transaction_details' => [
                 "order_id" => "ORDER-" . $order->id . "." . Carbon::now()->timestamp,
@@ -35,7 +42,7 @@ class OrderRepository implements OrderRepositoryInterface {
                     'id' => 1,
                     'price' => $order->before_amount,
                     'quantity' => $order->qty,
-                    'name' => $order->product->name_game,
+                    'name' => $order->brand->name_brand,
                     "merchant_name" => env("MERCHANT_NAME"),
                 ],
             ],
@@ -51,14 +58,14 @@ class OrderRepository implements OrderRepositoryInterface {
               "danamon_online", "akulaku", "shopeepay", "kredivo", "uob_ezpay"
             ],
         ];
-      $server_key = base64_encode(env("MIDTRANS_SERVER_KEY"));
+      $server_key = base64_encode(config('MIDTRANS_SERVER_KEY'));
       $headers = [
         'Authorization' => "Basic " . $server_key,
         'Accept' => 'application/json',
         'Content-Type' => 'application/json'
       ];
 
-      $response = Http::withHeaders($headers)->post(self::$endpoint, $transaction_detail);
+      $response = Http::withHeaders($headers)->post(self::$endpoint . "/transaction", $transaction_detail);
       $snap_token = json_decode($response, true);
       return $snap_token["token"];
   }

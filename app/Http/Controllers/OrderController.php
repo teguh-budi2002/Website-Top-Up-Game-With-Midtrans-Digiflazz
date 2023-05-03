@@ -8,17 +8,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use App\Http\Requests\StoreOrderRequest;
+use App\Repositories\Order\OrderRepository;
 use App\Services\Midtrans\CreateSnapTokenService;
-use App\Repositories\Interfaces\OrderRepositoryInterface;
 
 class OrderController extends Controller
 {
-    private $orderRepository;
-
-    public function __construct(OrderRepositoryInterface $interface){
-      $this->orderRepository = $interface;
-    }
-
     /**
      * Display a listing of the resource.
      */
@@ -44,7 +38,7 @@ class OrderController extends Controller
         $validation = $request->validated();
         DB::beginTransaction();
         try {
-          $checkout = $this->orderRepository->checkout($request->all());
+          $checkout = OrderRepository::checkout($request->all());
           DB::commit();
           return redirect()->back()->with('checkout_success', 'Checkout Berhasil Ditambahkan, Silahkan Lakukan Pembayaran.');
         } catch (\Throwable $th) {
@@ -61,7 +55,7 @@ class OrderController extends Controller
       $snapToken = $order->snap_token;
       // Checking Snap Token User
       if (is_null($snapToken)) {
-          $createSnapToken = $this->orderRepository->getSnapToken($order);
+          $createSnapToken = OrderRepository::getSnapToken($order);
           // Save Token Into DB
           $order->snap_token = $createSnapToken;
           $order->save();

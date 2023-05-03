@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dashboard;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
 
 class ProductController extends Controller
@@ -13,7 +14,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return view('some-view');
+        //
     }
 
     /**
@@ -34,29 +35,29 @@ class ProductController extends Controller
           return redirect()->back()->withErrors($validation);
         }
         Product::create($validation);
-        return redirect('some-view')->with('create_success', 'Product Created Successfully');
+        return redirect()->back()->with('create_success', 'Product Created Successfully');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Product $product)
+    public function show(string $id)
     {
-        return view('some-view', compact($product));
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product)
+    public function edit(string $id)
     {
-        return view('some-view', compact($product));
+        //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(StoreProductRequest $request, Product $product)
+    public function update(Request $request, string $id)
     {
         $validation = $request->validated();
         if (!$validation) {
@@ -69,9 +70,19 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($productId)
+    public function destroy(string $productId)
     {
         $isDelete = Product::whereId($productId)->delete();
-        return redirect('some-view')->with('delete_success', 'Product Deleted Successfully');
+        return redirect()->back()->with('delete_success', 'Product Deleted Successfully');
     }
+
+    /**
+     * Remove the choice resource from storage.
+     */
+    public function deleteManyResource(Request $request) {
+      $selectedProductRecords =  $request->productIds;
+      $isDelete = Product::whereIn('id', $selectedProductRecords)->delete();
+      return response()->json(['message' => 'Product Deleted Successfully'], 200);
+    }
+
 }

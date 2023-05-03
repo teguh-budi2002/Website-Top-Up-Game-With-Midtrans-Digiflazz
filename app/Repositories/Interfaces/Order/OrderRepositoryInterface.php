@@ -2,6 +2,6 @@
 namespace App\Repositories\Interfaces\Order;
 
 Interface OrderRepositoryInterface{
-    public function checkout($data);
-    public function getSnapToken($order);
+    public static function checkout($data);
+    public static function getSnapToken($order);
 }
