@@ -1,0 +1,81 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap");
+:root {
+    --color-primary: #03001c;
+    --color-primary-light: #353349;
+
+    --color-cyan-light: #22d3ee;
+    --color-cyan-lighten: #64e0f3;
+    --color-cyan-dark: #0a3f47;
+
+    --color-text-primary: #13605b;
+}
+
+/* CSS Reset */
+*,
+html,
+body {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+.bg-primary {
+    background-color: var(--color-primary);
+}
+
+.bg-primary-light {
+    background-color: var(--color-primary-light);
+}
+
+.bg-secondary-dark {
+    background-color: var(--color-cyan-dark);
+}
+
+.bg-secondary-light {
+    background-color: var(--color-cyan-light);
+}
+
+.border-primary-light {
+    border-color: var(--color-cyan-light);
+}
+
+.text-primary {
+    color: var(--color-text-primary);
+}
+
+.text-primary-light {
+    color: var(--color-cyan-lighten);
+}
+
+.text-secondary-light {
+    color: var(--color-primary-light);
+}
+
+/* Custom Loader */
+.custom__loader {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    padding: 1px;
+    background: conic-gradient(#0000 10%, #2a8d9b) content-box;
+    -webkit-mask: repeating-conic-gradient(
+            #0000 0deg,
+            #000 1deg 20deg,
+            #0000 21deg 36deg
+        ),
+        radial-gradient(
+            farthest-side,
+            #0000 calc(100% - 18px),
+            #000 calc(100% - 16px)
+        );
+    -webkit-mask-composite: destination-in;
+    mask-composite: intersect;
+    animation: s4 1s infinite steps(10);
+}
+
+@keyframes s4 {
+    to {
+        transform: rotate(1turn);
+    }
+}

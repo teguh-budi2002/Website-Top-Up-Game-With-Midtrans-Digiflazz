@@ -1,10 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\ProductController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\NominalProductController;
+use App\Http\Controllers\Dashboard\ItemController;
+use App\Http\Controllers\Dashboard\ProductController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +18,19 @@ use App\Http\Controllers\NominalProductController;
 |
 */
 
-Route::get('/', function() {
-  return view('Main');
+Route::get('/', [HomeController::class, 'index']);
+
+// Finding Data Resource
+Route::get('find-product-with-livesearch', [HomeController::class, 'liveSearchData']);
+
+Route::prefix('dashboard')->group(function () {
+  Route::get('/', [DashboardController::class, 'index']);
+  Route::get('/products', [DashboardController::class, 'manage_product_pages']);
+
+  //Product
+  Route::resource('product', ProductController::class);
+  Route::delete('delete-checked-products', [ProductController::class, 'deleteManyResource']);
+
+  // Item
+  Route::post('/item/store', [ItemController::class, 'storeItem']);
 });
