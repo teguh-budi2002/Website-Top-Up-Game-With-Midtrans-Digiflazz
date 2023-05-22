@@ -5,7 +5,7 @@
     "endWithNewLine": true,
     "noMultipleEmptyLines": false,
     "useTabs": false,
-    "sortTailwindcssClasses": true,
+    "sortTailwindcssClasses": false,
     "sortHtmlAttributes": "none",
     "noPhpSyntaxCheck": false
 }

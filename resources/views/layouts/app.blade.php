@@ -23,7 +23,7 @@
   <div class="min-h-max max-w-full">
     @include('layouts.navigation')
 
-    <!-- Page Heading -->
+    {{-- Page Heading  --}}
     @if (isset($header))
       <header class="bg-white shadow dark:bg-gray-800">
         <div class="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8">
@@ -32,12 +32,12 @@
       </header>
     @endif
 
-    <!-- Page Content -->
+    {{-- Page Content --}}
     <main>
       {{ $slot }}
     </main>
   </div>
-
+  {{-- 26.4.2.1:1080 --}}
   @stack('nav-style')
   @stack('js-custom')
   <script>
@@ -48,6 +48,19 @@
         loader.classList.add('hidden');
       }, 500);
     });
+
+  // INIT LOCALSTORAGE KEY
+  // Get the value from localStorage
+  let recentSearchArr = JSON.parse(localStorage.getItem('__SEARCH__'));
+
+  // Check if the value exists and if it is an array
+  if (!recentSearchArr || !Array.isArray(recentSearchArr)) {
+    // If it doesn't exist or is not an array, set an empty array as the default value
+    recentSearchArr = [];
+
+    // Save the default array to localStorage
+    localStorage.setItem('__SEARCH__', JSON.stringify(recentSearchArr));
+  }
   </script>
 </body>
 
