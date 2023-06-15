@@ -1,9 +1,10 @@
 <x-app-layout>
-  <div class="bg-primary bg-primary-light h-screen w-full">
-    <div class="h-auto w-fit rounded p-2 pt-8">
-      <p class="text-primary-light text-2xl">ini text uji coba</p>
-      <p class="text-primary text-2xl">ini text uji coba</p>
-      <a href="dashboard">db</a>
+    <div class="bg-primary bg-primary-light h-screen w-full">
+        <header class="h-full w-full rounded p-2 pt-8">
+            {{-- Banner Website --}}
+            <div class="flex justify-center">
+              <x-header-banner/>
+            </div>
+        </header>
     </div>
-  </div>
 </x-app-layout>
