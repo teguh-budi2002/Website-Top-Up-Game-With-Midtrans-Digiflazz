@@ -77,7 +77,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Remove the choice resource from storage.
+     * Remove many resource from storage.
      */
     public function deleteManyResource(Request $request) {
       $selectedProductRecords =  $request->productIds;
