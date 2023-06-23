@@ -125,6 +125,7 @@
                                 this.notFound = false
                                 this.resultSearch = response.data.data;
                             } else {
+                                // resultSearch will be empty array when product not found
                                 this.resultSearch = [];
                                 this.notFound = true
                             }
@@ -164,7 +165,6 @@
                 localStorage.setItem('__SEARCH__', JSON.stringify(this.recentSearch));
             },
 
-            // Delete Recent Search
             deleteRecentSearch(index) {
                 this.recentSearch[index].isDeleted = true;
                 this.updateRecentSearches();
