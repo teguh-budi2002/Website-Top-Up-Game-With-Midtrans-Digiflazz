@@ -163,6 +163,7 @@
                 localStorage.setItem('__SEARCH__', JSON.stringify(this.recentSearch));
             },
 
+            // Delete Recent Search
             deleteRecentSearch(index) {
                 this.recentSearch[index].isDeleted = true;
                 this.updateRecentSearches();
