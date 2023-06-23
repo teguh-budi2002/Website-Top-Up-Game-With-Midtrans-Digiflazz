@@ -125,6 +125,7 @@
                                 this.notFound = false
                                 this.resultSearch = response.data.data;
                             } else {
+                                this.resultSearch = [];
                                 this.notFound = true
                             }
                         })
