@@ -140,13 +140,13 @@
                 let recentSearch = JSON.parse(localStorage.getItem('__SEARCH__')) || [];
 
                 // Check If Old Recent Search Is Same With Result Will Return NULL
-                // let oldRecentName = null
-                // recentSearch.map(val => {
-                //     oldRecentName = val.name
-                // });
-                // if (oldRecentName === result.name) {
-                //     return null
-                // }
+                let oldRecentName = null
+                recentSearch.map(val => {
+                    oldRecentName = val.name
+                });
+                if (oldRecentName === result.name) {
+                    return null
+                }
 
                 recentSearch.push({
                     id: Math.random() * 1000000,
