@@ -21,28 +21,32 @@
     </div>
     <div x-show="isOpen" @keydown.window.prevent.esc="isOpen = false" class="modal__search">
         <x-modal>
-            <input type="text" name="search_product" @click="isOpen = true" {{-- x-model.debounce.500ms="search" --}}
+            <input type="text" name="search_product" @click="isOpen = true"
                 x-model="search" x-on:input="debounceSearch"
                 class="bg-primary-slate-light text-primary-cyan-light border-primary-cyan-light w-full rounded border border-solid"
                 autofocus placeholder="Cari Games Yang Kamu Inginkan" autocomplete="off">
 
             <div x-show="noRecentSearch" class="mt-3 text-center text-white/90">
-                <p>No recent searches</p>
+                <p>Apa Yang Ingin Kamu Cari?</p>
             </div>
 
-            <template x-for="result in resultSearch" :key="result.id">
-                <a href="order/test"
-                    @click.prevent="setResultSearch({url: $event.currentTarget.getAttribute('href'), name: result.product_name})"
-                    class="result_search bg-primary-slate  h-auto w-full flex cursor-pointer items-center justify-between rounded-sm p-2 mt-3 transition hover:bg-cyan-300 text-xl font-medium no-underline text-primary-cyan"">
-            <span x-text=" result.product_name" class="result_tabs">
-                    </span>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="h-6 w-6">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
-                    </svg>
-                </a>
-            </template>
+            <div x-show="resultSearch" x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 transform translate-x-full"
+                x-transition:enter-end="opacity-100 transform translate-x-0">
+                <template x-for="result in resultSearch" :key="result.id">
+                    <a href="order/test"
+                        @click.prevent="setResultSearch({url: $event.currentTarget.getAttribute('href'), name: result.product_name})"
+                        class="result_search bg-primary-slate  h-auto w-full flex cursor-pointer items-center justify-between rounded-sm p-2 mt-3 transition hover:bg-cyan-300 text-xl font-medium no-underline text-primary-cyan"">
+                <span x-text=" result.product_name" class="result_tabs">
+                        </span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="h-6 w-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
+                        </svg>
+                    </a>
+                </template>
+            </div>
 
             <div class="mt-5 mb-3" x-show="notFound" x-transition.duration.400ms>
                 <svg width="40" height="40" class="mb-2" viewBox="0 0 20 20" fill="none" fill-rule="evenodd"
@@ -59,21 +63,16 @@
             </div>
             <div class="recent__search">
                 <template x-for="(recent, index) in recentSearch" :key="recent.id">
-                    <div :href="recent.url" x-show="!recent.isDeleted"
-                        x-transition:enter="transition ease-out duration-300"
-                        x-transition:enter-start="opacity-0 transform translate-x-full"
-                        x-transition:enter-end="opacity-100 transform translate-x-0"
-                        x-transition:leave="transition ease-in duration-300"
-                        x-transition:leave-start="opacity-100 transform translate-x-0"
-                        x-transition:leave-end="opacity-0 transform translate-x-full"
-                        class="result_search bg-primary  h-auto w-full flex cursor-pointer items-center justify-between rounded-sm p-2 mt-3 transition hover:bg-primary-cyan-light text-xl font-medium no-underline text-primary-cyan">
-                        <span x-text="recent.name" class="result_tabs"></span>
-                        <svg @click="deleteRecentSearch(index)" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                    <a :href="recent.url" x-cloak x-show="recent"
+                        :data-id="recent.id"
+                        class="result_search bg-primary h-auto w-full flex cursor-pointer items-center justify-between rounded-sm p-2 mt-3 hover:bg-primary-cyan-light text-xl font-medium no-underline text-primary-cyan z-50">
+                        <span x-text="recent.name" class="result_tabs "></span>
+                        <svg @click.prevent="deleteRecentSearch(recent.id)" xmlns="http://www.w3.org/2000/svg"
+                            fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                             class="w-6 h-6 p-0.5 hover:rounded-full hover:bg-red-400 hover:text-white">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
-                    </div>
+                    </a>
                 </template>
             </div>
         </x-modal>
@@ -137,13 +136,22 @@
                 }
             },
 
-            setResultSearch(datas) {
+            setResultSearch(result) {
                 let recentSearch = JSON.parse(localStorage.getItem('__SEARCH__')) || [];
+
+                // Check If Old Recent Search Is Same With Result Will Return NULL
+                // let oldRecentName = null
+                // recentSearch.map(val => {
+                //     oldRecentName = val.name
+                // });
+                // if (oldRecentName === result.name) {
+                //     return null
+                // }
 
                 recentSearch.push({
                     id: Math.random() * 1000000,
-                    url: datas.url,
-                    name: datas.name,
+                    url: result.url,
+                    name: result.name,
                     isRecent: true,
                     isDeleted: false,
                     timestamp: Date.now()
@@ -165,9 +173,24 @@
                 localStorage.setItem('__SEARCH__', JSON.stringify(this.recentSearch));
             },
 
-            deleteRecentSearch(index) {
-                this.recentSearch[index].isDeleted = true;
-                this.updateRecentSearches();
+            deleteRecentSearch(id) {
+                let recentSearchStorage = JSON.parse(localStorage.getItem('__SEARCH__')) || []
+                let recentSearchID = id
+
+                // Apply animation to the item being deleted
+                let deletedItem = document.querySelector(`[data-id="${id}"]`);
+                    deletedItem.style.transition = 'opacity 0.5s, transform 0.5s';
+                    deletedItem.style.opacity = '0';
+                    deletedItem.style.transform = 'translateX(-80%)';
+
+                setTimeout(() => {
+                    let newVal = recentSearchStorage.filter((item) => item.id !== id)
+                    localStorage.setItem('__SEARCH__', JSON.stringify(newVal));
+
+                    // Update recentSearch Immediately
+                    this.recentSearch = newVal;
+                }, 500)
+
             }
         }
     }
