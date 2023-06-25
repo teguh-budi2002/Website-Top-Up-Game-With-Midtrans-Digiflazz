@@ -1,13 +1,10 @@
 <?php
-namespace App\Repositories\Order;
-use Carbon\Carbon;
-use App\Models\Order;
-use App\Enums\PaymentStatusEnum;
+namespace App\Services;
+
 use Illuminate\Support\Facades\Http;
-use App\Repositories\Interfaces\Order\OrderRepositoryInterface;
 
-class OrderRepository implements OrderRepositoryInterface {
-
+class MidtransServices {
+  
   protected static $endpoint;
 
   public function __construct() {
