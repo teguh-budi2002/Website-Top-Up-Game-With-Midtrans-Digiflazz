@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,6 +19,8 @@ class ProductFactory extends Factory
     {
         return [
             'product_name' => $this->faker->name(),
+            'slug' => Str::slug($this->faker->name()),
+            'img_url' => 'https://source.unsplash.com/collection/190727/200x200'
         ];
     }
 }

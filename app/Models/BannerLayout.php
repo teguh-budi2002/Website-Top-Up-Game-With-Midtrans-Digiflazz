@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\Json;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,12 +12,16 @@ class BannerLayout extends Model
     use HasFactory;
     protected $guarded = ['id'];
 
+    // protected $casts = [
+    //     'img_url' => Json::class
+    // ];
+
     /** 
      * Getter : Convert JSON Into Array
      * 
      * Setter : Convert Array Into JSON
     */
-    protected function img_url() : Attribute 
+    protected function imgUrl() : Attribute 
     {
         return Attribute::make(
             get: fn($val) => json_decode($val, true),

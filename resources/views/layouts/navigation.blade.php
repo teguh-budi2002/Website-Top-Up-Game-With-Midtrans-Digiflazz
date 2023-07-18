@@ -5,7 +5,7 @@
 
     <div class="w-full flex items-center justify-between px-5">
         <div class="text__nav">
-            <p class="text-3xl font-semibold italic">Website Top Up Game Termurah</p>
+            <p class="text-3xl font-semibold italic">{{ $navigation->text_head_nav ?? "Website Top Up Game Termurah" }}</p>
         </div>
         {{-- Search Box Main Page --}}
         @include('partials.search-box')

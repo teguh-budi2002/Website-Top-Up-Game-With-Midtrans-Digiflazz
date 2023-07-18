@@ -23,6 +23,7 @@ class StoreProductRequest extends FormRequest
     {
         return [
             'product_name' => 'required',
+            'img_url' => 'required'
         ];
     }
 
@@ -35,6 +36,7 @@ class StoreProductRequest extends FormRequest
     {
         return [
             'product_name.required' => 'Nama Product Tidak Boleh Kosong.',
+            'img_url.required' => 'Upload Gambar Product Mu Di File Hosting Online, dan Copy Paste Link Share Pada Kolom'
         ];
     }
 }

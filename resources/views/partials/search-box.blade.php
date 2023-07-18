@@ -34,11 +34,10 @@
                 x-transition:enter-start="opacity-0 transform translate-x-full"
                 x-transition:enter-end="opacity-100 transform translate-x-0">
                 <template x-for="result in resultSearch" :key="result.id">
-                    <a href="order/test"
-                        @click.prevent="setResultSearch({url: $event.currentTarget.getAttribute('href'), name: result.product_name})"
+                    <a :href="`{{ env('APP_URL') }}/order/${result.slug}`"
+                        @click="setRecentSearch({url: $event.currentTarget.getAttribute('href'), name: result.product_name})"
                         class="result_search bg-primary-slate  h-auto w-full flex cursor-pointer items-center justify-between rounded-sm p-2 mt-3 transition hover:bg-cyan-300 text-xl font-medium no-underline text-primary-cyan"">
-                <span x-text=" result.product_name" class="result_tabs">
-                        </span>
+                        <span x-text=" result.product_name" class="result_tabs"></span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="h-6 w-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -63,7 +62,7 @@
             </div>
             <div class="recent__search">
                 <template x-for="(recent, index) in recentSearch" :key="recent.id">
-                    <a :href="recent.url" x-cloak x-show="recent"
+                    <a :href="`{{ env('APP_URL') }}/order/${recent.url}`" x-show="recent"
                         :data-id="recent.id"
                         class="result_search bg-primary h-auto w-full flex cursor-pointer items-center justify-between rounded-sm p-2 mt-3 hover:bg-primary-cyan-light text-xl font-medium no-underline text-primary-cyan z-50">
                         <span x-text="recent.name" class="result_tabs "></span>
@@ -79,6 +78,7 @@
     </div>
 </div>
 
+@push('js-custom')
 <script>
     function liveSearch() {
         return {
@@ -118,7 +118,7 @@
                     let params = new URLSearchParams({
                         search_product: this.search
                     });
-                    axios.get(`find-product-with-livesearch?${params.toString()}`)
+                    axios.get(`/api/find-product-with-livesearch?${params.toString()}`)
                         .then(response => {
                             if (response.data.status !== "404") {
                                 this.notFound = false
@@ -128,7 +128,7 @@
                                 this.resultSearch = [];
                                 this.notFound = true
                             }
-                        })
+                        }).catch(err => {console.log("ERROR in Server Side")})
                 } else {
                     this.notFound = false
                     this.noRecentSearch = true
@@ -136,7 +136,7 @@
                 }
             },
 
-            setResultSearch(result) {
+            setRecentSearch(result) {
                 let recentSearch = JSON.parse(localStorage.getItem('__SEARCH__')) || [];
 
                 // Check If Old Recent Search Is Same With Result Will Return NULL
@@ -160,7 +160,7 @@
                 localStorage.setItem('__SEARCH__', JSON.stringify(recentSearch));
                 // noRecentSearch will be FALSE when user click result search
                 this.noRecentSearch = false
-                // update rece
+                // update recentSearch
                 this.recentSearch = recentSearch;
             },
 
@@ -196,3 +196,4 @@
     }
 
 </script>
+@endpush

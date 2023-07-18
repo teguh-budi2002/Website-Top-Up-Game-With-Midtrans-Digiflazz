@@ -2,11 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CustomField;
+use App\Models\Product;
+use App\Models\NavLayout;
 use Illuminate\Http\Request;
 use App\Repositories\Product\ProductRepository;
+use Illuminate\Support\Facades\View;
 
 class HomeController extends Controller
 {
+
+  public function __construct() {
+    $getNavLayouts = NavLayout::select("id", "text_head_nav")->first();
+    
+    View::share('navigation', $getNavLayouts);
+  }
 
   public function index()
   {
@@ -14,33 +24,15 @@ class HomeController extends Controller
   }
 
   /**
-   * Handle Request Search Resource In Home Page
+   * Get Product for Ordered
    */
-  public function liveSearchData(Request $request): object
+  public function orderProduct($productOrdered) 
   {
-    if ($request->get('search_product')) {
-      $search = $request->get('search_product');
-      try {
-        $doSearch = ProductRepository::findResourceWithLiveSearch($search);
-        if ($doSearch->isEmpty()) {
-          return response()->json([
-            'id' => 0,
-            'message' => 'Data Not Found',
-            'status' => '404'
-          ]);
-        } else {
-          return response()->json([
-            'message' => 'Data Finding',
-            'data' => $doSearch,
-            'status' => '200'
-          ]);
-        }
-      } catch (\Throwable $th) {
-        return response()->json([
-          'message' => 'Error In Server Side',
-          'error' => $th->getMessage()
-        ]);
-      }
-    }
+    $getCustomField = CustomField::wherepageSlug($productOrdered)->first()?? null;
+    $getProductOrdered = ProductRepository::getProductForOrder($productOrdered);
+    return view('Order', [
+      'product' => $getProductOrdered,
+      'custom_field' => $getCustomField,
+    ]);
   }
 }

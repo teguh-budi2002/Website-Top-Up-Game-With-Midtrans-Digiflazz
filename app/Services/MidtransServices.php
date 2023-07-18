@@ -1,28 +1,34 @@
 <?php
 namespace App\Services;
 
+use Carbon\Carbon;
+use App\Models\Order;
+use App\Enums\PaymentStatusEnum;
 use Illuminate\Support\Facades\Http;
+use App\Http\Resources\OrderResource;
+use GuzzleHttp\Client;
 
 class MidtransServices {
-  
+
   protected static $endpoint;
 
-  public function __construct() {
-      if (!config('midtrans.isProd')) {
-        self::$endpoint = config('midtrans.MIDTRANS_API_URL');
+  public static function init() {
+      if (config('midtrans.isProd') === 'production') {
+        self::$endpoint = 'https://app.midtrans.com/snap/v1';
       }
-      self::$endpoint = 'https://app.midtrans.com/snap/v1';
+      self::$endpoint = config('midtrans.MIDTRANS_API_URL');
   }
 
   public static function checkout($data) {
-    $total_amount = (int)$data['qty'] * (int)$data['price'];
+    $total_amount = (int) $data['qty'] * (int) $data['before_amount'];
     return Order::create([
       'product_id' => $data['product_id'],
       'player_id' => $data['player_id'],
+      'invoice' => $data['invoice'],
       'email' => $data['email'],
       'number_phone' => $data['number_phone'],
       'qty' => $data['qty'],
-      'before_amount' => $data['price'],
+      'before_amount' => $data['before_amount'],
       'total_amount' => $total_amount,
       'payment_status' => PaymentStatusEnum::Pending
     ]);
@@ -31,16 +37,16 @@ class MidtransServices {
   public static function getSnapToken($order) {
     $transaction_detail = [
             'transaction_details' => [
-                "order_id" => "ORDER-" . $order->id . "." . Carbon::now()->timestamp,
+                "order_id" => "ORDER-" . $order->id . "-" . Carbon::now()->timestamp,
                 "gross_amount" => $order->total_amount
             ],
             'item_details' => [
                 [
-                    'id' => 1,
+                    'id' => $order->id,
                     'price' => $order->before_amount,
                     'quantity' => $order->qty,
-                    'name' => $order->brand->name_brand,
-                    "merchant_name" => env("MERCHANT_NAME"),
+                    'name' => $order->product->product_name,
+                    "merchant_name" => env("APP_NAME"),
                 ],
             ],
             'customer_details' => [
@@ -55,15 +61,30 @@ class MidtransServices {
               "danamon_online", "akulaku", "shopeepay", "kredivo", "uob_ezpay"
             ],
         ];
-      $server_key = base64_encode(config('MIDTRANS_SERVER_KEY'));
+
+      $server_key = base64_encode(config('midtrans.MIDTRANS_SERVER_KEY'));
       $headers = [
         'Authorization' => "Basic " . $server_key,
         'Accept' => 'application/json',
         'Content-Type' => 'application/json'
       ];
+      
+      $client = new Client([
+        // TESTING KARENA PAKE PROXY
+        'verify' => false,
+        'curl' => [
+          CURLOPT_PROXY => '26.4.2.1:8089',
+        ]
+      ]);
 
-      $response = Http::withHeaders($headers)->post(self::$endpoint . "/transaction", $transaction_detail);
-      $snap_token = json_decode($response, true);
+      $response = $client->post(self::$endpoint . "/transactions", [
+        'headers' => $headers,
+        'json' => $transaction_detail
+      ]);
+
+      $responseBody = $response->getBody();
+      $jsonResponse = json_decode($responseBody, true);
+     
       return $snap_token["token"];
   }
 }

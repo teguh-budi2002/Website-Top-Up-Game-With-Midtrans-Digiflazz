@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Models\Product;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
@@ -32,8 +33,10 @@ class ProductController extends Controller
     {
         $validation = $request->validated();
         if (!$validation) {
-          return redirect()->back()->withErrors($validation);
+            return redirect()->back()->withErrors($validation);
         }
+
+        $validation['slug'] = Str::slug($request->product_name);
         Product::create($validation);
         return redirect()->back()->with('create_success', 'Product Created Successfully');
     }

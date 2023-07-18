@@ -7,6 +7,20 @@ use App\Repositories\Interfaces\Product\ProductRepositoryInterface;
 
 class ProductRepository implements ProductRepositoryInterface
 {
+
+  public static function findProductBySlugOrId($key, $request) {
+    return Product::where($key, $request)->first();
+  }
+
+  public static function getProductForOrder($slug) {
+    $product = Product::select("id", "product_name", "img_url")
+                        ->with(['items' => function($q) {
+                          $q->select("id", "product_id", "item_name", "nominal", "price");
+                        }])
+                        ->whereSlug($slug)
+                        ->first();
+    return $product;
+  }
   /**
    * Find Data Resource For Dashboard
    */
@@ -23,7 +37,7 @@ class ProductRepository implements ProductRepositoryInterface
    */
   public static function findResourceWithLiveSearch($req_search)
   {
-    $data_searching = Product::select("id", "product_name")
+    $data_searching = Product::select("id", "product_name", 'slug')
       ->where('product_name', 'LIKE', '%' . $req_search . '%')
       ->get();
     return $data_searching;
