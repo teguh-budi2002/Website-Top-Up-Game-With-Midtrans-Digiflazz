@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->string("slug")->unique()->after('img_url');
+        Schema::create('payment_methods', function (Blueprint $table) {
+            $table->id();
+            $table->string('payment_name', 15);
+            $table->string('type_of_payment', 55);
+            $table->string('img_static');
+            $table->timestamps();
         });
     }
 
@@ -21,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('products', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('payment_methods');
     }
 };
