@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('product_id')->references('id')->on('products');
             $table->string('invoice');
-            $table->string('email');
-            $table->integer('number_phone');
+            $table->string('email')->nullable();
             $table->string('player_id');
             $table->string("qty");
+            $table->integer('price');
             $table->integer("before_amount");
             $table->integer('total_amount');
             $table->enum('payment_status', ['Pending', 'Success', 'Expired']);

@@ -10,7 +10,9 @@ class WebsiteController extends Controller
 {
     public function settingCustomOrderPage(Request $request, $slug) {
         $img = $request->file('bg_img_on_order_page');
+        $oldImg = $request->get('oldImg');
         $path = "";
+        $filename = "";
         $request->validate([
             'bg_img_on_order_page' => 'image|mimes:jpeg,png,jpg,webp|max:2048'
         ],[
@@ -18,11 +20,11 @@ class WebsiteController extends Controller
 				]);
 
         if ($img) {
-            $getName = $img->getClientOriginalName();
+            $filename = $img->getClientOriginalName();
             $path = "page/custom_bg_image/" . $slug . "/";				
-						$this->deleteOldImage($path, $getName, $slug);
+						$this->deleteOldImage($path, $filename, $slug);
 
-            $putImgIntoStorage = Storage::putFileAs('/public/page/custom_bg_image/' . $slug . "/", $img, $getName);
+            $putImgIntoStorage = Storage::putFileAs('/public/page/custom_bg_image/' . $slug . "/", $img, $filename);
         }
         
         $customField = CustomField::updateOrCreate(
@@ -30,8 +32,10 @@ class WebsiteController extends Controller
             [
                 'text_title_on_order_page' => $request->get('text_title_on_order_page'),
                 'description_on_order_page' => $request->get('description_on_order_page'),
+                'detail_for_product' => $request->get('detail_for_product'),
                 'page_slug' => $slug,
-                'bg_img_on_order_page' => $path . $getName
+                // Handle If Any OldImage
+                'bg_img_on_order_page' => $img ? $path . $filename : $oldImg
             ]
         );
 

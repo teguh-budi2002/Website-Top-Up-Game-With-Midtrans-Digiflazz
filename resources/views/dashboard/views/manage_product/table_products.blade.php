@@ -35,13 +35,34 @@
         </div>
 
         {{-- Modal ADD PRODUCT Component --}}
-        <x-dashboard.form-modal actionUrl="dashboard/product" modalId="add_product" modalToggle="add_product">
+        <x-dashboard.form-modal actionUrl="dashboard/product" enctype="multipart/form-data" modalId="add_product" modalToggle="add_product">
             <x-slot:modalHeader>
                 Add Product
             </x-slot:modalHeader>
             <x-slot:inputBox>
                 <x-form.input type="text" inputName="product_name" name="name_game" label="Masukkan Nama Product" />
-                <x-form.input type="text" inputName="img_url" name="img_url" label="Masukkan Img URL Product" />
+                {{-- <x-form.input type="text" inputName="img_url" name="img_url" label="Masukkan Img URL Product" /> --}}
+                <div class="image_for_product">
+                    <label for="custom_bg_product" class="block mt-3 uppercase font-semibold text-gray-800 text-sm">Add Photo Into Product</label>
+                    <div x-data="previewImage()">
+                        <label class="cursor-pointer" for="custombgImg">
+                            <div
+                                class="w-full h-48 rounded bg-gray-50 dark:bg-gray-100 mt-2 border border-gray-200 flex items-center justify-center overflow-hidden">
+                                <img x-show="imageUrl" :src="imageUrl" alt="preview_img" class="w-full object-cover">
+                                <div x-show="!imageUrl" class="text-gray-300 flex flex-col items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                    </svg>
+                                    <div>Image Preview</div>
+                                </div>
+                            </div>
+                        </label>
+                        <input class="w-96 cursor-pointer mt-3 focus:outline-0" type="file" name="img_url"
+                            id="custombgImg" @change="fileChosen">
+                    </div>
+                </div>
             </x-slot:inputBox>
         </x-dashboard.form-modal>
 
@@ -51,6 +72,9 @@
                     class="text-xs font-semibold uppercase text-white dark:text-light bg-primary hover:bg-primary-dark">
                     <tr>
                         <th></th>
+                        <th class="p-2">
+                            <div class="font-semibold text-left">Product Image</div>
+                        </th>
                         <th class="p-2">
                             <div class="font-semibold text-left">Product Name</div>
                         </th>
@@ -80,6 +104,9 @@
                                 value="{{ $product->id }}" />
                         </td>
                         <td class="p-2">
+                            <img class="w-10 h-10 rounded mx-auto" src="{{ asset('/storage/product/' . $product->product_name . '/' . $product->img_url) }}" alt="image_{{ $product->product_name }}">
+                        </td>
+                        <td class="p-2">
                             <div class="font-medium">
                                 {{ $product->product_name }}
                             </div>
@@ -93,19 +120,20 @@
                             <x-dashboard.info-modal modalId="showInfoItems{{ $product->id }}" titleModal="INFO ITEM">
                                 <x-slot:info>
                                     @if ($product->items->count())
-                                    @foreach ($product->items as $item)
-                                    <div
-                                        class="items w-[200px] h-[100px] bg-gray-100/30 flex flex-col justify-center items-center space-y-2 rounded-md p-2 border border-gray-400 border-solid cursor-pointer">
-                                        <p class="font-semibold capitalize">{{ $item->nominal }} -
-                                            {{ $item->item_name }}</p>
-                                        <p class="text-xs">Harga</p>
-                                        <p class="text-sm text-rose-600">Rp. {{ Cash($item->price, 2) }}</p>
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        @foreach ($product->items as $item)
+                                        <div
+                                            class="items w-[200px] h-[100px] bg-gray-100/30 flex flex-col justify-center items-center space-y-2 rounded-md p-2 border border-gray-400 border-solid cursor-pointer">
+                                            <p class="font-semibold capitalize">{{ $item->nominal }} -
+                                                {{ $item->item_name }}</p>
+                                            <p class="text-xs">Harga</p>
+                                            <p class="text-sm text-rose-600">Rp. {{ Cash($item->price, 2) }}</p>
+                                        </div>
+                                        @endforeach
                                     </div>
-                                    @endforeach
                                     @else
-                                    <p class="text-2xl uppercase dark:text-primary-light">Produk
-                                        <span class="text-red-400">{{ $product->product_name }}</span> Belum Mempunyai
-                                        Item Apapun
+                                    <p class="text-2xl uppercase dark:text-primary-light">Product of
+                                        <span class="text-red-400">{{ $product->product_name }}</span> don't have any items yet.
                                     </p>
                                     @endif
                                 </x-slot:info>
@@ -120,23 +148,27 @@
                         <td class="p-2 text-center">
                             <button data-modal-target="showInfoPayment{{ $product->id }}" type="button"
                                 data-modal-toggle="showInfoPayment{{ $product->id }}"
-                                class="border-[1px] border-primary-dark p-2 rounded hover:bg-primary-dark hover:text-white transition">Show
+                                class="border-[1px] border-primary-dark p-2 rounded hover:bg-primary-dark hover:text-white transition">Supported
                                 Payment Methods</button>
                             {{-- Info Payment Method Modal Component --}}
-                            <x-dashboard.info-modal modalId="showInfoPayment{{ $product->id }}" titleModal="PAYMENT METHOD ON PRODUCT">
+                            <x-dashboard.info-modal modalId="showInfoPayment{{ $product->id }}"
+                                titleModal="PAYMENT METHOD SUPPORTED ON PRODUCT">
                                 <x-slot:info>
                                     @if ($product->paymentMethods->count())
-                                    <div class="flex items-center space-x-3 flex-wrap">
+                                    <div class="flex items-center gap-2 flex-wrap">
                                         @foreach ($product->paymentMethods as $payment)
-                                            <img src="{{ asset("/img/" . $payment->img_static) }}" class="w-auto h-5" alt="{{ $payment->payment_name }}">
+                                        <img src="{{ asset("/img/" . $payment->img_static) }}" class="w-auto h-5"
+                                            alt="{{ $payment->payment_name }}">
                                         @endforeach
                                     </div>
                                     @else
                                     <p class="text-2xl uppercase dark:text-primary-light">
-                                       Please indicate payment method on product  <span class="text-rose-400">{{ $product->product_name }}</span>
+                                        Please indicate payment method on product <span
+                                            class="text-rose-400">{{ $product->product_name }}</span>
                                     </p>
-                                    <a href="{{ URL("dashboard/payment-product") }}" class="text-blue-300 hover:text-blue-500 mt-2">Click here!</a>
-                                    @endif 
+                                    <a href="{{ URL("dashboard/payment-product") }}"
+                                        class="text-blue-300 hover:text-blue-500 mt-2">Click here!</a>
+                                    @endif
                                 </x-slot:info>
                                 <x-slot name="footer">
                                     <div class="flex items-center space-x-2 rounded-b">
@@ -153,9 +185,10 @@
                         </td>
                         <td class="p-2">
                             <div class="flex justify-center">
-                                <button data-popover-target="popover-add-items" data-modal-target="add_item_on_product"
-                                    data-modal-toggle="add_item_on_product" data-popover-placement="bottom"
-                                    type="button">
+                                <button data-popover-target="popover-add-items"
+                                    data-modal-target="add_item_on_product{{ $product->id }}"
+                                    data-modal-toggle="add_item_on_product{{ $product->id }}"
+                                    data-popover-placement="bottom" type="button">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor"
                                         class="w-8 h-8 hover:text-blue-600 rounded-full hover:bg-gray-100 p-1">
@@ -186,29 +219,36 @@
                                     <x-slot:info>
                                         <h2 class="text-3xl text-red-400 dark:text-primary-light text-center">WARNING!
                                         </h2>
-                                        <p class="dark:text-white text-lg">Dengan menghapus produk, Maka item pada
-                                            produk akan ikut terhapus!</p>
+                                        <p class="dark:text-white text-lg">By deleting a product, The items in product also will be deleted.</p>
                                     </x-slot:info>
                                     <x-slot name="footer">
                                         <form action="{{ URL('dashboard/product/' . $product->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
-                                                class="py-2.5 px-6 bg-red-600 hover:bg-red-400 transition rounded text-white">Ya,
-                                                Hapus</button>
+                                                class="py-2.5 px-6 bg-red-600 hover:bg-red-400 transition rounded text-white">Yes, Delete</button>
                                         </form>
                                     </x-slot>
                                 </x-dashboard.info-modal>
                             </div>
                             {{-- Form Modal ADD ITEMS Component --}}
-                            <x-dashboard.form-modal actionUrl="dashboard/item/store" modalId="add_item_on_product"
-                                modalToggle="add_item_on_product">
+                            <x-dashboard.form-modal actionUrl="dashboard/item/store"
+                                modalId="add_item_on_product{{ $product->id }}"
+                                modalToggle="add_item_on_product{{ $product->id }}">
                                 <x-slot:modalHeader>
                                     Add Items On Product
                                 </x-slot:modalHeader>
                                 <x-slot:inputBox>
+                                    @if ($product->items->count())
+                                    @foreach ($product->items->take(1) as $item)
+                                    <x-form.input type="text" inputName="item_name"
+                                        value="{{ old('item_name', $item->item_name) }}" name="item_name"
+                                        label="Masukkan Nama Item" />
+                                    @endforeach
+                                    @else
                                     <x-form.input type="text" inputName="item_name" name="item_name"
                                         label="Masukkan Nama Item" />
+                                    @endif
                                     <x-form.input type="text" inputName="nominal" name="nominal"
                                         label="Jumlah Nominal Pada Item" />
                                     <x-form.input type="number" inputName="price" name="price" label="Harga Item" />
@@ -230,3 +270,28 @@
         </div>
     </div>
 </div>
+
+@push('dashboard-js')
+<script>
+function previewImage() {
+    return {
+        imageUrl: "",
+
+        fileChosen(event) {
+            this.fileToDataUrl(event, (src) => (this.imageUrl = src));
+            console.log(event)
+        },
+
+        fileToDataUrl(event, callback) {
+            if (!event.target.files.length) return;
+
+            let file = event.target.files[0],
+                reader = new FileReader();
+
+            reader.readAsDataURL(file);
+            reader.onload = (e) => callback(e.target.result);
+        },
+    };
+}
+</script>
+@endpush

@@ -30,7 +30,7 @@ Route::prefix('dashboard')->group(function () {
   Route::get('/payment-product', [DashboardController::class, 'manage_payment_product']);
 
   // Custom Order Page
-  Route::post('order-page/{pproduct:slug}/setting', [WebsiteController::class, 'settingCustomOrderPage']);
+  Route::post('order-page/{product:slug}/setting', [WebsiteController::class, 'settingCustomOrderPage']);
   //Product
   Route::resource('product', ProductController::class);
   Route::delete('delete-checked-products', [ProductController::class, 'deleteManyResource']);

@@ -28,7 +28,7 @@ class HomeController extends Controller
    */
   public function orderProduct($productOrdered) 
   {
-    $getCustomField = CustomField::wherepageSlug($productOrdered)->first()?? null;
+    $getCustomField = CustomField::wherepageSlug($productOrdered)->first() ?? null;
     $getProductOrdered = ProductRepository::getProductForOrder($productOrdered);
     return view('Order', [
       'product' => $getProductOrdered,

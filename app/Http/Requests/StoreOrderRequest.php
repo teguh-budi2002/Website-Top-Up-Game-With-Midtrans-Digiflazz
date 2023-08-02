@@ -23,10 +23,11 @@ class StoreOrderRequest extends FormRequest
     {
         return [
             'product_id' => 'required|integer',
-            'email' => 'required',
-            'number_phone' => 'required|integer',
-            'UID' => 'required',
+            'payment_id' => 'required',
+            'email' => 'nullable|email|ends_with:@gmail.com',
+            'player_id' => 'required',
             'qty' => 'required',
+            'price' => 'required',
             'payment_status' => 'in:Pending,Success,Expired'
         ];
     }
@@ -39,11 +40,12 @@ class StoreOrderRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.required' => 'Alamat Email Harus Di Isi.',
-            'number_phone.required' => 'Nomer HP Harus Di Isi.',
-            'number_phone.integer' => 'Nomer HP Harus Berupa Angka.',
-            'UID' => 'Player ID Tidak Boleh Kosong.',
-            'qty.required' => 'Cantumkan Jumlah Order',
+            'email.email' => 'Alamat Email Harus Valid.',
+            'email.ends_with' => 'Alamat Email Harus Terdaftar Dari Domain @gmail.com',
+            'player_id.required' => 'Player ID Tidak Boleh Kosong.',
+            'payment_id.required' => 'Metode Pembayaran Wajib Dipilih.',
+            'qty.required' => 'Cantumkan Jumlah Order.',
+            'price' => "Pilih Minimal Satu Item Agar Dapat Melanjutkan Pembelian."
         ];
     }
 }

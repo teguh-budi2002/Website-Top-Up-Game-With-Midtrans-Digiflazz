@@ -6,6 +6,7 @@ use App\Models\Product;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreProductRequest;
 
 class ProductController extends Controller
@@ -32,12 +33,25 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         $validation = $request->validated();
+        $img_product = $request->file('img_url');
+        $filename = $img_product->getClientOriginalName();
+        $path = "product/" . $request->product_name . "/";
+
         if (!$validation) {
             return redirect()->back()->withErrors($validation);
         }
 
+        if ($img_product) {            
+            $putImgIntoStorage = Storage::putFileAs('/public/product/' . $request->product_name . "/", $img_product, $filename);
+        }
+
+
         $validation['slug'] = Str::slug($request->product_name);
-        Product::create($validation);
+        Product::create([
+            'product_name' => $request->get('product_name'),
+            'slug' => Str::slug($request->get('product_name')),
+            'img_url' => $filename
+        ]);
         return redirect()->back()->with('create_success', 'Product Created Successfully');
     }
 

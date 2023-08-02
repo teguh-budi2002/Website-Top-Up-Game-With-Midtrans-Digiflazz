@@ -28,14 +28,16 @@ class OrderController extends Controller
           $checkout = MidtransServices::checkout($request->all());
           return response()->json([
             'message' => 'Checkout Berhasil Ditambahkan, Silahkan Lakukan Pembayaran.',
-            'data' => $checkout
+            'data' => $checkout,
+            'status' => 'success'
           ], 201);
           DB::commit();
         } catch (\Throwable $th) {
           DB::rollback();
           return response()->json([
             'message' => 'Checkout Gagal. Maaf Kesalahan Di Sisi Server',
-            'data' => $checkout
+            'data' => $checkout,
+             'status' => 'error'
           ], 500);
         }
     }
@@ -43,21 +45,23 @@ class OrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function showOrder(Order $order)
+    public function showOrder($id)
     {
-      $snapToken = $order->snap_token;
-      // Checking Snap Token Every Customer
-      if (is_null($snapToken)) {
-          $createSnapToken = MidtransServices::getSnapToken($order);
-          // Save Token Into DB
-          $order->snap_token = $createSnapToken;
-          $order->save();
-      }
+      try {
+          $orderDetail = Order::with('payment')->where('id', $id)->firstOrFail();
+          $chargeOrder = MidtransServices::chargeOrder($orderDetail);
 
-      return response()->json([
-        'message' => 'Product Ordered',
-        'snapToken' => $snapToken,
-        'order' => $order->with('product')->first(),
-      ]);
+          return response()->json([
+            'message' => 'Product Ordered',
+            'status' => 'success'
+            // 'order' => $order->with('product')->first(),
+          ], 200);
+      } catch (\Throwable $th) {
+        return response()->json([
+          'message' => 'Error In Server Side ' . $th->getMessage(),
+          'status' => 'error'
+        ], 500);
+      }
+   
     }
 }

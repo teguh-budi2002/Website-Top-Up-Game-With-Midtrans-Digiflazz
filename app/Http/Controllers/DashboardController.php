@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
-use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\DB;
 use App\Repositories\Product\ProductRepository;
 
@@ -16,8 +15,11 @@ class DashboardController extends Controller
 
     public function manage_website() {
       $getNameAndSlugProduct = DB::table('products')->select("id", "product_name", 'slug')->get();
+      $getCustomFields = DB::table('custom_fields')->select("text_title_on_order_page", "description_on_order_page", "bg_img_on_order_page", "detail_for_product")->get();
+
       return view('dashboard.views.manage_website.main', [
-        'products' => $getNameAndSlugProduct
+        'products' => $getNameAndSlugProduct,
+        'oldCustomFields' => $getCustomFields
       ]);
     }
 

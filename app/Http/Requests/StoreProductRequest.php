@@ -23,7 +23,7 @@ class StoreProductRequest extends FormRequest
     {
         return [
             'product_name' => 'required',
-            'img_url' => 'required'
+            'img_url' => 'required|image|mimes:webp,png,jpg,jpeg|max:2048'
         ];
     }
 
@@ -35,8 +35,9 @@ class StoreProductRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'product_name.required' => 'Nama Product Tidak Boleh Kosong.',
-            'img_url.required' => 'Upload Gambar Product Mu Di File Hosting Online, dan Copy Paste Link Share Pada Kolom'
+            'product_name.required' => "The Name Of Product Can't Be Null",
+            'img_url.required' => 'The Product Must Have a Photo.',
+            'img_url.uploaded' => 'Maximum Image Size Allowed is 2MB'
         ];
     }
 }
