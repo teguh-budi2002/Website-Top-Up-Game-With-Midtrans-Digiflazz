@@ -5,7 +5,7 @@
     <div class="logo">logo</div>
 
     <div class="w-full flex items-center justify-between px-5">
-        <div class="text__nav">
+        <div class="text__nav md:block hidden">
             <p class="text-3xl font-semibold italic">{{ $navigation->text_head_nav ?? "Website Top Up Game Termurah" }}</p>
         </div>
         <div class="flex justify-end items-center">
