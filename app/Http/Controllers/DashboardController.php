@@ -48,4 +48,9 @@ class DashboardController extends Controller
         'products' => $getProducts
       ]);
     }
+
+    public function manage_payment_fee() {
+      $getAllPayments = DB::table("payment_methods")->select("id", "payment_name", "img_static")->get();
+      return view('dashboard.views.manage_payment_fee.main', ['payment_methods' => $getAllPayments]);
+    }
 }

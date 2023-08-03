@@ -7,6 +7,7 @@ use App\Http\Controllers\Layout\LayoutController;
 use App\Http\Controllers\Dashboard\ItemController;
 use App\Http\Controllers\Dashboard\PaymentController;
 use App\Http\Controllers\Dashboard\ProductController;
+use App\Http\Controllers\PaymentFeeController;
 use App\Http\Controllers\WebsiteController;
 
 /*
@@ -28,6 +29,7 @@ Route::prefix('dashboard')->group(function () {
   Route::get('/website/order-page/setting', [DashboardController::class, 'manage_website']);
   Route::get('/products', [DashboardController::class, 'manage_product_pages']);
   Route::get('/payment-product', [DashboardController::class, 'manage_payment_product']);
+  Route::get('/payment-fee', [DashboardController::class, 'manage_payment_fee']);
 
   // Custom Order Page
   Route::post('order-page/{product:slug}/setting', [WebsiteController::class, 'settingCustomOrderPage']);
@@ -40,6 +42,9 @@ Route::prefix('dashboard')->group(function () {
 
   //Payment Method
   Route::post('/add-payment-method', [PaymentController::class, 'handleAddPaymentMethodIntoProduct']);
+
+  //  Payment Fee
+  Route::post('/add-payment-fee', [PaymentFeeController::class, 'handlePaymentFee']);
 
   // Layout Edit Component
   Route::prefix('layout')->group(function() {
