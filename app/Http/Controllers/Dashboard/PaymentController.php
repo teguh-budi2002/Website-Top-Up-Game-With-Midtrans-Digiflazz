@@ -6,6 +6,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\PaymentMethod;
 
 class PaymentController extends Controller
 {
@@ -25,5 +26,22 @@ class PaymentController extends Controller
 
             return redirect()->back()->with('error-add-payment-method', 'Ooopss, Something Went Wrong in Serverside!');
         }
+    }
+
+    public function handleRecommendationPaymentMethod(Request $request) {
+        $paymentIds = $request->payment_ids;
+        $isUpdate = PaymentMethod::whereIn('id', $paymentIds)->update([
+            'is_recommendation' => 1
+        ]);
+        
+        return redirect()->back()->with('success-add-payment-method', 'Successfully Updating Recommendation Payment Method.');
+    }
+
+    public function handleRemoveRecommendationPaymentMethod($payment_id) {
+        $deActiveRecommendation = PaymentMethod::whereId($payment_id)->update([
+            'is_recommendation' => 0
+        ]);
+
+        return redirect()->back()->with('success-add-payment-method', 'Successfully Updating Recommendation Payment Method.');
     }
 }
