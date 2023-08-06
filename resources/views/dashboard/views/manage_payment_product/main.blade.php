@@ -3,7 +3,7 @@
 Manage Payment Product
 @endsection
 @section('dashboard_main')
-<main class="w-full h-full">
+<main class="w-full h-full mb-20">
     @if ($mess = Session::get('success-add-payment-method'))
     <div class="p-2 px-16 mt-5">
         <x-alert bg-color="bg-green-400">
@@ -114,7 +114,7 @@ Manage Payment Product
                     </div>
                 </div>
             </div>
-            <div class="w-10/12 h-auto p-3 bg-white dark:bg-primary shadow-md rounded mx-auto mt-5 mb-20">
+            <div class="w-10/12 h-auto p-3 bg-white dark:bg-primary shadow-md rounded mx-auto mt-5">
                 @include('dashboard.views.manage_payment_product.add_payment_method')
             </div>
         </div>

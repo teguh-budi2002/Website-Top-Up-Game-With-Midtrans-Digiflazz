@@ -1,4 +1,4 @@
-<div class="mobile__display__header md:hidden block md:mx-0 mx-3 mt-56 mb-10 z-50">
+<div class="mobile__display__header md:hidden block md:mx-0 mx-3 mb-10">
     <div>
         <div class="top_section md:mt-0 mt-60 border-0 border-b border-solid border-slate-500 pb-4">
             <img src="{{ asset('/storage/product/' . $product->product_name . '/' . $product->img_url) }}"

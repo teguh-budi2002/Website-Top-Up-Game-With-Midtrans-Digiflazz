@@ -1,7 +1,7 @@
   <div class="md:hidden block w-full h-full bg-black pb-10">
       <div class="left_section_mobile">
           <div class="form_wrapper w-full h-fit p-8 md:shadow-lg shadow-slate-800 bg-primary-slate">
-              <form x-data="handleOrder()" @submit.prevent="checkout" method="POST">
+              <form @submit.prevent="checkoutOrder" method="POST">
                   <div
                       class="add_player_id bg-primary-slate-light border border-slate-500 text-white border-solid w-full p-4 rounded">
                       <div class="step_one flex justify-between items-center mb-3">
@@ -34,14 +34,13 @@
                           <p x-text="errMess.errorItem" class="w-full bg-red-300 rounded text-red-700 p-1.5 font-normal"
                               role="errorItemMessage"></p>
                       </div>
-                      <ul class="list-none flex flex-wrap justify-center mx-0 items-center gap-3 mt-3"
-                          x-data="{activeItem : null}">
+                      <ul class="list-none flex flex-wrap justify-center mx-0 items-center gap-3 mt-3">
                           @foreach ($product->items as $item)
                           <li>
-                              <div @click="activeItem = {{ $item->id }}; data.price = {{ $item->price }}"
+                              <div @click.prevent="activeItem = {{ $item->id }}; data.price = {{ $item->price }}; selectedItemProduct()"
                                   :class="{ 'bg-slate-300/60 border-rose-500': activeItem === {{ $item->id }}, 'bg-slate-500 hover:bg-slate-300/90 border-[1px] border-white text-white': activeItem !== {{ $item->id }} }"
                                   class="items w-[180px] h-[100px] flex flex-col justify-center items-center space-y-2 rounded-md p-2
-                                border border-gray-400 border-solid cursor-pointer" data-item-id="{{ $item->id }}">
+                                    border border-gray-400 border-solid cursor-pointer" data-item-id="{{ $item->id }}">
                                   <p class="font-semibold capitalize">{{ $item->nominal }} -
                                       {{ $item->item_name }}</p>
                                   <p class="text-xs">Harga</p>
@@ -52,7 +51,11 @@
                       </ul>
                   </div>
                   <div class="payment__type mt-5 bg-primary-slate-light border border-slate-500 text-white border-solid w-full p-4 rounded"
-                      x-data="{ paymentSelected: '' }">
+                      x-show="activeItem !== null"
+                      x-transition:enter="transition-opacity duration-300"
+                      x-transition:leave="transition-opacity duration-300" x-transition:enter-start="opacity-0"
+                      x-transition:enter-end="opacity-100" x-transition:leave-start="opacity-100"
+                      x-transition:leave-end="opacity-0">
                       <div class="step_three flex items-center justify-between mb-5">
                           <p class="capitalize">Pilih metode pembayaran.</p>
                           <div class="w-fit bg-primary-slate text-white p-2 rounded-lg">
@@ -66,15 +69,26 @@
                       </div>
                       @foreach ($product->paymentMethods as $payment)
                       <div class="{{ $payment->payment_name }}__payment mb-3"
-                          @click="paymentSelected = '{{ $payment->payment_name }}'">
-                          <label for="{{ $payment->payment_name }}__payment"
-                              class="flex items-center justify-between py-2 px-4 rounded hover:bg-slate-400/60 border border-solid border-slate-500 cursor-pointer "
-                              :class="{'bg-slate-400/60 border-slate-300' : paymentSelected === '{{ $payment->payment_name }}' }">
-                              <input type="radio" x-model="data.payment_id" value="{{ $payment->id }}" name="payment_id"
-                                  class="hidden" id="{{ $payment->payment_name }}__payment">
-                              <img src="{{ asset('/img/' . $payment->img_static) }}" class="w-auto h-8"
-                                  alt="logo_{{ $payment->payment_name }}">
-                          </label>
+                          @click.prevent="paymentSelected = '{{ $payment->payment_name }}'; selectedPaymentId = '{{ $payment->id }}'; selectedPayment()">
+                          <div>
+                              <label for="{{ $payment->payment_name }}__payment"
+                                  class="flex items-center justify-between py-2 px-4 rounded hover:bg-slate-400/60 border border-solid border-slate-500 cursor-pointer "
+                                  :class="{'bg-slate-400/60 border-slate-300' : paymentSelected === '{{ $payment->payment_name }}' }">
+                                  <input type="radio" x-model="data.payment_id" value="{{ $payment->id }}"
+                                      name="payment_id" class="hidden" id="{{ $payment->payment_name }}__payment">
+                                  <img src="{{ asset('/img/' . $payment->img_static) }}" class="w-auto h-8"
+                                      alt="logo_{{ $payment->payment_name }}">
+                              </label>
+                          </div>
+                      </div>
+                      <div x-show="paymentSelected === '{{ $payment->payment_name }}'"
+                          x-transition:enter="transition-opacity duration-300"
+                          x-transition:leave="transition-opacity duration-300" x-transition:enter-start="opacity-0"
+                          x-transition:enter-end="opacity-100" x-transition:leave-start="opacity-100"
+                          x-transition:leave-end="opacity-0"
+                          class="detail__fee__and__price mb-3 bg-slate-400 rounded-b p-1.5 flex justify-between items-center">
+                          <p class="font-extrabold uppercase">Total Harga</p>
+                          <p class="font-extrabold uppercase" x-text="priceIncludeFee"></p>
                       </div>
                       @endforeach
                   </div>
@@ -105,10 +119,8 @@
                               anda jika ingin menerima bukti pembelian Anda</p>
                       </div>
                   </div>
-                  <input type="hidden" x-model="data.product_id" x-init="data.product_id = '{{$product->id ?? ''}}'"
-                      name="product_id">
                   <div class="btn_checkout mt-5">
-                      <button type="submit" class="py-2.5 px-6 rounded-md bg-teal-500 text-white">Bayar
+                      <button type="submit" class="py-2.5 px-6 rounded-md bg-teal-500 text-white cursor-pointer">Bayar
                           Sekarang</button>
                   </div>
               </form>

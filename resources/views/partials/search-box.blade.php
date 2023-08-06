@@ -1,28 +1,43 @@
-<div x-data="liveSearch()" x-init="init()" class="search_box z-50">
-    <div class="search__btn bg-primary-slate-light border-primary-cyan-light flex h-auto w-80 cursor-pointer flex-row items-center justify-between space-x-3 rounded border border-solid p-2"
-        @keydown.window.prevent.ctrl.k="isOpen = true" @click="isOpen = true">
-        <div class="space-x-2">
-            <i class="fa-solid fa-magnifying-glass text-primary-light"></i>
-            <span class="text-gray-400">
-                Search
-            </span>
-        </div>
-        <div class="k-bord_key text-primary-cyan flex items-center space-x-1 text-xs">
-            <div class="ctrl_kbod flex h-8 w-8 items-center justify-center rounded bg-white p-1 leading-relaxed">
-                <span class="ctrl text-center">ctrl</span>
+<div x-data="liveSearch()" x-init="init()" class="search_box z-[999]">
+    <div class="search__btn__desktop md:block hidden">
+        <div class="bg-primary-slate-light border-primary-cyan-light flex h-auto w-80 cursor-pointer flex-row items-center justify-between space-x-3 rounded border border-solid p-2"
+            @keydown.window.prevent.ctrl.k="isOpen = true" @click="isOpen = true">
+            <div class="space-x-2">
+                <i class="fa-solid fa-magnifying-glass text-primary-light"></i>
+                <span class="text-gray-400">
+                    Search
+                </span>
             </div>
-            <div>
-                <span class="text-white">+</span>
-            </div>
-            <div class="k_kbod flex h-8 w-8 items-center justify-center rounded bg-white p-1 leading-relaxed">
-                <span class="k text-center">K</span>
+            <div class="k-bord_key text-primary-cyan flex items-center space-x-1 text-xs">
+                <div class="ctrl_kbod flex h-8 w-8 items-center justify-center rounded bg-white p-1 leading-relaxed">
+                    <span class="ctrl text-center">ctrl</span>
+                </div>
+                <div>
+                    <span class="text-white">+</span>
+                </div>
+                <div class="k_kbod flex h-8 w-8 items-center justify-center rounded bg-white p-1 leading-relaxed">
+                    <span class="k text-center">K</span>
+                </div>
             </div>
         </div>
     </div>
-    <div x-show="isOpen" @keydown.window.prevent.esc="isOpen = false" class="modal__search">
+    <div class="search__btn__mobile md:hidden block">
+        <div class="bg-primary-cyan-light p-1.5 rounded-md cursor-pointer" @click="isOpen = true">
+            <i class="fa-solid fa-magnifying-glass text-primary-light"></i>
+        </div>
+    </div>
+    <div class="modal__search">
         <x-modal>
-            <input type="text" name="search_product" @click="isOpen = true"
-                x-model="search" x-on:input="debounceSearch"
+            <div class="md:hidden block mb-5">
+                <div class="flex justify-end" @click="isOpen = false">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-8 h-8 bg-rose-400 p-1 text-rose-200 rounded-md">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+            </div>
+            <input type="text" name="search_product" @click="isOpen = true" x-model="search" x-on:input="debounceSearch"
                 class="bg-primary-slate-light text-primary-cyan-light border-primary-cyan-light w-full rounded border border-solid"
                 autofocus placeholder="Cari Games Yang Kamu Inginkan" autocomplete="off">
 
@@ -34,7 +49,7 @@
                 x-transition:enter-start="opacity-0 transform translate-x-full"
                 x-transition:enter-end="opacity-100 transform translate-x-0">
                 <template x-for="result in resultSearch" :key="result.id">
-                    <a :href="`{{ env('APP_URL') }}/order/${result.slug}`"
+                    <a :href="`/order/${result.slug}`"
                         @click="setRecentSearch({url: $event.currentTarget.getAttribute('href'), name: result.product_name})"
                         class="result_search bg-primary-slate  h-auto w-full flex cursor-pointer items-center justify-between rounded-sm p-2 mt-3 transition hover:bg-cyan-300 text-xl font-medium no-underline text-primary-cyan"">
                         <span x-text=" result.product_name" class="result_tabs"></span>
@@ -62,8 +77,7 @@
             </div>
             <div class="recent__search">
                 <template x-for="(recent, index) in recentSearch" :key="recent.id">
-                    <a :href="`{{ env('APP_URL') }}/order/${recent.url}`" x-show="recent"
-                        :data-id="recent.id"
+                    <a :href="`{{ env('APP_URL') }}${recent.url}`" x-show="recent" :data-id="recent.id"
                         class="result_search bg-primary h-auto w-full flex cursor-pointer items-center justify-between rounded-sm p-2 mt-3 hover:bg-primary-cyan-light text-xl font-medium no-underline text-primary-cyan z-50">
                         <span x-text="recent.name" class="result_tabs "></span>
                         <svg @click.prevent="deleteRecentSearch(recent.id)" xmlns="http://www.w3.org/2000/svg"
@@ -128,7 +142,9 @@
                                 this.resultSearch = [];
                                 this.notFound = true
                             }
-                        }).catch(err => {console.log("ERROR in Server Side")})
+                        }).catch(err => {
+                            console.log("ERROR in Server Side")
+                        })
                 } else {
                     this.notFound = false
                     this.noRecentSearch = true
@@ -179,9 +195,9 @@
 
                 // Apply animation to the item being deleted
                 let deletedItem = document.querySelector(`[data-id="${id}"]`);
-                    deletedItem.style.transition = 'opacity 0.5s, transform 0.5s';
-                    deletedItem.style.opacity = '0';
-                    deletedItem.style.transform = 'translateX(-80%)';
+                deletedItem.style.transition = 'opacity 0.5s, transform 0.5s';
+                deletedItem.style.opacity = '0';
+                deletedItem.style.transform = 'translateX(-80%)';
 
                 setTimeout(() => {
                     let newVal = recentSearchStorage.filter((item) => item.id !== id)

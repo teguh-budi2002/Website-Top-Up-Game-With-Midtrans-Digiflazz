@@ -17,7 +17,7 @@
     alertNotif: localStorage.getItem('ALERT_NOTIF') === 'true',
     textDesc: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius explicabo veniam laboriosam beatae nobis nemo dignissimos mollitia dicta quaerat, cupiditate nostrum nisi error illo, in sequi! Iste porro ab rem?'
 }" x-init="localStorage.setItem('ALERT_NOTIF', alertNotif.toString()); localStorage.setItem('isHiddenNotifDot', alertNotif.toString())">
-    <div class="notif__bell relative" @click="isHiddenNotifDot = true; localStorage.setItem('NOTIF_DOT', isHiddenNotifDot.toString()); isNotifOpen = true">
+    <div class="notif__bell relative z-[999]" @click="isHiddenNotifDot = true; localStorage.setItem('NOTIF_DOT', isHiddenNotifDot.toString()); isNotifOpen = true">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
             class="w-8 h-8 p-1 rounded-full hover:bg-slate-500 transition-colors duration-200 cursor-pointer">
             <path stroke-linecap="round" stroke-linejoin="round"

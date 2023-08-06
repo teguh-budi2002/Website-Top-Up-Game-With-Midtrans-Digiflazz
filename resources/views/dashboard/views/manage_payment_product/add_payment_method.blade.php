@@ -35,7 +35,7 @@
             <label for="multiselect" class="text-sm font-medium dark:text-white uppercase">payment method</label>
             <select x-cloack id="multiselect" class="hidden">
                 @foreach ($payment_methods as $payment)
-                <option value="{{ $payment->id }}">{{ $payment->payment_name }}</option>
+                    <option value="{{ $payment->id }}">{{ $payment->payment_name }}</option>
                 @endforeach
             </select>
             <div x-data="multiselect()" x-init="loadOptions()"
