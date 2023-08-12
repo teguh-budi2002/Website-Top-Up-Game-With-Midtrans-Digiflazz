@@ -20,7 +20,7 @@ class LayoutController extends Controller
      * Edit Text Navigation
      */
     public function editTextHeadingNav() {
-        return view('dashboard.views.edit_layout.edit-nav');
+        return view('dashboard.views.manage_layout.nav_layout');
     }
 
     /**
@@ -52,7 +52,7 @@ class LayoutController extends Controller
 
     public function editMainLayout() {
         $oldBanner = BannerLayout::select("id", "img_url")->first();
-        return view('dashboard.views.edit_layout.edit_main', ['banner' => $oldBanner]);
+        return view('dashboard.views.manage_layout.banner_layout', ['banner' => $oldBanner]);
     }
 
     /**
