@@ -21,8 +21,8 @@ use App\Http\Controllers\WebsiteController;
 |
 */
 
-Route::get('/', [HomeController::class, 'index']);
-Route::get('order/{slug}', [HomeController::class, 'orderProduct']);
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('order/{slug}', [HomeController::class, 'orderProduct'])->name('order');
 
 Route::prefix('dashboard')->group(function () {
   Route::get('/', [DashboardController::class, 'index']);
@@ -42,6 +42,8 @@ Route::prefix('dashboard')->group(function () {
 
   //Payment Method
   Route::post('/add-payment-method', [PaymentController::class, 'handleAddPaymentMethodIntoProduct']);
+  Route::post('/add-recommendation-payment-method', [PaymentController::class, 'handleRecommendationPaymentMethod']);
+  Route::put('/remove-recommendation-payment-method/{payment_id}', [PaymentController::class, 'handleRemoveRecommendationPaymentMethod']);
 
   //  Payment Fee
   Route::post('/add-payment-fee', [PaymentFeeController::class, 'handlePaymentFee']);

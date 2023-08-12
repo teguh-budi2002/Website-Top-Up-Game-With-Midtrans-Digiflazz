@@ -17,7 +17,7 @@ class PaymentController extends Controller
         DB::beginTransaction();
         try {
             // Attaching Payment Method Id's into Pivot Table
-            $product->paymentMethods()->attach($paymentMethodIds);
+            $product->paymentMethods()->sync($paymentMethodIds);
             DB::commit();
 
             return redirect()->back()->with('success-add-payment-method', 'Successfully Adding Payment Method Into ' . $product->product_name);

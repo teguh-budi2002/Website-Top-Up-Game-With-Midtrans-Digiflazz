@@ -16,6 +16,20 @@
 
     </style>
     <div class="bg-primary-slate-light h-full w-full">
+        <div class="md:block hidden">
+            <div class="breadcrumbs w-80 h-auto p-1 pb-2 px-3 bg-primary-slate border-0 border-solid border-b border-r border-primary-cyan-light">
+                <ul class="list-none flex items-center space-x-2 text-sm font-semibold">
+                     <li class="flex items-center space-x-2">
+                        <a href="{{ Route('home') }}"
+                            class="text-gray-200 hover:text-gray-400 transition-colors duration-150 no-underline">Home</a>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-4 h-4 text-gray-400">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                        </svg>
+                    </li>
+                </ul>
+            </div>
+        </div>
         <header class="h-full w-full rounded p-2 pt-8">
             {{-- Banner Website --}}
             <div class="flex justify-center">

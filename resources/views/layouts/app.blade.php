@@ -9,11 +9,18 @@
     @vite('resources/css/app.css')
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;1,600&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('styles/custom_class.css') }}">
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+         .breadcrumbs {
+            clip-path: polygon(0% 0%, 100% 0%, 88% 100%, 0% 100%);
+        }
+    </style>
 </head>
 
 <body>
@@ -25,15 +32,14 @@
     <div class="min-h-max max-w-full">
         @include('layouts.navigation')
 
-        {{-- Page Heading  --}}
-        @if (isset($header))
-        {{ $header }}
-        @endif
 
-        {{-- Page Content --}}
-        <main>
+        {{-- Page Container --}}
+        <div>
+            @if (isset($breadcrumbs))
+            {{ $breadcrumbs }}
+            @endif
             {{ $slot }}
-        </main>
+        </div>
     </div>
     {{-- 26.4.2.1:1080 --}}
     @stack('nav-style')

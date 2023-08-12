@@ -148,27 +148,3 @@
   <a href="{{ URL('dashboard/products') }}" class="text-blue-300 hover:text-blue-500">Click here!</a>
 </div>
 @endif
-@push('dashboard-js')
-<script>
-function previewImage() {
-    return {
-        imageUrl: "",
-
-        fileChosen(event) {
-            this.fileToDataUrl(event, (src) => (this.imageUrl = src));
-            console.log(event)
-        },
-
-        fileToDataUrl(event, callback) {
-            if (!event.target.files.length) return;
-
-            let file = event.target.files[0],
-                reader = new FileReader();
-
-            reader.readAsDataURL(file);
-            reader.onload = (e) => callback(e.target.result);
-        },
-    };
-}
-</script>
-@endpush
