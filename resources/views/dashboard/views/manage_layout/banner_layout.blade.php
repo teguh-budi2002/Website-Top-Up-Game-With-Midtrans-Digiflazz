@@ -1,4 +1,7 @@
 @extends('dashboard.layouts.app_dashboard')
+@section('header')
+Manage Banner Layout
+@endsection
 @section('dashboard_main')
 <main class="w-full h-auto">
     @if ($mess = Session::get('edit_banner_layout_success'))
@@ -17,7 +20,7 @@
             @endforeach
         </div>
     @endif
-    <div class="w-3/4 bg-white dark:bg-primary rounded p-5 mx-auto mt-10 mb-20">
+    <div class="w-3/4 bg-white rounded p-5 mx-auto mt-10 mb-20">
         <div>
             <div id="accordion-collapse" data-accordion="collapse">
                 <div id="accordion-collapse-heading-1">

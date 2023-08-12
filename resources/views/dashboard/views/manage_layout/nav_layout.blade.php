@@ -1,4 +1,7 @@
 @extends('dashboard.layouts.app_dashboard')
+@section('header')
+Manage Navigation Layout
+@endsection
 @section('dashboard_main')
 <main class="w-full h-screen">
     @if ($mess = Session::get('edit_nav_layout_success'))

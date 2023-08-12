@@ -30,7 +30,7 @@ Manage Page Of Website
     </div>
     @endif
     <div class="flex justify-center">
-        <div class="w-10/12 rounded bg-gray-50 dark:bg-darker shadow-md p-8 mt-5 mb-24">
+        <div class="w-10/12 rounded bg-white shadow-md p-8 mt-5 mb-24">
             <div class="manage_page">
                 @include('dashboard.views.manage_website.custom_page')
             </div>

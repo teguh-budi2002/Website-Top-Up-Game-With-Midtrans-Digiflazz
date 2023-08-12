@@ -50,7 +50,7 @@ class LayoutController extends Controller
     | ---------------------------------------
     */
 
-    public function editMainLayout() {
+    public function editBannerLayout() {
         $oldBanner = BannerLayout::select("id", "img_url")->first();
         return view('dashboard.views.manage_layout.banner_layout', ['banner' => $oldBanner]);
     }

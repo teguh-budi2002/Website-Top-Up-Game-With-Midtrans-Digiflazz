@@ -29,7 +29,7 @@ Manage Payment Product
     @endif
     <div class="box__container mt-5">
         <div class="">
-            <div class="w-10/12 h-auto p-1.5 bg-white dark:bg-primary shadow-md rounded mx-auto">
+            <div class="w-10/12 h-auto p-1.5 bg-white shadow-md rounded mx-auto">
                 <div
                     class="available_payment_method border-2 border-white dark:border-primary-100 border-solid py-2 px-2">
                     <p
@@ -44,7 +44,7 @@ Manage Payment Product
                             <div class="flex items-center space-x-2 mt-2 mb-1">
                                 <div class="wrapper">
                                     <div class="flex items-center space-x-2">
-                                        <label for="is_recommendation_{{ $payment->id }}" class="text-xs">Recommendation
+                                        <label for="is_recommendation_{{ $payment->id }}" class="text-xs dark:text-gray-900">Recommendation
                                             Payment
                                             Method?</label>
                                         @if ($payment->is_recommendation)
@@ -92,7 +92,7 @@ Manage Payment Product
                                 </x-slot:titleModal>
                                 <x-slot:info>
                                     <div>
-                                        <p class="text-lg text-slate-600">Are You Sure Want To Inactive Recommendation
+                                        <p class="text-lg text-slate-600 dark:text-slate-400">Are You Sure Want To Inactive Recommendation
                                             Payment For <span
                                                 class="text-red-500 uppercase">{{ $paymentModal->payment_name }}</span>
                                         </p>
@@ -114,7 +114,7 @@ Manage Payment Product
                     </div>
                 </div>
             </div>
-            <div class="w-10/12 h-auto p-3 bg-white dark:bg-primary shadow-md rounded mx-auto mt-5">
+            <div class="w-10/12 h-auto p-3 bg-white shadow-md rounded mx-auto mt-5">
                 @include('dashboard.views.manage_payment_product.add_payment_method')
             </div>
         </div>

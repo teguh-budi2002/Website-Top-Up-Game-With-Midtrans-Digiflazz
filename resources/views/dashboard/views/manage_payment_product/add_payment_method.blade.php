@@ -23,7 +23,7 @@
     <form action="{{ URL('dashboard/add-payment-method') }}" method="POST">
         @csrf
         <div class="products">
-            <label for="small" class="text-sm font-medium dark:text-white uppercase">choose product</label>
+            <label for="small" class="text-sm font-medium dark:text-gray-900 uppercase">choose product</label>
             <select id="small" name="product_id"
                 class="block w-64 p-2 mb-2 text-sm mt-2 border border-gray-300 rounded dark:border-gray-600 text-black">
                 @foreach ($products as $product)
@@ -32,7 +32,7 @@
             </select>
         </div>
         <div class="payment_methods">
-            <label for="multiselect" class="text-sm font-medium dark:text-white uppercase">payment method</label>
+            <label for="multiselect" class="text-sm font-medium dark:text-gray-900 uppercase">payment method</label>
             <select x-cloack id="multiselect" class="hidden">
                 @foreach ($payment_methods as $payment)
                     <option value="{{ $payment->id }}">{{ $payment->payment_name }}</option>

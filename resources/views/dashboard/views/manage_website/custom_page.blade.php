@@ -20,7 +20,7 @@
             </button>
         </h2>
         <div id="accordion-collapse-body-{{ $product->id }}" class="hidden" aria-labelledby="accordion-collapse-heading-{{ $product->id }}">
-            <div class="p-5 bg-gray-100 dark:bg-white">
+            <div class="p-5 bg-gray-100 dark:bg-gray-600">
                 <form action="{{ URL("dashboard/order-page/" . $product->slug . "/setting") }}" method="POST" enctype="multipart/form-data">
                   @csrf
                     <div class="text_title_box1">
@@ -36,10 +36,10 @@
                     </div>
                      <div class="detail_product mt-3">
                         <label for="detail_product" class="block mb-2 text-sm uppercase font-semibold text-gray-800 dark:text-white">Detail Product (Opsional)</label>
-                        <textarea name="detail_for_product" class="w-full" id="detail_product" rows="6">{{ $oldValue->detail_for_product }}</textarea>
+                        <textarea name="detail_for_product" class="w-full bg-slate-500 text-gray-900 dark:text-white" id="detail_product" rows="6">{{ $oldValue->detail_for_product }}</textarea>
                     </div>
                     <div class="bg_image_for_page">
-                        <label for="custom_bg" class="block mt-3 uppercase font-semibold text-gray-800 text-sm">Custom
+                        <label for="custom_bg" class="block mt-3 uppercase font-semibold text-gray-800 dark:text-white text-sm">Custom
                             Background Image Page</label>
                         <div x-data="previewImage()">
                             <label class="cursor-pointer" for="custombgImg{{ $product->id }}">

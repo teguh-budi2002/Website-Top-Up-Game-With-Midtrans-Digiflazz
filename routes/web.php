@@ -62,7 +62,7 @@ Route::prefix('dashboard')->group(function () {
     | Main Layout
     | --------------------------------
     */
-    Route::get('main', [LayoutController::class, 'editMainLayout']);
+    Route::get('banner', [LayoutController::class, 'editBannerLayout']);
     Route::post('main/banner/edit', [LayoutController::class, 'editMainBannerLayout']);
   });
 });
