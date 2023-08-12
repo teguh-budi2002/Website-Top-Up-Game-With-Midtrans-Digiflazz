@@ -1,12 +1,12 @@
- <div class="relative w-full flex flex-col justify-center items-center" x-data="handleBanner()"">
+ <div class="relative w-full flex flex-col justify-center items-center" x-data="handleBanner()">
     <template x-if="imgUrls.length > 0">
-        <div style="border-radius: 6px" class="md:w-[800px] w-full h-[390px] flex overflow-x-hidden relative">
+        <div style="border-radius: 6px" class="md:w-[1100px] w-full h-[390px] flex overflow-x-hidden relative">
             <template x-for="(img, index) in imgUrls" :key="index">
                <div class="absolute inset-x-0" x-show="isActiveSlide(index + 1)"
                    x-transition:enter="transition duration-1000" x-transition:enter-start="transform translate-x-full"
                    x-transition:enter-end="transform translate-x-0" x-transition:leave="transition duration-1000"
                    x-transition:leave-start="transform" x-transition:leave-end="transform -translate-x-full">
-                   <img x-cloak class="md:w-[800px] w-full h-96 object-cover rounded-md mx-auto" alt="1" :src="img" />
+                   <img x-cloak class="md:w-[1100px] w-full h-96 object-cover rounded-md mx-auto" alt="1" :src="`/storage/${img}`" />
                </div>
             </template>
         </div>
