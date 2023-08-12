@@ -14,7 +14,7 @@ class ProductRepository implements ProductRepositoryInterface
 
   public static function getProductForOrder($slug) {
     $product = Product::select("id", "slug", "product_name", "img_url")
-                        ->with("items:id,product_id,item_name,nominal,price", "paymentMethods:id,payment_name,img_static")
+                        ->with("items:id,product_id,item_name,nominal,price", "paymentMethods:id,payment_name,img_static,is_recommendation", 'paymentMethods.fee')
                         ->whereSlug($slug)
                         ->first();
     return $product;

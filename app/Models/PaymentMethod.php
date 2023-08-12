@@ -13,4 +13,8 @@ class PaymentMethod extends Model
     public function products() {
         return $this->belongsToMany(Product::class, 'product_payment_method');
     }
+
+    public function fee() {
+        return $this->hasOne(PaymentFee::class, 'payment_id');
+    }
 }

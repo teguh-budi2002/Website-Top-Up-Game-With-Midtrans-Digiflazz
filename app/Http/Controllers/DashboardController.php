@@ -41,7 +41,7 @@ class DashboardController extends Controller
 
     public function manage_payment_product() {
       $getPaymentMethods = DB::table("payment_methods")->select("id", "payment_name", "type_of_payment", "img_static", "is_recommendation")->get();
-      $getProducts = Product::with('paymentMethods')->select("id", "product_name")->get();
+      $getProducts = Product::select("id", "product_name")->get();
 
       return view ('dashboard.views.manage_payment_product.main', [
         'payment_methods' => $getPaymentMethods,

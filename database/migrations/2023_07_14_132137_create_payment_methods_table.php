@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('payment_name', 15);
             $table->string('type_of_payment', 55);
             $table->string('img_static');
+            $table->boolean('is_recommendation')->default(0);
             $table->timestamps();
         });
     }

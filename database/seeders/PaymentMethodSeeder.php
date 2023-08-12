@@ -17,17 +17,32 @@ class PaymentMethodSeeder extends Seeder
         PaymentMethod::create([
             'payment_name' => 'qris',
             'type_of_payment' => 'E-Wallet',
-            'img_static' => 'PaymentLogo/qris.webp'
+            'img_static' => 'PaymentLogo/qris.webp',
+            'is_recommendation' => false
         ]);
         PaymentMethod::create([
             'payment_name' => 'gopay',
             'type_of_payment' => 'E-Wallet',
-            'img_static' => 'PaymentLogo/gopay.webp'
+            'img_static' => 'PaymentLogo/gopay.webp',
+            'is_recommendation' => false
         ]);
         PaymentMethod::create([
             'payment_name' => 'shopeepay',
             'type_of_payment' => 'E-Wallet',
-            'img_static' => 'PaymentLogo/shopeepay.webp'
+            'img_static' => 'PaymentLogo/shopeepay.webp',
+            'is_recommendation' => false
+        ]);
+        PaymentMethod::create([
+            'payment_name' => 'alfamart',
+            'type_of_payment' => 'Over-The-Counter',
+            'img_static' => 'PaymentLogo/alfamart.webp',
+            'is_recommendation' => false
+        ]);
+        PaymentMethod::create([
+            'payment_name' => 'alfamidi',
+            'type_of_payment' => 'Over-The-Counter',
+            'img_static' => 'PaymentLogo/alfamidi.webp',
+            'is_recommendation' => false
         ]);
     }
 }
