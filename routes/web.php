@@ -7,8 +7,11 @@ use App\Http\Controllers\Layout\LayoutController;
 use App\Http\Controllers\Dashboard\ItemController;
 use App\Http\Controllers\Dashboard\PaymentController;
 use App\Http\Controllers\Dashboard\ProductController;
+use App\Http\Controllers\DiscountProductController;
+use App\Http\Controllers\FlashSaleController;
 use App\Http\Controllers\PaymentFeeController;
 use App\Http\Controllers\WebsiteController;
+use App\Models\FlashSale;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +26,7 @@ use App\Http\Controllers\WebsiteController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('order/{slug}', [HomeController::class, 'orderProduct'])->name('order');
+Route::get('checkout/{invoice}', [HomeController::class, 'checkoutProduct'])->name('checkout');
 
 Route::prefix('dashboard')->group(function () {
   Route::get('/', [DashboardController::class, 'index']);
@@ -30,6 +34,8 @@ Route::prefix('dashboard')->group(function () {
   Route::get('/products', [DashboardController::class, 'manage_product_pages']);
   Route::get('/payment-product', [DashboardController::class, 'manage_payment_product']);
   Route::get('/payment-fee', [DashboardController::class, 'manage_payment_fee']);
+  Route::get('/discount', [DashboardController::class, 'manage_discount']);
+  Route::get('/list-discount', [DashboardController::class, 'list_product_discount']);
 
   // Custom Order Page
   Route::post('order-page/{product:slug}/setting', [WebsiteController::class, 'settingCustomOrderPage']);
@@ -47,6 +53,16 @@ Route::prefix('dashboard')->group(function () {
 
   //  Payment Fee
   Route::post('/add-payment-fee', [PaymentFeeController::class, 'handlePaymentFee']);
+
+  // Discount Product
+  Route::post('/add-discount-to-product', [DiscountProductController::class, 'addDiscountIntoItemProduct']);
+  Route::patch('/activate-discount/{item_id}', [DiscountProductController::class, 'activatedDiscount']);
+  Route::patch('/deactive-discount/{item_id}', [DiscountProductController::class, 'deactiveDiscount']);
+  
+  //  FlashSale
+  Route::post('/add-flash-sale', [FlashSaleController::class, 'handleFlashSale']);
+  Route::patch('/active-flashsale/{flashsale_id}', [FlashSaleController::class, 'activateFlashsale']);
+  Route::patch('/deactive-flashsale/{flashsale_id}', [FlashSaleController::class, 'deactiveFlashsale']);
 
   // Layout Edit Component
   Route::prefix('layout')->group(function() {

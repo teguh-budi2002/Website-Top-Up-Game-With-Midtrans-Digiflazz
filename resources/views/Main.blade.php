@@ -36,6 +36,13 @@
                 <x-header-banner />
             </div>
         </header>
+        <section class="w-full mt-5 mb-5 flex justify-center">
+            <div class="w-3/5">
+                @if (count($flash_sales))
+                <x-flash-sale-box  :flash_sales="$flash_sales" />
+                @endif
+            </div>
+        </section>
         <main class="mt-5 pb-10">
             <div class="flex justify-center">
                 <div class="w-3/4">
@@ -43,7 +50,7 @@
                         <p class="text-3xl text-primary-cyan-light underline__magical font-semibold">GAME TERFAVORIT</p>
                     </div>
                     {{-- Item Box --}}
-                    <x-item-product-box />
+                    <x-item-product-box/>
                 </div>
             </div>
         </main>
