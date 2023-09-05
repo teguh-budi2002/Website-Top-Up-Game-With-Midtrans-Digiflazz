@@ -96,9 +96,9 @@
               x-transition:leave-end="opacity-0 transform scale-90">
               <div class="grid grid-cols-1 grid-rows-1 py-2">
                   <div class="carousel" x-ref="carousel">
-                   @foreach ($flash_sales[0]->items_flashsale as $item)
+                   @foreach ($flash_sales as $item)
                       <div class="flashsale_items w-auto flickity-viewport px-2">
-                        <a href="{{ URL('/order/' . $item->product->slug) }}" class="no-underline">
+                        <a href="{{ URL('/order/' . $item->slug) }}" class="no-underline">
                           <div class="relative w-full h-full">
                             <div class="discount_flashsale p-1.5 rounded-tr-md bg-yellow-300 absolute right-[7px] top-0">
                               <p class="font-semibold text-rose-500 text-center text-sm">  
@@ -112,19 +112,19 @@
                                             strval($item->discount_flat)
                                         )
                                     ) :
-                                    ($item->discount_fixed . " %")
+                                    ($item->discount_fixed . "%")
                                   }}
                               </p>
                               <p class="font-semibold text-white text-xs">OFF</p>
                             </div>
                             <figure class="w-full h-full">
-                              <img class="w-[188px] h-[240px] object-cover object-center mr-2 rounded-md" data-flickity-lazyload="{{ asset('/storage/product/' . $item->product->product_name . '/' . $item->product->img_url) }}"
+                              <img class="w-[188px] h-[240px] object-cover object-center mr-2 rounded-md" data-flickity-lazyload="{{ asset('/storage/product/' . $item->product_name . '/' . $item->img_url) }}"
                                     loading="lazy">
                             </figure>
                             <div class="description_flashsale absolute bg-blue-500/90 shadow-md shadow-blue-700 rounded-b-md w-[188px] p-2 left-0 right-0 bottom-0">
-                              <p class="item_name text-xs font-semibold truncate text-white">{{ $item->item->nominal }} - {{ $item->item->item_name }}</p>
+                              <p class="item_name text-xs font-semibold truncate text-white">{{ $item->nominal }} - {{ $item->item_name }}</p>
                               <p class="price_after_discount text-sm font-extrabold text-green-500 bg-green-200 py- px-2 mt-1 mb-1 rounded-md w-fit">Rp {{ Cash($item->price_after_discount) }}</p>
-                              <p class="price_before_discount text-xs text-rose-300 line-through">Rp {{ Cash($item->item->price) }}</p>
+                              <p class="price_before_discount text-xs text-rose-300 line-through">Rp {{ Cash($item->price) }}</p>
                             </div>
                           </div>
                         </a>
@@ -144,7 +144,7 @@
 
     return {
       active: 0,
-      flashsaleDatas: [],
+      isFlashsaleActive: '{{ $flash_sales[0]->is_flash_sale }}',
       end: endTimeFlashsale,
       countdown: {
           days: 0,
@@ -179,13 +179,13 @@
       },
 
       whenTheFlashsaleIsOn() {
+        const isFlashsaleActive = this.isFlashsaleActive
+        const endFlashsale = this.end
         const interval = setInterval(() => {
                           const now = Date.now();
-
-                          if (now < this.end) {
-                              this.calculateCountdown(this.end);
+                          if (now <= endFlashsale && isFlashsaleActive) {
+                              this.calculateCountdown(endFlashsale);
                             } else {
-                              // this.showCountdown = false;
                               clearInterval(interval);
                             }
                         }, 1000);

@@ -5,7 +5,6 @@ use Carbon\Carbon;
 use App\Models\Order;
 use App\Enums\PaymentStatusEnum;
 use Illuminate\Support\Facades\Http;
-use App\Http\Resources\OrderResource;
 use GuzzleHttp\Client;
 
 class MidtransServices {
@@ -19,16 +18,24 @@ class MidtransServices {
       self::$endpoint = config('midtrans.MIDTRANS_API_DEV_URL');
   }
 
+  private static function createInvoice() {
+    $randomStr = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    $generateStr = substr(str_shuffle($randomStr), 0 ,10);
+    return strtoupper($generateStr); 
+  }
+
   public static function checkout($data) {
-    $total_amount = (int) $data['qty'] * (int) $data['before_amount'];
+    $total_amount = (int) $data['qty'] * (int) $data['price'];
+    $invoice = "INV" . Carbon::now()->format("dmy") . self::createInvoice();
     return Order::create([
       'product_id' => $data['product_id'],
+      'payment_id' => $data['payment_id'],
       'player_id' => $data['player_id'],
-      'invoice' => $data['invoice'],
+      'invoice' => $invoice,  // Hardcode
       'email' => $data['email'],
       'qty' => $data['qty'],
       'price' => (int) $data['price'],
-      'before_amount' => (int) $data['price'],
+      'before_amount' => (int) $data['before_amount'],
       'total_amount' => $total_amount,
       'payment_status' => PaymentStatusEnum::Pending
     ]);

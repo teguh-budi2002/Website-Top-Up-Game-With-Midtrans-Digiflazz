@@ -35,7 +35,7 @@ Manage Navigation Layout
                             @csrf
                             <div class="form_group">
                                 <x-form.input type="text" inputName="text_head_nav" name="text_head_nav"
-                                    label="Masukkan Text Pada Header Navigation" />
+                                    label="Masukkan Text Untuk Header Navigation" />
                                 @error('text_head_nav')
                                 <p class="text-xs text-rose-500 capitalize mt-1">{{ $message }}</p>
                                 @enderror

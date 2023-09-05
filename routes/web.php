@@ -63,6 +63,7 @@ Route::prefix('dashboard')->group(function () {
   Route::post('/add-flash-sale', [FlashSaleController::class, 'handleFlashSale']);
   Route::patch('/active-flashsale/{flashsale_id}', [FlashSaleController::class, 'activateFlashsale']);
   Route::patch('/deactive-flashsale/{flashsale_id}', [FlashSaleController::class, 'deactiveFlashsale']);
+  Route::delete('/delete-flashsale/{flashsale_id}', [FlashSaleController::class, 'deleteFlashsale']);
 
   // Layout Edit Component
   Route::prefix('layout')->group(function() {

@@ -260,7 +260,7 @@
                     @endforeach
                     @else
                     <div class="mt-2 mb-3">
-                        <p class="text-2xl text-center uppercase dark:text-primary-light">The product hasn't been
+                        <p class="text-2xl text-rose-400 text-center uppercase dark:text-primary-light">The product hasn't been
                             created yet
                         </p>
                     </div>

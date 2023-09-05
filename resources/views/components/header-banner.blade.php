@@ -48,13 +48,20 @@
             },
 
              getBanner() {
-                axios.get('/api/layout/banner')
-                        .then(res => {
-                            const banner = res.data.banner.img_url
-                            this.imgUrls.push(...banner)
-                        }).catch(err => {
-                            this.imgUrls = []
-                        })
+                axios.get('/api/get-token').then(res => {
+                    const token = res.data.data
+                    axios.get('/api/layout/banner', {
+                        headers: {
+                            'X-Custom-Token': `${token}`
+                        }
+                    })
+                    .then(res => {
+                        const banner = res.data.banner.img_url
+                        this.imgUrls.push(...banner)
+                    }).catch(err => {
+                        this.imgUrls = []
+                    })
+                })
              }
          }
      }

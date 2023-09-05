@@ -41,11 +41,11 @@
         </div>
         @if (!is_null($custom_field))
         <img src="{{ asset('/storage/' . $custom_field->bg_img_on_order_page) }}"
-            class="custom__bg__img w-full md:h-[700px] h-[300px] object-cover bg-no-repeat bg-top z-10 absolute md:top-[99px] top-[85px]"
+            class="custom__bg__img w-full md:h-[700px] h-[300px] object-cover bg-no-repeat bg-top z-10 absolute md:top-[119px] top-[85px]"
             alt="{{ asset('/storage/' . $custom_field->bg_img_on_order_page) }}">
         @else
         <img src="https://source.unsplash.com/random/1920x800"
-            class="w-full md:h-[700px] h-[300px] object-cover bg-no-repeat bg-top z-10 absolute md:top-[99px] top-[85px]"
+            class="w-full md:h-[700px] h-[300px] object-cover bg-no-repeat bg-top z-10 absolute md:top-[119px] top-[85px]"
             alt="random_img">
         @endif
         <div class="container__shadaow w-full md:h-[900px] h-[400px] absolute overflow-x-hidden z-20 bg-white"></div>
@@ -54,10 +54,10 @@
             @include('mobile.header_order_mobile')
             <div class="wrapper_grid">
                 <div class="grid md:grid-cols-2 grid-cols-1 gap-5">
-                    <div class="left_section md:mt-52 mt-5 md:mb-10 mb-0 ">
+                    <div class="left_section md:mt-52 mt-5 md:mb-10 mb-0">
                         {{-- #1a1919 --}}
                         {{-- #222224 --}}
-                        <div class="form_wrapper w-full h-fit p-8 md:shadow-lg shadow-slate-800 bg-[#25262b]">
+                        <div class="form_wrapper w-full h-fit p-8 rounded-lg md:shadow-lg shadow-slate-800 bg-[#25262b]">
                             <form @submit.prevent="checkoutOrder" method="POST">
                                 <div
                                     class="add_player_id bg-primary-slate-light border border-slate-500 text-white border-solid w-full p-4 rounded">
@@ -210,9 +210,16 @@
                                     </div>
                                 </div>
                                 <div class="btn_checkout md:block hidden mt-5">
-                                    <button type="submit"
-                                        class="py-2.5 px-6 rounded-md bg-teal-500 text-white cursor-pointer border-0">Bayar
-                                        Sekarang</button>
+                                    <p x-text="isButtonSubmitDisabled"></p>
+                                    <button type="submit" :disabled="isButtonSubmitDisabled"
+                                        class="py-3 px-6 rounded-md bg-teal-500 disabled:bg-teal-300 text-white disabled:text-teal-100 cursor-pointer disabled:cursor-not-allowed border-0">
+                                        <template x-if="isButtonSubmitDisabled">
+                                            <span>Process</span>
+                                        </template>
+                                        <template x-if="!isButtonSubmitDisabled">
+                                            <span>Bayar Sekarang</span>
+                                        </template>
+                                    </button>
                                 </div>
                                 {{-- #95D6B5 --}}
                                 <div class="btn_checkout_mobile md:hidden block">
@@ -240,9 +247,15 @@
                                                 </template>
                                             </div>
                                             <div class="btn_checkout_submit">
-                                                <button type="submit"
-                                                    class="py-2.5 px-10 rounded-lg bg-teal-600 text-white cursor-pointer border-0">Bayar
-                                                    Sekarang</button>
+                                                <button type="submit" :disabled="isButtonSubmitDisabled"
+                                                    class="py-3 px-10 rounded-lg bg-teal-600 disabled:bg-teal-300 text-white cursor-pointer disabled:cursor-not-allowed border-0">
+                                                    <template x-if="isButtonSubmitDisabled">
+                                                        <span>Process</span>
+                                                    </template>
+                                                    <template x-if="!isButtonSubmitDisabled">
+                                                        <span>Bayar Sekarang</span>
+                                                    </template>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -312,7 +325,6 @@
                 </div>
             </div>
         </section>
-        {{-- @include('mobile.order_page_mobile') --}}
     </div>
     @push('js-custom')
     <script>
@@ -336,7 +348,7 @@
                 paymentSelected: '',
                 isDisablePaymentMethod: false,
                 showBestDealBanner: false,
-                isLoading: false,
+                isButtonSubmitDisabled: false,
                 errMess: {},
 
                 init() {
@@ -362,30 +374,39 @@
                         product_id: this.data.product_id,
                         payment_id: this.handleDisblePaymentMethod() ? '' : this.selectedPaymentId,
                         email: this.data.email,
-                        price: this.priceIncludeFee,
+                        price: this.convertPriceIntoInteger(),
+                        before_amount: this.initialPrice,
                         qty: this.data.qty
                     }
-                    this.isLoading = true
-                    console.log(dataOrder)
+                    this.isButtonSubmitDisabled = true
                     try {
-                        axios.post(`/api/order/${productName}`, dataOrder).then(res => {
-                            console.log({
-                                res
-                            })
-                            this.isLoading = false
-                        }).catch(err => {
-                            if (err.response.status == 422) {
-                                const resErrMess = err.response.data.errors
-                                this.errMess = {
-                                    errorPlayerId: resErrMess.player_id,
-                                    errorItem: resErrMess.price,
-                                    errorPaymentId: resErrMess.payment_id,
-                                    errorEmail: resErrMess.email
+                        axios.get('/api/get-token').then(res => {
+                            const token = res.data.data
+                            axios.post(`/api/order/${productName}`, dataOrder, {
+                                headers: {
+                                    'X-Custom-Token': `${token}`
                                 }
-                            }
+                            }).then(res => {
+                                if (res.status == 201) {
+                                    const invoice = res.data.data.invoice
+                                    window.location.replace(`/checkout/${invoice}`)
+                                }
+                                this.isButtonSubmitDisabled = false
+                            }).catch(err => {
+                                if (err.response.status == 422) {
+                                    const resErrMess = err.response.data.errors
+                                    this.errMess = {
+                                        errorPlayerId: resErrMess.player_id,
+                                        errorItem: resErrMess.price,
+                                        errorPaymentId: resErrMess.payment_id,
+                                        errorEmail: resErrMess.email
+                                    }
+                                }
+                                this.isButtonSubmitDisabled = false
+                            })
                         })
                     } catch (error) {
-                        console.log("STATUS CODE 500")
+                        console.log("ERROR STATUS CODE 500")
                     }
                 },
 
@@ -397,7 +418,6 @@
                         let calculatingFixedFee = feeFixed * 0.01 * normalPrice
                         let fee = calculatingFixedFee + normalPrice
                         this.priceIncludeFee = Math.ceil(fee / 500) * 500
-                        // console.log(calculatingFixedFee)
                     } else if (this.feeType === 'fee_flat') {
                         let feeFlat = parseInt(this.fee_flat)
                         let calculatingFlatFee = feeFlat + normalPrice
@@ -410,6 +430,13 @@
                         style: 'currency',
                         currency: 'IDR'
                     })
+                },
+
+                convertPriceIntoInteger() {
+                    const strPrice = this.priceIncludeFee
+                    const replaceStr = strPrice ? strPrice.replace(/[^0-9]/g, "") : null
+                    const priceIncludeFee = parseInt(replaceStr)
+                    return priceIncludeFee / 100
                 },
 
                 handleDisblePaymentMethod() {

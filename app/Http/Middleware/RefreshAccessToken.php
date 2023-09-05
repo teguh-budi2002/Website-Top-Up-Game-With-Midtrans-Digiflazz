@@ -17,7 +17,7 @@ class RefreshAccessToken
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $customToken = CustomAccessApiToken::first();
+        $customToken = CustomAccessApiToken::select("id", "token", "expired_at")->first();
 
         // If Token Is NULL = Craete New Token, else = RefreshToken
         if (!$customToken) {

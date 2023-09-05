@@ -18,7 +18,7 @@ class ApiAccessMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $tokenFromFrontEnd = $request->header('X-Custom-Token');
-        $checkTokenIfExists = CustomAccessApiToken::where('token', $tokenFromFrontEnd)->exists();
+        $checkTokenIfExists = CustomAccessApiToken::select("id", "token", "expired_at")->where('token', $tokenFromFrontEnd)->exists();
 
         if (!$checkTokenIfExists) {
             return response()->json([

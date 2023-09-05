@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PaymentFee;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,10 +14,12 @@ class DashboardController extends Controller
       return view('dashboard.views.main');
     }
 
-    public function manage_website() {
+    public function manage_website(Request $request) {
       $getNameAndSlugProduct = DB::table('products')->select("id", "product_name", 'slug')->get();
-      $getCustomFields = DB::table('custom_fields')->select("text_title_on_order_page", "description_on_order_page", "bg_img_on_order_page", "detail_for_product")->get();
-
+      $getCustomFields = DB::table('custom_fields')
+                            ->select("id", "text_title_on_order_page", "description_on_order_page", "bg_img_on_order_page", "detail_for_product", "page_slug")
+                            ->where('page_slug', $request->query('slug'))
+                            ->get();
       return view('dashboard.views.manage_website.main', [
         'products' => $getNameAndSlugProduct,
         'oldCustomFields' => $getCustomFields
@@ -51,6 +54,33 @@ class DashboardController extends Controller
 
     public function manage_payment_fee() {
       $getAllPayments = DB::table("payment_methods")->select("id", "payment_name", "img_static")->get();
-      return view('dashboard.views.manage_payment_fee.main', ['payment_methods' => $getAllPayments]);
+      $getPaymentIncludeFees = PaymentFee::with('payment:id,payment_name,img_static')->get();
+      return view('dashboard.views.manage_payment_fee.main', [
+        'payment_methods' => $getAllPayments,
+        'payment_fees' => $getPaymentIncludeFees
+      ]);
+    }
+
+    public function manage_discount() {
+      return view('dashboard.views.manage_discount.main');;
+    }
+
+    public function list_product_discount() {
+      $itemDiscount         = DB::table('discount_products')
+                                  ->join('items', 'discount_products.item_id', '=', 'items.id')
+                                  ->join('products', 'discount_products.product_id', '=', 'products.id')
+                                  ->select('discount_products.*', 'items.*', 'products.id', 'products.product_name')
+                                  ->paginate(5);
+      $flashSales           = DB::table('flash_sales')
+                                  ->select("id", "name_flashsale", "is_flash_sale", "start_time", "end_time")
+                                  ->get();
+      $itemAddedOnFlashsale = DB::table('flashsale_discount_items')
+                                  ->select("id", "item_id")
+                                  ->get();
+      return view('dashboard.views.manage_discount.list_discount', [
+        'items_discount' => $itemDiscount,
+        'flash_sales'    => $flashSales,
+        'items_on_flashsale' => $itemAddedOnFlashsale
+      ]);
     }
 }

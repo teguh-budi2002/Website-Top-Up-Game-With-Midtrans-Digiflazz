@@ -77,6 +77,7 @@ List Discount Product
                                              <th class="p-1.5">Duration</th>
                                              <th class="p-1.5">Status</th>
                                              <th class="p-1.5">Start Time Flashsale</th>
+                                             <th class="p-1.5">Action</th>
                                          </tr>
                                       </thead>
                                       <tbody class="text-sm text-primary dark:text-primary-light divide-y divide-gray-100">
@@ -87,7 +88,7 @@ List Discount Product
                                                     <p class="font-semibold capitalize">{{ $flashsale->name_flashsale }}</p>
                                                 </td>
                                                     <td class="text-center p-2">
-                                                        <p x-text="convertToDayHoursMinutesString('{{ $flashsale->start_time }}', '{{ $flashsale->end_time }}')"></p>
+                                                        <p class="text-xs" x-text="convertToDayHoursMinutesString('{{ $flashsale->start_time }}', '{{ $flashsale->end_time }}')"></p>
                                                     </td>
                                                     <td class="text-center p-2">
                                                     <button class="py-0.5 px-4 rounded {{ $flashsale->is_flash_sale ? 'bg-green-500' : 'bg-rose-500' }} text-white">{{ $flashsale->is_flash_sale ? 'Active' : 'Inactive' }}</button>
@@ -97,41 +98,17 @@ List Discount Product
                                                             <p class="text-xs">{{ $flashsale->start_time }}</p>
                                                         </div>
                                                     </td>
-                                                    {{-- <td class="text-center">
-                                                        @if ($flashsale->is_flash_sale)
-                                                        <form action="{{ URL('dashboard/deactive-flashsale/' . $flashsale->id) }}" method="POST">
-                                                            @method('PATCH')
+                                                    <td class="text-center">
+                                                        <form action="{{ URL('dashboard/delete-flashsale/' . $flashsale->id) }}" method="POST">
+                                                            @method('DELETE')
                                                             @csrf
-                                                            <button data-popover-target="popover-off" type="submit" class="">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-red-500">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9" />
+                                                            <button data-popover-target="popover-off" type="submit" class="p-1 border border-solid border-rose-400 rounded-md hover:bg-rose-400 text-rose-400 hover:text-white">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                                                                 </svg>
                                                             </button>
-                                                            <div data-popover id="popover-off" role="tooltip" class="absolute z-10 invisible inline-block w-fit text-sm text-white transition-opacity duration-300 bg-rose-300 border border-gray-200 rounded opacity-0 dark:border-gray-600">
-                                                                <div class="py-1 px-2">
-                                                                    <p>OFF</p>
-                                                                </div>
-                                                                <div data-popper-arrow></div>
-                                                            </div>
                                                         </form>
-                                                        @else    
-                                                        <form action="{{ URL('dashboard/active-flashsale/' . $flashsale->id) }}" method="POST">
-                                                            @method('PATCH')
-                                                            @csrf
-                                                            <button data-popover-target="popover-on" type="submit" class="">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-green-500">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9" />
-                                                                </svg>
-                                                            </button>
-                                                            <div data-popover id="popover-on" role="tooltip" class="absolute z-10 invisible inline-block w-fit text-sm text-white transition-opacity duration-300 bg-green-300 border border-gray-200 rounded opacity-0 dark:border-gray-600">
-                                                                <div class="py-1 px-2">
-                                                                    <p>ON</p>
-                                                                </div>
-                                                                <div data-popper-arrow></div>
-                                                            </div>
-                                                        </form>
-                                                        @endif
-                                                    </td> --}}
+                                                    </td>
                                                 </tr>   
                                             @endforeach
                                         @else
@@ -154,6 +131,12 @@ List Discount Product
             @if ($mess = Session::get('flashsale'))
             <div class="flex justify-center mt-3">
                 <div class="w-3/4 h-auto p-2 rounded-md text-center bg-green-400 text-white">
+                    <p class="uppercase">{{ $mess }}</p>
+                </div>
+            </div>
+            @elseif ($mess = Session::get('flashsale-warning'))
+            <div class="flex justify-center mt-3">
+                <div class="w-3/4 h-auto p-2 rounded-md text-center bg-yellow-400 text-white">
                     <p class="uppercase">{{ $mess }}</p>
                 </div>
             </div>
@@ -216,9 +199,19 @@ List Discount Product
                             <td class="p-2">
                                 <p>{{ $item_discount->product_name }}</p>
                             </td>
-                            <td class="p-2 text-left">
+                            <td class="p-2 flex items-center space-x-2 text-left">
                                 <p class="text-rose-400">{{ $item_discount->nominal }} {{ $item_discount->item_name }}
                                 </p>
+                                {{-- markers of items included in the flash sale --}}
+                                @foreach ($items_on_flashsale as $item_flashsale)
+                                    @if ($item_flashsale->item_id === $item_discount->item_id)
+                                    <button type="button" class="p-1 rounded text-xs bg-yellow-400 shadow-lg shadow-yellow-200 text-white">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                                        </svg>
+                                    </button>     
+                                    @endif
+                                @endforeach
                             </td>
                             <td class="p-2 text-center">
                                 <p>Rp. {{ Cash($item_discount->price) }}</p>

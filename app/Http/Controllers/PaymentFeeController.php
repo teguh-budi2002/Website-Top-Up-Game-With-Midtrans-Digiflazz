@@ -10,16 +10,18 @@ class PaymentFeeController extends Controller
 {
     public function handlePaymentFee(Request $request) {
         $validation = $request->validate([
-            'payment_id' => 'required|numeric',
-            'fee_flat' => 'nullable|regex:/^\d+(\.\d{1,2})?$/',
-            'fee_fixed' => 'nullable|regex:/^\d+(\.\d{1,2})?$/',
-            'type_fee' => 'required'
+            'payment_id'    => 'required|numeric',
+            'fee_flat'      => 'required_without:discount_flat:fee_fixed|regex:/^\d+(\.\d{1,2})?$/',
+            'fee_fixed'     => 'required_without:discount_flat:fee_flat|regex:/^\d+(\.\d{1,2})?$/',
+            'type_fee'      => 'required'
         ], [
-            'payment_id.required' => 'Choose One of The Payment Method',
-            'payment_id.required' => 'Fee Type Must Be Selected',
-            'fee_flat.regex' => 'Fee Flat or Fee Fixed Must Be Filled In And Is a Number',
-            'fee_fixed.refex' => 'Fee Flat or Fee Fixed Must Be Filled In And Is a Number',
-            'type_fee.required' => 'Choose One of Type Fee'
+            'payment_id.required'           => 'Choose One of The Payment Method',
+            'payment_id.required'           => 'Fee Type Must Be Selected',
+            'fee_flat.regex'                => 'Fee Flat or Fee Fixed Must Be Filled a Number',
+            'fee_fixed.refex'               => 'Fee Flat or Fee Fixed Must Be Filled a Number',
+            'fee_fixed.required_without'    => "Fee Fixed or Fee Flat must be filled",
+            'fee_flat.required_without'     => "Fee Fixed or Fee Flat must be filled",
+            'type_fee.required'             => 'Choose One of Type Fee'
         ]);
         DB::beginTransaction();
         try {

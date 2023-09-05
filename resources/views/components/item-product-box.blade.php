@@ -19,7 +19,7 @@
       </template>
     </div>
   </template>
-  <template x-if="products.length == 0">
+  <template x-if="products.length == 0 && isLoading == false">
     <div class="w-full h-auto p-2 border border-solid mb-10 border-slate-400 bg-white/20">
       <p class="text-red-400 text-2xl text-center">Produk Masih Belum Di Buat Oleh Pihak Toko.</p>
     </div>
@@ -39,10 +39,18 @@
       
       getProducts() {
         this.isLoading = true
-        axios.get('/api/get-products')
-        .then(res => {
-          const dataProducts = res.data.data
-          this.products.push(...dataProducts)
+        axios.get('/api/get-token').then(res => {
+          const token = res.data.data
+
+          axios.get('/api/get-products', {
+            headers: {
+              'X-Custom-Token': `${token}`
+            }
+          })
+          .then(res => {
+            const dataProducts = res.data.data
+            this.products.push(...dataProducts)
+          })
         })
         this.isLoading = false
       },

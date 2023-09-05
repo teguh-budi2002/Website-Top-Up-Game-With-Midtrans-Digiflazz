@@ -26,18 +26,17 @@ class OrderController extends Controller
         DB::beginTransaction();
         try {
           $checkout = MidtransServices::checkout($request->all());
+          DB::commit();
           return response()->json([
             'message' => 'Checkout Berhasil Ditambahkan, Silahkan Lakukan Pembayaran.',
             'data' => $checkout,
             'status' => 'success'
           ], 201);
-          DB::commit();
         } catch (\Throwable $th) {
           DB::rollback();
           return response()->json([
-            'message' => 'Checkout Gagal. Maaf Kesalahan Di Sisi Server',
-            'data' => $checkout,
-             'status' => 'error'
+            'message' => 'Checkout Gagal. Maaf Kesalahan Di Sisi Server: ' . $th->getMessage(),
+            'status' => 'error'
           ], 500);
         }
     }

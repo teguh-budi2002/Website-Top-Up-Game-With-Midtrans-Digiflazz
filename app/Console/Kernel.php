@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->job(new AutoActiveFlashsale)
-                ->daily()
+                ->everyMinute()
                 ->when(function() {
                     $now = Carbon::now();
                     $flashsale = FlashSale::select("id", "start_time", "end_time")

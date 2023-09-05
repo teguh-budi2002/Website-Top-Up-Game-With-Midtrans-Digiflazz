@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\Api\ItemApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\TokenController;
 use App\Http\Controllers\Layout\LayoutController;
 
 /*
@@ -20,16 +22,21 @@ use App\Http\Controllers\Layout\LayoutController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::get('get-token', [TokenController::class, 'token'])->withoutMiddleware('api.security');
 
-// Finding Data Resource
-Route::get('find-product-with-livesearch', [ProductController::class, 'liveSearchData']);
+Route::middleware(['api.refresh_token', 'api.security'])->group(function() {
+    // Finding Data Resource
+    Route::get('find-product-with-livesearch', [ProductController::class, 'liveSearchData']);
+    Route::get('get-products', [ProductController::class, 'getAllProducts']);
+    
+    Route::post('get-items-by-product', [ItemApiController::class, 'getItemsByProductId']);
 
-Route::get('get-products', [ProductController::class, 'getAllProducts']);
-Route::prefix('order')->group(function() {
-    Route::post('{order}', [OrderController::class, 'createOrder']);
-
+    Route::prefix('order')->group(function() {
+        Route::post('{order}', [OrderController::class, 'createOrder']);  
+    });
+    Route::prefix('layout')->group(function() {
+        Route::get('banner',[LayoutController::class, 'getBannerLayout']);
+    });
 });
 
-Route::prefix('layout')->group(function() {
-    Route::get('banner',[LayoutController::class, 'getBannerLayout']);
-});
+

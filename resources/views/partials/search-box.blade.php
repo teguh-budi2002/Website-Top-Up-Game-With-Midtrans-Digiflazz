@@ -132,7 +132,13 @@
                     let params = new URLSearchParams({
                         search_product: this.search
                     });
-                    axios.get(`/api/find-product-with-livesearch?${params.toString()}`)
+                    axios.get('/api/get-token').then(res => {
+                        const token = res.data.data
+                        axios.get(`/api/find-product-with-livesearch?${params.toString()}`, {
+                            headers: {
+                                'X-Custom-Token': `${token}`
+                            }
+                        })
                         .then(response => {
                             if (response.data.status !== "404") {
                                 this.notFound = false
@@ -145,6 +151,7 @@
                         }).catch(err => {
                             console.log("ERROR in Server Side")
                         })
+                    })
                 } else {
                     this.notFound = false
                     this.noRecentSearch = true

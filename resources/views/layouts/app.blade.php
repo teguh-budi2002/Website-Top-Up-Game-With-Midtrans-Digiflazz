@@ -16,10 +16,20 @@
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
     <style>
          .breadcrumbs {
             clip-path: polygon(0% 0%, 100% 0%, 88% 100%, 0% 100%);
         }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        } 
     </style>
 </head>
 
@@ -44,6 +54,7 @@
     {{-- 26.4.2.1:1080 --}}
     @stack('nav-style')
     @stack('js-custom')
+    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
     <script>
         // Loading Init Page
         window.addEventListener('load', function () {

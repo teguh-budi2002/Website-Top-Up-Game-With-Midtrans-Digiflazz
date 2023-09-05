@@ -7,7 +7,6 @@ use App\Models\BannerLayout;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 class LayoutController extends Controller
@@ -100,10 +99,6 @@ class LayoutController extends Controller
             $insertedBanner = BannerLayout::create([
                 'img_url' => $uploadedImages
             ]);
-
-            // if (!is_null($insertedBanner)) {
-                
-            // }
 
             DB::commit();
             return redirect()->back()->with('edit_banner_layout_success', 'Edit Banner Layout Successfully');

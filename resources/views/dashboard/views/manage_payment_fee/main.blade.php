@@ -42,20 +42,33 @@ Manage Payment Fee
     @endif
     <div class="box__container mt-5">
         <div class="">
-            <div class="w-10/12 h-auto p-1.5 bg-white shadow-md rounded mx-auto">
-                <div
-                    class="available_payment_method border-2 border-white dark:border-primary-100 border-solid py-2 px-2">
-                    <p
-                        class="uppercase bg-primary-100 dark:bg-primary-darker text-gray-400 dark:text-white w-fit p-1 px-3 rounded-md font-semibold">
-                        Available Payment Methods</p>
-                    <div class="flex flex-wrap items-center space-x-2 mt-4">
-                        @foreach ($payment_methods as $payment)
-                        <img src="{{ asset('/img/' . $payment->img_static) }}" class="w-auto h-6"
-                            alt="{{ $payment->payment_name }}">
-                        @endforeach
-                    </div>
-                </div>
-            </div>
+          @if ($payment_fees->count())
+          <div class="w-10/12 h-auto p-1.5 bg-white shadow-md rounded mx-auto">
+              <div
+                  class="available_payment_fee border-2 border-white dark:border-primary-100 border-solid py-2 px-2">
+                  <p
+                      class="uppercase bg-primary-100 dark:bg-primary-darker text-gray-400 dark:text-white w-fit p-1 px-3 rounded-md font-semibold">
+                      Available Payment Fee</p>
+                  <div class="mt-4">
+                      @foreach ($payment_fees as $fee)
+                      <div class="grid grid-cols-5 gap-5 space-y-2">
+                        <div class="col-span-1">
+                          <img src="{{ asset('/img/' . $fee->payment->img_static) }}" class="w-auto h-6" alt="{{ $fee->payment->payment_name }}">
+                        </div>
+                        <div class="col-span-2">
+                          @if (!is_null($fee->fee_fixed))
+                            <p class="font-semibold text-gray-400">{{ $fee->fee_fixed }} %</p>
+                          @endif
+                          @if (!is_null($fee->fee_flat))
+                            <p class="font-semibold text-gray-400">Rp. {{ number_format($fee->fee_flat, 2) }}</p>
+                          @endif
+                        </div>
+                      </div>
+                      @endforeach
+                  </div>
+              </div>
+          </div>
+          @endif
             <div class="w-10/12 h-auto p-3 bg-white shadow-md rounded mx-auto mt-5" x-data="handlePaymentFee">
                 <form action="{{ URL('/dashboard/add-payment-fee') }}" method="POST">
                   @csrf
