@@ -63,7 +63,7 @@ List Discount Product
                             </x-slot:inputBox>
                         </x-dashboard.form-modal>
                         <button type="button" data-modal-target="list_flashsale" data-modal-toggle="list_flashsale" x-transition.duration.500ms
-                            class="w-fit bg-slate-800 hover:bg-slate-700 text-white p-1.5 px-4 rounded cursor-pointer flex items-center space-x-2"
+                            class="w-fit bg-slate-800 dark:bg-slate-100 hover:bg-slate-700 dark:hover:bg-slate-200 text-white dark:text-primary-darker p-1.5 px-4 rounded cursor-pointer flex items-center space-x-2"
                             id="listFlashSale">
                             <span class="text-xs">LIST FLASHSALE</span>
                         </button>

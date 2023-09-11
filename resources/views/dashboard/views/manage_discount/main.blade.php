@@ -60,18 +60,18 @@ Manage Discount Product
                 <form action="{{ URL('dashboard/add-discount-to-product') }}" method="POST">
                   @csrf
                   <div class="name_product space-y-2">
-                    <label for="product" class="block dark:text-gray-900">Product</label>
-                    <select name="product_id" class="w-64 capitalize dark:text-black" id="product" x-model="selectedProduct" @change="getAllItems">
-                      <option value="" selected disabled>Choice Product</option>
+                    <label for="product" class="block text-sm font-semibold text-slate-600 dark:text-primary-darker">Product</label>
+                    <select name="product_id" id="product" x-model="selectedProduct" @change="getAllItems" style="box-shadow: none;padding: 8px">
+                      <option value="" selected disabled>Select Products</option>
                         <template x-for="product in products" :key="product.id">
                             <option :value="product.id" x-text="product.product_name"></option>
                         </template>  
                     </select>
                   </div>
                   <div class="name_item space-y-2 mt-3">
-                    <label for="item_product" class="block dark:text-gray-900">Item Product</label>
-                    <select name="item_id" class="w-64 capitalize dark:text-black"x-model="selectedItem" @change="updateNormalPrice" id="item_product">
-                      <option value="" selected disabled>Choice Item</option>
+                    <label for="item_product" class="block text-sm font-semibold text-slate-600 dark:text-primary-darker">Item Product</label>
+                    <select name="item_id"x-model="selectedItem" @change="updateNormalPrice" id="item_product" style="box-shadow: none;padding: 8px">
+                      <option value="" selected disabled>Select Item Product</option>
                       <template x-if="items.length">
                         <template x-for="item in items" :key="item.id">
                           <option :value="item.id" :data-price="item.price" x-text="`${item.nominal} - ${item.item_name}`"></option>
@@ -81,12 +81,12 @@ Manage Discount Product
                   </div>
                   <div class="display_price mt-3">
                     <div class="normal_price flex items-center space-x-2">
-                      <p>Harga Normal: </p>
-                      <p class="font-bold" x-text="normalPrice"></p>
+                      <p class="text-sm font-semibold text-slate-600 dark:text-primary-darker">Normal Price: </p>
+                      <p class="font-bold dark:text-primary" x-text="selectedItem !== '' ? normalPrice : ''"></p>
                     </div>
                     <div class="discount_price flex items-center space-x-2 mt-1">
-                      <p>Harga Setelah Diskon: </p>
-                      <p class="font-bold" :class="{'text-rose-500' : isDiscountOverpriced === true}" x-text="discountPrice.toLocaleString('id-ID', {style: 'currency', currency: 'IDR'})"></p>
+                      <p class="text-sm font-semibold text-slate-600 dark:text-primary-darker">Price After Discount: </p>
+                      <p class="font-bold dark:text-primary" :class="{'text-rose-500 dark:text-rose-500' : isDiscountOverpriced === true}" x-text="discountPrice.toLocaleString('id-ID', {style: 'currency', currency: 'IDR'})"></p>
                     </div>
                   </div>
                   <div class="input__group mt-3">
@@ -126,6 +126,19 @@ Manage Discount Product
 </main>
 @push('dashboard-js')
 <script>
+    new SlimSelect({
+        select: '#product',
+        settings: {
+            placeholderText: 'Select Products',
+        }
+    })
+
+    new SlimSelect({
+        select: '#item_product',
+        settings: {
+            placeholderText: 'Select Item Product',
+        }
+    })
     function handleDiscountProduct() {
       return {
         discountType: '',
@@ -211,7 +224,7 @@ Manage Discount Product
           if (discountType === 'discount_fixed') {
             let discountPercent = discountFixed / 100;
             let discountFixedAmount = normalPrice * discountPercent;
-            
+          
             if(isNaN(discountFixedAmount)) {
               this.isDiscountOverpriced = false
               this.discountPrice = "Rp. 0"
