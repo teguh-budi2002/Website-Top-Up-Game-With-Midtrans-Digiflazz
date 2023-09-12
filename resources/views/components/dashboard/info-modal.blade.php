@@ -1,4 +1,4 @@
-<div id="{{ $modalId }}" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+<div id="{{ $modalId }}" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-[1000] hidden w-full p-4 overflow-hidden md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative w-full max-w-2xl max-h-full">
         <div class="relative bg-white rounded-lg shadow dark:bg-dark border dark:border-primary-darker">
             <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">

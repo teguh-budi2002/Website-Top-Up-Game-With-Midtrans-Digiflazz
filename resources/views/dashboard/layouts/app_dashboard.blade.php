@@ -13,14 +13,13 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="{{ asset('styles/custom_class.css') }}">
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"
-        integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+    <link href="https://unpkg.com/slim-select@latest/dist/slimselect.css" rel="stylesheet"></link>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 
-<body>
+<body class="overflow-x-hidden">
     <div x-data="setup()" x-init="$refs.loading.classList.add('hidden'); setColors(color);" :class="{ 'dark': isDark}">
-        <div class="flex h-screen antialiased text-gray-900 bg-gray-100 dark:bg-dark dark:text-light">
+        <div class="flex w-full h-full min-h-screen antialiased text-gray-900 bg-gray-100 dark:bg-dark dark:text-light">
             <!-- Loading screen -->
             <div x-ref="loading"
                 class="fixed inset-0 z-50 flex items-center justify-center text-2xl font-semibold text-white bg-primary-darker">
@@ -528,7 +527,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
                         </svg>
-                        <p class="text-xl text-primary-light font-semibold">@yield('header')</p>
+                        <p class="text-xl text-primary dark:text-primary-lighter font-semibold">@yield('header')</p>
                     </div>
                     <a href="https://github.com/teguh-budi2002" target="_blank"
                         class="px-4 py-2 text-sm text-white rounded-md bg-primary hover:bg-primary-dark focus:outline-none focus:ring focus:ring-primary focus:ring-offset-1 focus:ring-offset-white dark:focus:ring-offset-dark">
@@ -537,12 +536,13 @@
                 </div>
 
                 <!-- Main content -->
-
-                @yield('dashboard_main')
+                <div class="w-full h-full min-h-screen">
+                    @yield('dashboard_main')
+                </div>
 
                 <!-- Main footer -->
                 <footer
-                    class="w-full fixed bottom-0 flex items-center justify-between p-4 bg-white border-t dark:bg-darker dark:border-primary-darker">
+                    class="w-full flex items-center justify-between p-4 bg-white border-t dark:bg-darker dark:border-primary-darker">
                     <div>
                         <a href="https://github.com/teguh-budi2002" target="_blank"
                             class="text-blue-500 hover:underline">Teguh Budi Laksono</a>
@@ -644,7 +644,9 @@
                                 <button @click="setColors('blue')" class="w-10 h-10 rounded-full"
                                     style="background-color: var(--color-blue)"></button>
                                 <button @click="setColors('violet')" class="w-10 h-10 rounded-full"
-                                    style="background-color: var(--color-violet)"></button>
+                                    style="background-color: var(--color-elegant)"></button>
+                                <button @click="setColors('elegant')" class="w-10 h-10 rounded-full"
+                                    style="background-color: var(--color-elegant)"></button>
                             </div>
                         </div>
                     </div>
@@ -758,14 +760,11 @@
                 </div>
             </section>
 
-            <!-- Search panel -->
-            <!-- Backdrop -->
             <div x-transition:enter="transition duration-300 ease-in-out" x-transition:enter-start="opacity-0"
                 x-transition:enter-end="opacity-100" x-transition:leave="transition duration-300 ease-in-out"
                 x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" x-show="isSearchPanelOpen"
                 @click="isSearchPanelOpen = false" class="fixed inset-0 z-10 bg-primary-darker" style="opacity: 0.5"
                 aria-hidden="ture"></div>
-            <!-- Panel -->
             <section x-transition:enter="transition duration-300 ease-in-out transform sm:duration-500"
                 x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
                 x-transition:leave="transition duration-300 ease-in-out transform sm:duration-500"
@@ -810,6 +809,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/slim-select@latest/dist/slimselect.min.js"></script>
     <script src="{{ asset('/js/dashboard_script.js') }}"></script>
     @stack('dashboard-js')
     <script>

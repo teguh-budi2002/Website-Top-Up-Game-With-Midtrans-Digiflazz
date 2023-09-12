@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Lapak Murah | @yield('title', 'Home')</title>
+    
+    <title>{{ app('seo_data')->name_of_the_company }} | @yield('title', 'Home')</title>
+    <meta name="description" content="{{ app('seo_data')->description }}">
+    <meta name="keywords" content="{{ app('seo_data')->keyword }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('/storage/seo/logo/favicon/' . app('seo_data')->logo_favicon) }}">
     @vite('resources/css/app.css')
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

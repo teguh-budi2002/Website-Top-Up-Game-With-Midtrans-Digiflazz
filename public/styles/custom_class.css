@@ -43,6 +43,16 @@ body {
     animation-duration: 4s;
 }
 
+.sidebar {
+    width: 48px;
+    transition: 0.3s;
+}
+
+.sidebar:hover {
+    width: 256px;
+    overflow: visible;
+}
+
 @keyframes s4 {
     100% {
         transform: rotate(1turn);

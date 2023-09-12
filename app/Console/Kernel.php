@@ -20,34 +20,46 @@ class Kernel extends ConsoleKernel
                 ->everyMinute()
                 ->when(function() {
                     $now = Carbon::now();
-                    $flashsale = FlashSale::select("id", "start_time", "end_time")
+                    $flashsale = FlashSale::select("id", "is_flash_sale", "start_time", "end_time")
                                             ->where('start_time', '<=', $now->toDateTimeString())
                                             ->where('end_time', '>=', $now->toDateTimeString())
                                             ->first();
+                    if (is_null($flashsale)) {
+                            return false;
+                    }
 
-                    if ($flashsale) {
+                    if($flashsale->is_flash_sale === 1) {
+                        return false;
+                    }
+
+                    if (!is_null($flashsale) && $flashsale->is_flash_sale === 0) {
                         $start_time = Carbon::parse($flashsale->start_time);
                         $end_time = Carbon::parse($flashsale->end_time);
 
                         return $now->between($start_time, $end_time);
                     }
-
-                    return false;
                 });
 
         $schedule->job(new AutoInactiveFlashsale)
                 ->everyMinute()
                 ->when(function() {
                     $now = Carbon::now();
-                    $flashsale = FlashSale::select("id", "end_time")->where('end_time', '<=', $now->toDateTimeString())->first();
-
-                    if ($flashsale) {
-                        $end_time = Carbon::parse($flashsale->end_time);
-
-                        return $now->isAfter($end_time);
+                    $flashsale = FlashSale::select("id", "is_flash_sale", "end_time")->where('end_time', '<=', $now->toDateTimeString())->first();
+                    
+                    if (is_null($flashsale)) {
+                            return false;
                     }
 
-                    return false;
+                    if($flashsale->is_flash_sale === 0) {
+                        return false;
+                    }
+
+                    if (!is_null($flashsale) && $flashsale->is_flash_sale === 1) {
+                        if ($now->isAfter(Carbon::parse($flashsale->end_time))) {
+                            $flashsaleExecuted = true;
+                            return true;
+                        }
+                    }
                 });
     }
 

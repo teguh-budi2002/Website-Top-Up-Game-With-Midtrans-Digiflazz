@@ -10,6 +10,8 @@ use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\DiscountProductController;
 use App\Http\Controllers\FlashSaleController;
 use App\Http\Controllers\PaymentFeeController;
+use App\Http\Controllers\PaymentGatewayProviderController;
+use App\Http\Controllers\SEOController;
 use App\Http\Controllers\WebsiteController;
 use App\Models\FlashSale;
 
@@ -38,7 +40,7 @@ Route::prefix('dashboard')->group(function () {
   Route::get('/list-discount', [DashboardController::class, 'list_product_discount']);
 
   // Custom Order Page
-  Route::post('order-page/{product:slug}/setting', [WebsiteController::class, 'settingCustomOrderPage']);
+  Route::post('order-page/setting', [WebsiteController::class, 'settingCustomOrderPage']);
   //Product
   Route::resource('product', ProductController::class);
   Route::delete('delete-checked-products', [ProductController::class, 'deleteManyResource']);
@@ -81,5 +83,15 @@ Route::prefix('dashboard')->group(function () {
     */
     Route::get('banner', [LayoutController::class, 'editBannerLayout']);
     Route::post('main/banner/edit', [LayoutController::class, 'editMainBannerLayout']);
+  });
+
+  Route::prefix('settings')->group(function() {
+    Route::get('seo', [DashboardController::class, 'manage_seo_website']);
+    Route::post('add-or-update-seo', [SEOController::class, 'addOrUpdateSeo']);
+
+    Route::get('payment-gateway', [DashboardController::class, 'manage_payment_gateway']);
+    Route::post('/payment-gateway/add-or-update-pg', [PaymentGatewayProviderController::class, 'addOrUpdatePG']);
+    Route::post('/payment-gateway/activated-pg/{id}', [PaymentGatewayProviderController::class, 'activatedPG']);
+    Route::post('/payment-gateway/deactive-pg/{id}', [PaymentGatewayProviderController::class, 'deactivePG']);
   });
 });

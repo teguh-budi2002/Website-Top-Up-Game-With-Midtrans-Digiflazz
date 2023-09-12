@@ -8,15 +8,18 @@ use Illuminate\Support\Facades\Storage;
 
 class WebsiteController extends Controller
 {
-    public function settingCustomOrderPage(Request $request, $slug) {
+    public function settingCustomOrderPage(Request $request) {
         $img = $request->file('bg_img_on_order_page');
         $oldImg = $request->get('oldImg');
+        $slug = $request->slug;
         $path = "";
         $filename = "";
         $request->validate([
-            'bg_img_on_order_page' => 'image|mimes:jpeg,png,jpg,webp|max:2048'
+            'bg_img_on_order_page' => 'image|mimes:png,jpg,webp|max:2048'
         ],[
-						'bg_img_on_order_page.uploaded' => 'Maximum image size allowed is 2MB'
+						'bg_img_on_order_page.uploaded' => 'Maximum image size allowed is 2MB',
+						'bg_img_on_order_page.image'    => 'The Uploaded File Must be an Image.',
+						'bg_img_on_order_page.mimes'    => 'Allowed Extension For Image (png, jpg, webp)',
 				]);
 
         if ($img) {

@@ -1,31 +1,25 @@
-<div x-data="{ showBtn: false, selectedRecord: [] }" x-init="$watch('selectedRecord', (val) => {
-    if (val.length) {
-        showBtn = true
-    } else {
-        showBtn = false
-    }
-})" class="p-4 mt-2">
-    <div class="w-full mx-auto bg-white dark:bg-darker shadow-lg rounded-sm">
-        <div class="grid grid-cols-2 border-b dark:border-primary-darker">
+<div x-data="handleTableProducts()"  class="w-full h-full overflow-hidden p-4 mt-2">
+    <div class="w-full h-fit bg-white dark:bg-darker shadow-lg rounded-sm">
+        <div class="grid md:grid-cols-2 grid-cols-1 border-b dark:border-primary-darker">
 
             {{-- Search Product --}}
             @include('dashboard.views.manage_product.search_product')
 
-            <div class="px-5 py-4 border-b dark:border-primary-darker flex items-center justify-end space-x-3">
+            <div class="px-5 py-4 border-b dark:border-primary-darker md:flex md:items-center md:justify-end md:space-x-3 space-y-2">
                 <div>
                     <button x-show="showBtn" x-transition.duration.500ms
-                        class="w-fit bg-red-500 hover:bg-red-600 text-white p-1.5 px-4 rounded cursor-pointer"
+                        class="w-fit bg-red-500 hover:bg-red-600 text-white md:p-1.5 md:px-4 p-1 px-2 md:mt-2 mt-0 rounded cursor-pointer"
                         id="btnDeleteAllRecords" type="submit">
-                        <span>DELETED SELECTED PRODUCTS</span>
+                        <span class="md:text-md text-sm uppercase">deleted selected products</span>
                     </button>
                 </div>
                 <div data-modal-target="add_product" data-modal-toggle="add_product">
                     <button
-                        class="w-fit bg-primary hover:bg-primary-dark dark:bg-primary-light dark:hover:bg-primary-dark text-white flex items-center p-1.5 px-4 rounded cursor-pointer"
+                        class="w-fit bg-primary hover:bg-primary-dark dark:bg-primary-light dark:hover:bg-primary-dark text-white flex items-center md:p-1.5 md:px-4 p-1 px-2 rounded cursor-pointer"
                         type="button">
-                        <span>ADD PRODUCT</span>
+                        <span class="md:text-md text-sm uppercase">add product</span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                            stroke="currentColor" class="w-8 h-8 p-1">
+                            stroke="currentColor" class="md:w-8 md:h-8 w-4 h-4 md:p-1">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                         </svg>
                     </button>
@@ -43,7 +37,7 @@
                 <x-form.input type="text" inputName="product_name" name="name_game" label="Masukkan Nama Product" />
                 {{-- <x-form.input type="text" inputName="img_url" name="img_url" label="Masukkan Img URL Product" /> --}}
                 <div class="image_for_product">
-                    <label for="custom_bg_product" class="block mt-3 uppercase font-semibold text-gray-800 text-sm">Add Photo Into Product</label>
+                    <label for="custom_bg_product" class="block mt-3 text-slate-600 dark:text-primary-dark text-sm">Add Photo Into Product</label>
                     <div x-data="previewImage()">
                         <label class="cursor-pointer" for="custombgImg">
                             <div
@@ -93,13 +87,14 @@
                     </tr>
                 </thead>
 
-                <tbody class="text-sm text-primary dark:text-primary-light divide-y divide-gray-100">
+                <tbody class="text-sm text-primary dark:text-primary-light divide-y divide-gray-100 dark:divide-primary">
                     @if (count($products))
                     @foreach ($products as $product)
-                    <tr id="productIds{{ $product->id }}">
+                    <tr>
                         <td class="p-2">
-                            <input type="checkbox" autocomplete="off" name="checked_record_ids" x-model="selectedRecord"
+                            <input type="checkbox" autocomplete="off" name="checked_record_ids" x-model="selectedRecord" 
                                 id="selected_items"
+                                @change="updateBtnVisibillity()"
                                 class="w-4 h-4 text-blue-600 bg-gray-100 rounded focus:ring-blue-500 dark:focus:ring-blue-600 focus:ring-2 dark:bg-primary-dark cursor-pointer"
                                 value="{{ $product->id }}" />
                         </td>
@@ -270,3 +265,17 @@
         </div>
     </div>
 </div>
+ @push('dashboard-js')
+<script>
+    function handleTableProducts() {
+        return {
+            showBtn: false, 
+            selectedRecord: [],
+            
+            updateBtnVisibillity() {
+                this.showBtn = this.selectedRecord.length > 0
+            },
+        }
+    }
+</script>
+@endpush

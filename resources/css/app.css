@@ -59,6 +59,14 @@
     --color-violet-lighter: #a78bfa;
     --color-violet-dark: #6d28d9;
     --color-violet-darker: #5b21b6;
+
+    --color-elegant: #191818;
+    --color-elegant-50: #c8c9ca;
+    --color-elegant-100: #e0e2e3;
+    --color-elegant-light: #776e6e;
+    --color-elegant-lighter: #e0e2e3;
+    --color-elegant-dark: #232b2b;
+    --color-elegant-darker: #0e1111;
 }
 @tailwind base;
 @tailwind components;

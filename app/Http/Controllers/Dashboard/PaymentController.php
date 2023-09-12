@@ -11,7 +11,7 @@ use App\Models\PaymentMethod;
 class PaymentController extends Controller
 {
     public function handleAddPaymentMethodIntoProduct(Request $request) {
-        $paymentMethodIds = explode(",", $request->payment_method_ids[0]);
+        $paymentMethodIds = $request->payment_method_ids;
         $product = Product::findOrFail($request->product_id);
         
         DB::beginTransaction();
@@ -24,7 +24,7 @@ class PaymentController extends Controller
         } catch (\Throwable $th) {
             DB::rollback();
 
-            return redirect()->back()->with('error-add-payment-method', 'Ooopss, Something Went Wrong in Serverside!');
+            return redirect()->back()->with('error-add-payment-method', 'Ooopss, Something Went Wrong in Serverside! ' . $th->getMessage());
         }
     }
 

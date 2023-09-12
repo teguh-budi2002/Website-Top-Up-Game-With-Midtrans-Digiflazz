@@ -4,7 +4,11 @@
     {{-- {{ Request::is('/') ? 'bg-primary-slate' : 'bg-primary-slate/70' }} --}}
     <div class="logo">
         <a href="{{ URL('/') }}">
-            <img src="{{ asset('/img/logo_with_bg.png') }}" class="w-16 h-16" alt="logo_website">
+            @if (app('seo_data')->logo_website)
+                <img src="{{ asset('/storage/seo/logo/website/' . app('seo_data')->logo_website) }}" class="w-16 h-16" alt="logo_website">
+            @else
+                <img src="{{ asset('/img/logo_with_bg.png') }}" class="w-16 h-16" alt="logo_website">    
+            @endif
         </a>
     </div>
 

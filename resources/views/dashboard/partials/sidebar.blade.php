@@ -1,4 +1,4 @@
-<aside class="flex-shrink-0 hidden w-64 bg-white border-r dark:border-primary-darker dark:bg-darker md:block">
+<aside class="sidebar flex-shrink-0 hidden bg-white border-r dark:border-primary-darker dark:bg-darker md:block overflow-x-hidden">
     <div class="flex flex-col h-full">
         <!-- Sidebar links -->
         <nav aria-label="Main" class="flex-1 px-2 py-4 space-y-2 ">
@@ -15,7 +15,7 @@
                                 d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                         </svg>
                     </span>
-                    <span class="ml-2 text-sm"> Dashboard </span>
+                    <span class="ml-3 text-sm"> Dashboard </span>
                 </a>
             </div>
 
@@ -32,7 +32,7 @@
                                 d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
                         </svg>
                     </span>
-                    <span class="ml-2 text-sm"> Website </span>
+                    <span class="ml-3 text-sm"> Website </span>
                     <span aria-hidden="true" class="ml-auto">
                         <svg class="w-4 h-4 transition-transform transform" :class="{ 'rotate-180': open }"
                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -43,19 +43,19 @@
                 <div x-show="open" class="mt-2 space-y-2 px-7" role="menu" arial-label="Components">
                     <a href="{{ URL('dashboard/website/order-page/setting') }}" role="menuitem"
                         class="block p-2 text-sm text-gray-400 transition-colors duration-200 rounded-md dark:text-gray-400 dark:hover:text-light hover:text-gray-700">
-                        Setting Order Pages
+                        Order Pages
                     </a>
                 </div>
                 <div x-show="open" class="mt-2 space-y-2 px-7" role="menu" arial-label="Components">
                     <a href="{{ URL('dashboard/layout/banner') }}" role="menuitem"
                         class="block p-2 text-sm text-gray-400 transition-colors duration-200 rounded-md dark:text-gray-400 dark:hover:text-light hover:text-gray-700">
-                        Setting Banner
+                        Slideshow
                     </a>
                 </div>
                 <div x-show="open" class="mt-2 space-y-2 px-7" role="menu" arial-label="Components">
                     <a href="{{ URL('dashboard/layout/nav') }}" role="menuitem"
                         class="block p-2 text-sm text-gray-400 transition-colors duration-200 rounded-md dark:text-gray-400 dark:hover:text-light hover:text-gray-700">
-                        Setting Navigation
+                        Navigation
                     </a>
                 </div>
             </div>
@@ -74,7 +74,7 @@
                                 d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72m-13.5 8.65h3.75a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75H6.75a.75.75 0 00-.75.75v3.75c0 .415.336.75.75.75z" />
                         </svg>
                     </span>
-                    <span class="ml-2 text-sm"> Manage Store </span>
+                    <span class="ml-3 text-sm"> Manage Store </span>
                     <span aria-hidden="true" class="ml-auto">
                         <!-- active class 'rotate-180' -->
                         <svg class="w-4 h-4 transition-transform transform" :class="{ 'rotate-180': open }"
@@ -123,7 +123,7 @@
                                 d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                     </span>
-                    <span class="ml-2 text-sm"> Authentication </span>
+                    <span class="ml-3 text-sm"> Authentication </span>
                     <span aria-hidden="true" class="ml-auto">
                         <!-- active class 'rotate-180' -->
                         <svg class="w-4 h-4 transition-transform transform" :class="{ 'rotate-180': open }"
@@ -167,7 +167,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
                     </span>
-                    <span class="ml-2 text-sm"> Settings </span>
+                    <span class="ml-3 text-sm"> Settings </span>
                     <span aria-hidden="true" class="ml-auto">
                         <!-- active class 'rotate-180' -->
                          <svg class="w-4 h-4 transition-transform transform" :class="{ 'rotate-180': open }"
@@ -177,14 +177,20 @@
                     </span>
                 </a>
                 <div x-show="open" x-transition.duration.500ms class="mt-2 space-y-2" role="menu" aria-label="Layouts">
-                    <a href="{{ URL('dashboard/layout/nav') }}" role="menuitem"
-                        class="menu__item__navigation flex justify-between items-center p-2 text-sm hover:bg-gray-200 text-gray-400 transition delay-75 cursor-pointer duration-200 rounded-md dark:text-gray-400 hover:text-gray-700 hover:translate-x-7">
-                        <span>SEO</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="w-6 h-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                        </svg>
-                    </a>
+                    <div x-show="open" class="mt-2 space-y-2 px-7" role="menu" arial-label="Components">
+                        <a href="{{ URL('dashboard/settings/seo') }}" role="menuitem"
+                            class="block p-2 text-sm text-gray-400 transition-colors duration-200 rounded-md dark:text-gray-400 dark:hover:text-light hover:text-gray-700">
+                            SEO
+                        </a>
+                    </div>
+                </div>
+                <div x-show="open" x-transition.duration.500ms class="mt-2 space-y-2" role="menu" aria-label="Layouts">
+                    <div x-show="open" class="mt-2 space-y-2 px-7" role="menu" arial-label="Components">
+                        <a href="{{ URL('dashboard/settings/payment-gateway') }}" role="menuitem"
+                            class="block p-2 text-sm text-gray-400 transition-colors duration-200 rounded-md dark:text-gray-400 dark:hover:text-light hover:text-gray-700">
+                            Payment Gateway
+                        </a>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -192,15 +198,14 @@
         <!-- Sidebar footer -->
         <div class="flex-shrink-0 px-2 py-4 space-y-2">
             <button @click="openSettingsPanel" type="button"
-                class="flex items-center justify-center w-full px-4 py-2 text-sm text-white rounded-md bg-primary hover:bg-primary-dark focus:outline-none focus:ring focus:ring-primary-dark focus:ring-offset-1 focus:ring-offset-white dark:focus:ring-offset-dark">
+                class="flex items-center justify-center w-full space-x-1 px-4 py-2 text-sm text-white rounded-md bg-primary hover:bg-primary-dark focus:outline-none focus:ring focus:ring-primary-dark focus:ring-offset-1 focus:ring-offset-white dark:focus:ring-offset-dark">
                 <span aria-hidden="true">
-                    <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                     </svg>
                 </span>
-                <span>Customize</span>
             </button>
         </div>
     </div>

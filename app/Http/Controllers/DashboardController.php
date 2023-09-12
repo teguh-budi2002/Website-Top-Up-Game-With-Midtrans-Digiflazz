@@ -15,7 +15,7 @@ class DashboardController extends Controller
     }
 
     public function manage_website(Request $request) {
-      $getNameAndSlugProduct = DB::table('products')->select("id", "product_name", 'slug')->get();
+      $getNameAndSlugProduct = DB::table('products')->select("id", "product_name", 'slug')->paginate(8);
       $getCustomFields = DB::table('custom_fields')
                             ->select("id", "text_title_on_order_page", "description_on_order_page", "bg_img_on_order_page", "detail_for_product", "page_slug")
                             ->where('page_slug', $request->query('slug'))
@@ -44,7 +44,7 @@ class DashboardController extends Controller
 
     public function manage_payment_product() {
       $getPaymentMethods = DB::table("payment_methods")->select("id", "payment_name", "type_of_payment", "img_static", "is_recommendation")->get();
-      $getProducts = Product::select("id", "product_name")->get();
+      $getProducts = Product::with('paymentMethods')->select("id", "product_name")->paginate(8);
 
       return view ('dashboard.views.manage_payment_product.main', [
         'payment_methods' => $getPaymentMethods,
@@ -81,6 +81,34 @@ class DashboardController extends Controller
         'items_discount' => $itemDiscount,
         'flash_sales'    => $flashSales,
         'items_on_flashsale' => $itemAddedOnFlashsale
+      ]);
+    }
+
+    public function manage_seo_website() {
+      $getDataSeo = DB::table('seo_website')
+                        ->select('id', 'name_of_the_company', 'keyword', 'description', 'logo_favicon', 'logo_website')
+                        ->first();
+
+      return view('dashboard.views.manage_seo.main', [
+        'data_seo' => $getDataSeo
+      ]);
+    }
+
+    public function manage_payment_gateway(Request $request) {
+      $paymentGateway = DB::table('payment_gateway_providers')
+                            ->select('id', 'payment_name', 'client_key', 'server_key', 'status')
+                            ->paginate(3);
+      $oldPg = null;
+      if ($request->has('pg_name')) {
+        $oldPg = DB::table('payment_gateway_providers')
+                    ->select('id', 'payment_name', 'client_key', 'server_key', 'status')
+                    ->where('payment_name', $request->query('pg_name'))
+                    ->first();
+      }
+      
+      return view('dashboard.views.manage_payment_gateway.main', [
+        'payment_gateway' => $paymentGateway,
+        'old_payment_gateway' => $oldPg
       ]);
     }
 }

@@ -3,7 +3,7 @@
 Manage Games Product
 @endsection
 @section('dashboard_main')
-<main class="w-full h-full overflow-y-hidden">
+<main class="w-full h-full">
 
     {{-- Alert Notif --}}
     @if ($errors->any())
@@ -56,40 +56,5 @@ Manage Games Product
     <div class="mb-2 p-4">
       {{ $products->links('vendor.pagination.simple-tailwind') }}
     </div>
-
-    @push('dashboard-js')
-    <script>
-        $(function (e) {
-            const btnDeleteRecords = $('#btnDeleteAllRecords')
-            let selectedItems = $('#selected_items')
-
-            btnDeleteRecords.click(function (e) {
-                e.preventDefault()
-                let allItems = []
-
-                $('input:checkbox[name=checked_record_ids]:checked').each(function (el) {
-                    allItems.push($(this).val())
-                })
-
-                // Call Api Delete Many Records
-                $.ajax({
-                    url: "delete-checked-products",
-                    method: "DELETE",
-                    data: {
-                        productIds: allItems,
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function (res) {
-                        $.each(allItems, function (key, id) {
-                            console.log(id)
-                            $('#productIds' + id).remove()
-                        })
-                    }
-                })
-            })
-        })
-
-    </script>
-    @endpush
 </main>
 @endsection
