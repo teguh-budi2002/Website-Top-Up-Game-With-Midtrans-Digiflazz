@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 
 class SEOController extends Controller
 {
-  public function addSeo(Request $request) 
+  public function addOrUpdateSeo(Request $request) 
   {
     $validation = $request->validate([
       'name_of_the_company'   => 'required',
@@ -18,10 +18,13 @@ class SEOController extends Controller
       'logo_favicon'          => 'image|mimes:png,webp|max:2048',
       'logo_website'          => 'image|mimes:png,webp|max:2048',
     ], [
-      'logo_favicon.uploaded' => 'Maximum image size allowed is 2MB',
-      'logo_favicon.mimes'    => 'Allowed Extension For Image (png, webp)',
-      'logo_website.uploaded' => 'Maximum image size allowed is 2MB',
-      'logo_website.mimes'    => 'Allowed Extension For Image (png, webp)',
+      'name_of_the_company.required'  => 'Name The Company Cannot Be Null',
+      'keyword.required'              => 'Keyword Cannot Be Null',
+      'description.required'          => 'Description Cannot Be Null',
+      'logo_favicon.uploaded'         => 'Maximum image size allowed is 2MB',
+      'logo_favicon.mimes'            => 'Allowed Extension For Image (png, webp)',
+      'logo_website.uploaded'         => 'Maximum image size allowed is 2MB',
+      'logo_website.mimes'            => 'Allowed Extension For Image (png, webp)',
     ]);
 
     DB::beginTransaction();
