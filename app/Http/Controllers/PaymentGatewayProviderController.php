@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\PaymentGatewayProvider;
+use App\Models\PaymentMethod;
+use App\Models\Product;
+use App\Models\ProductPaymentMethod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -56,6 +59,10 @@ class PaymentGatewayProviderController extends Controller
     }
 
     public function deactivePG($id) {
+        $oldSettingSupportedPayment = ProductPaymentMethod::exists();
+        if($oldSettingSupportedPayment) {
+            ProductPaymentMethod::truncate();
+        }
         $pg = PaymentGatewayProvider::whereId($id)->first();
         $pg->status = 0;
         $pg->save();

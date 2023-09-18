@@ -12,7 +12,7 @@
         </div>
         <div class="payment_methods w-full">
             <label for="multiSelect" class="text-sm font-medium dark:text-gray-900 uppercase">payment method</label>
-            <select id="multiSelect" name="payment_method_ids[]" class="mt-2 mb-2 slimselect-shadow-none;padding: 8px" style="box-shadow: none" multiple>
+            <select id="multiSelect" name="payment_method_ids[]" class="mt-2 mb-2 slimselect-shadow-none" style="box-shadow: none;padding: 8px" multiple>
                 @foreach ($payment_methods as $payment)
                     <option value="{{ $payment->id }}">{{ $payment->payment_name }}</option>
                 @endforeach

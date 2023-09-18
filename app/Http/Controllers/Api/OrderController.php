@@ -3,18 +3,41 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Order;
-use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Services\MidtransServices;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 use App\Http\Requests\StoreOrderRequest;
+use App\Models\PaymentGatewayProvider;
+use App\Services\PaymentGateway\Midtrans\MidtransServices;
+use App\Services\PaymentGateway\Tripay\TripayServices;
+use App\Services\PaymentGateway\Xendit\XenditServices;
 
-class OrderController extends Controller
+class OrderController extends BaseApiController
 {
+  protected $services;
+
     public function __construct() {
-        MidtransServices::init();
+      try {
+        $this->initServices();
+      } catch (\Exception $e) {
+        throw new \Exception("Maaf Kesalahan Di Sisi Server: Invalid Payment Gateway Provider. Mohon Kontak Admin!");
+      }
+    }
+
+    private function initServices() {
+        $provider = PaymentGatewayProvider::where('status', 1)->first();
+        switch ($provider->payment_name) {
+          case 'midtrans':
+            $this->services = new MidtransServices($provider);
+            break;
+          case 'tripay':
+            $this->services = new TripayServices;
+            break;
+          case 'xendit':
+            $this->services = new XenditServices;
+            break;
+        }
+        $this->services->init($provider);
     }
 
     /**
@@ -25,42 +48,34 @@ class OrderController extends Controller
         $validation = $request->validated();
         DB::beginTransaction();
         try {
-          $checkout = MidtransServices::checkout($request->all());
+         
+          $checkout = $this->services->checkout($request->all());
           DB::commit();
-          return response()->json([
-            'message' => 'Checkout Berhasil Ditambahkan, Silahkan Lakukan Pembayaran.',
-            'data' => $checkout,
-            'status' => 'success'
-          ], 201);
-        } catch (\Throwable $th) {
+          return $this->success_response('Checkout Berhasil Ditambahkan, Silahkan Lakukan Pembayaran.', 201, $checkout);
+        } catch (\Exception $e) {
           DB::rollback();
-          return response()->json([
-            'message' => 'Checkout Gagal. Maaf Kesalahan Di Sisi Server: ' . $th->getMessage(),
-            'status' => 'error'
-          ], 500);
+          return $this->failed_response('Checkout Gagal. Maaf Kesalahan Di Sisi Server.');
         }
     }
 
     /**
      * Display the specified resource.
      */
-    public function showOrder($id)
+    public function purchaseOrder($id)
     {
       try {
-          $orderDetail = Order::with('payment')->where('id', $id)->firstOrFail();
-          $chargeOrder = MidtransServices::chargeOrder($orderDetail);
+          $orderDetail = Order::with(['payment', 'product'])->whereId($id)->first();
+          if (empty($orderDetail)) {
+            return $this->failed_response('Detail Order Tidak Ditemukan', 404);
+          }
 
-          return response()->json([
-            'message' => 'Product Ordered',
-            'status' => 'success'
-            // 'order' => $order->with('product')->first(),
-          ], 200);
+          $chargeOrder = $this->services->chargeOrder($orderDetail);
+          return $this->success_response("Pembayaran Order Telah Berhasil. Silahkan tunggu beberapa saat untuk menerima item games.", 200, $chargeOrder);
       } catch (\Throwable $th) {
-        return response()->json([
-          'message' => 'Error In Server Side ' . $th->getMessage(),
-          'status' => 'error'
-        ], 500);
-      }
+        return $this->failed_response('ERROR IN SERVER SIDE: ' . $th->getMessage());
+      } catch (\RuntimeException $re) {
+          return $this->failed_response('Pembayaran Gagal. Maaf Kesalahan Di Sisi Server: ' . $re->getMessage());
+        }
    
     }
 }

@@ -32,12 +32,15 @@ class PaymentFeeController extends Controller
         } 
         DB::beginTransaction();
         try {
-            PaymentFee::create([
+            PaymentFee::updateOrCreate(
+                ['payment_id' => $request->payment_id],
+                [
                 'payment_id' => $request->payment_id,
                 'fee_flat' => $request->fee_flat,
                 'fee_fixed' => $request->fee_fixed,
                 'type_fee' => $request->type_fee
-            ]);
+                ]
+            );
 
             DB::commit();
             return redirect()->back()->with('success-add-fee', 'Success To Add Payment Fee.');

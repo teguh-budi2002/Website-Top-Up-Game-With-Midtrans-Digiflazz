@@ -22,12 +22,12 @@ class StoreOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'product_id' => 'required|integer',
-            'payment_id' => 'required',
-            'email' => 'nullable|email|ends_with:@gmail.com',
-            'player_id' => 'required',
-            'qty' => 'required',
-            'price' => 'required',
+            'product_id'    => 'required|integer',
+            'payment_id'    => 'required',
+            'email'         => 'nullable|email|ends_with:@gmail.com',
+            'player_id'     => 'required|regex:/^[^\s\p{P}]+$/',
+            'qty'           => 'required',
+            'price'         => 'required',
             'payment_status' => 'in:Pending,Success,Expired'
         ];
     }
@@ -40,12 +40,13 @@ class StoreOrderRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.email' => 'Alamat Email Harus Valid.',
-            'email.ends_with' => 'Alamat Email Harus Terdaftar Dari Domain @gmail.com',
-            'player_id.required' => 'Player ID Tidak Boleh Kosong.',
-            'payment_id.required' => 'Metode Pembayaran Wajib Dipilih.',
-            'qty.required' => 'Cantumkan Jumlah Order.',
-            'price' => "Pilih Minimal Satu Item Agar Dapat Melanjutkan Pembelian."
+            'email.email'           => 'Alamat Email Harus Valid.',
+            'email.ends_with'       => 'Alamat Email Harus Terdaftar Dari Domain @gmail.com',
+            'player_id.required'    => 'Player ID Tidak Boleh Kosong.',
+            'player_id.regex'       => 'Format Player ID Tidak Valid.',
+            'payment_id.required'   => 'Metode Pembayaran Wajib Dipilih.',
+            'qty.required'          => 'Cantumkan Jumlah Order.',
+            'price'                 => "Pilih Minimal Satu Item Agar Dapat Melanjutkan Pembelian."
         ];
     }
 }

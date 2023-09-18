@@ -22,7 +22,6 @@ return new class extends Migration
             $table->integer("before_amount");
             $table->integer('total_amount');
             $table->enum('payment_status', ['Pending', 'Success', 'Expired']);
-            $table->string('snap_token', 36)->nullable();
             $table->timestamps();
         });
     }

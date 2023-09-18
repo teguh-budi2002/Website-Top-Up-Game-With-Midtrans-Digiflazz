@@ -16,23 +16,23 @@ class BaseApiController extends Controller
             "data" => $data
         ])->withHeaders([
             'Content-Type'   => "application/json",
-            // 'X-Custom-Token' => $this->getAccessApiToken(),
+            // 'X-Custom-Token' => $this->getAccessApiToken()
         ]);
     }
 
-    public function failed_response($data)
+    public function failed_response($data, $status = 500)
     {
         $message = json_decode($data);
         if(!is_object($message)){
             $message = $data;
         }
 
-        return $this->base_response(FALSE, 500,$message); 
+        return $this->base_response(FALSE, $status,$message); 
     }
 
-    public function success_response($messages, $data)
+    public function success_response($messages, $status = 200, $data = [])
     {
-        return $this->base_response(TRUE, 200, $messages, $data);
+        return $this->base_response(TRUE, $status, $messages, $data);
     }
 
     protected function getAccessApiToken() {

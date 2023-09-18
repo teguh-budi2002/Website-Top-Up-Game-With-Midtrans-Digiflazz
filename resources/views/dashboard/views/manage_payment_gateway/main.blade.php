@@ -26,6 +26,17 @@ Manage Payment Gateway
                 </div>
                 <div class="w-full h-fit mt-5">
                     <div class="list_page w-full h-fit rounded bg-white shadow-md p-4">
+                        <div class="mt-2 mb-2 flex justify-end items-center">
+                            <button data-popover-target="popover-bottom-warning-pg" data-popover-placement="top" type="button"
+                                class="text-sm p-2 bg-rose-600 text-white rounded-md">WARNING!</button>
+                            <div data-popover id="popover-bottom-warning-pg" role="tooltip"
+                                class="absolute z-10 invisible inline-block w-64 transition-opacity duration-300 bg-rose-100 rounded-lg shadow-sm opacity-0">
+                                <div class="px-3 py-2">
+                                    <p class="text-rose-500 text-sm">If you deactivate a provider, all payment settings will be cleared, and will revert to the original settings.</p>
+                                </div>
+                                <div data-popper-arrow></div>
+                            </div>
+                        </div>
                         <div class="overflow-x-auto p-3">
                             <table class="w-full">
                                 <thead
@@ -67,9 +78,10 @@ Manage Payment Gateway
                                             <p>{{ $pg->server_key }}</p>
                                         </td>
                                         <td class="p-2">
-                                            <button class="{{ $pg->status ? 'bg-green-400' : 'bg-rose-400' }} text-white rounded p-1 px-2">{{ $pg->status ? 'Active' : 'Inactive' }}</button>
+                                            <button
+                                                class="{{ $pg->status ? 'bg-green-400' : 'bg-rose-400' }} text-white rounded p-1 px-2">{{ $pg->status ? 'Active' : 'Inactive' }}</button>
                                         </td>
-                                        <td class="p-2 flex justify-start items-center space-x-2">
+                                        <td class="p-2 flex justify-start items-center space-x-2 mt-1.5">
                                             <a href="?pg_name={{ $pg->payment_name }}"
                                                 class="block p-1 bg-primary-100 rounded hover:bg-primary hover:text-white transition-colors duration-150">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -79,35 +91,51 @@ Manage Payment Gateway
                                                 </svg>
                                             </a>
                                             @if ($pg->status)
-                                             <form action="{{ URL("dashboard/settings/payment-gateway/deactive-pg/" . $pg->id) }}" method="POST">
-                                              @csrf
-                                              <button data-popover-target="popover-bottom-deactive" data-popover-placement="bottom" type="submit" class="bg-rose-400 p-1 rounded text-white">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                                  <path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9" />
-                                                </svg>
-                                              </button>
-                                              <div data-popover id="popover-bottom-deactive" role="tooltip" class="absolute z-10 invisible inline-block w-fit text-xs text-white transition-opacity duration-300 bg-rose-400 rounded shadow-sm opacity-0">
-                                                  <div class="px-2 py-1">
-                                                      <p>Deactive Now</p>
-                                                  </div>
-                                                  <div data-popper-arrow></div>
-                                              </div>
-                                            </form>  
+                                            <form
+                                                action="{{ URL("dashboard/settings/payment-gateway/deactive-pg/" . $pg->id) }}"
+                                                method="POST">
+                                                @csrf
+                                                <button data-popover-target="popover-bottom-deactive"
+                                                    data-popover-placement="bottom" type="submit"
+                                                    class="bg-rose-400 p-1 rounded text-white">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                        class="w-4 h-4">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M5.636 5.636a9 9 0 1012.728 0M12 3v9" />
+                                                    </svg>
+                                                </button>
+                                                <div data-popover id="popover-bottom-deactive" role="tooltip"
+                                                    class="absolute z-10 invisible inline-block w-fit text-xs text-white transition-opacity duration-300 bg-rose-400 rounded shadow-sm opacity-0">
+                                                    <div class="px-2 py-1">
+                                                        <p>Deactive Now</p>
+                                                    </div>
+                                                    <div data-popper-arrow></div>
+                                                </div>
+                                            </form>
                                             @else
-                                            <form action="{{ URL("dashboard/settings/payment-gateway/activated-pg/" . $pg->id) }}" method="POST">
-                                              @csrf
-                                              <button data-popover-target="popover-bottom-active" data-popover-placement="bottom" type="submit" class="bg-green-400 p-1 rounded text-white">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                                  <path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9" />
-                                                </svg>
-                                              </button>
-                                              <div data-popover id="popover-bottom-active" role="tooltip" class="absolute z-10 invisible inline-block w-fit text-xs text-white transition-opacity duration-300 bg-green-400 rounded shadow-sm opacity-0">
-                                                  <div class="px-2 py-1">
-                                                      <p>Activated Now</p>
-                                                  </div>
-                                                  <div data-popper-arrow></div>
-                                              </div>
-                                            </form>    
+                                            <form
+                                                action="{{ URL("dashboard/settings/payment-gateway/activated-pg/" . $pg->id) }}"
+                                                method="POST">
+                                                @csrf
+                                                <button data-popover-target="popover-bottom-active"
+                                                    data-popover-placement="bottom" type="submit"
+                                                    class="bg-green-400 p-1 rounded text-white">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                        class="w-4 h-4">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M5.636 5.636a9 9 0 1012.728 0M12 3v9" />
+                                                    </svg>
+                                                </button>
+                                                <div data-popover id="popover-bottom-active" role="tooltip"
+                                                    class="absolute z-10 invisible inline-block w-fit text-xs text-white transition-opacity duration-300 bg-green-400 rounded shadow-sm opacity-0">
+                                                    <div class="px-2 py-1">
+                                                        <p>Activated Now</p>
+                                                    </div>
+                                                    <div data-popper-arrow></div>
+                                                </div>
+                                            </form>
                                             @endif
                                         </td>
                                     </tr>

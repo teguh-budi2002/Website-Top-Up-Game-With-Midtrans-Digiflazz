@@ -14,7 +14,7 @@ class ItemApiController extends BaseApiController
             $product_id = $request->product_id;
             $itemProduct = Item::whereProductId($product_id)->get();
             
-            return $this->success_response('Get Item Successfully', $itemProduct, config('token.SECRET_TOKEN'));
+            return $this->success_response('Get Item Successfully', 200, $itemProduct);
         }
       } catch (\Throwable $th) {
         return $this->failed_response('ERROR SERVER: ' . $th->getMessage());

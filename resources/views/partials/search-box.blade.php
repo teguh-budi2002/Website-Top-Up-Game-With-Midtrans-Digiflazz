@@ -22,8 +22,8 @@
         </div>
     </div>
     <div class="search__btn__mobile md:hidden block">
-        <div class="bg-primary-cyan-light p-1.5 rounded-md cursor-pointer" @click="isOpen = true">
-            <i class="fa-solid fa-magnifying-glass text-primary-light"></i>
+        <div class="bg-slate-800 w-9 h-9 flex justify-center items-center rounded-md cursor-pointer" @click="isOpen = true">
+            <i class="fa-solid fa-magnifying-glass text-primary-cyan-light"></i>
         </div>
     </div>
     <div class="modal__search">
@@ -62,8 +62,8 @@
                 </template>
             </div>
 
-            <div class="mt-5 mb-3" x-show="notFound" x-transition.duration.400ms>
-                <svg width="40" height="40" class="mb-2" viewBox="0 0 20 20" fill="none" fill-rule="evenodd"
+            <div class="mt-5 mb-3 text-center" x-show="notFound" x-transition.duration.400ms>
+                <svg width="40" height="40" class="mb-4 mx-auto" viewBox="0 0 20 20" fill="none" fill-rule="evenodd"
                     stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                     <path
                         d="M15.5 4.8c2 3 1.7 7-1 9.7h0l4.3 4.3-4.3-4.3a7.8 7.8 0 01-9.8 1m-2.2-2.2A7.8 7.8 0 0113.2 2.4M2 18L18 2">
@@ -140,7 +140,7 @@
                             }
                         })
                         .then(response => {
-                            if (response.data.status !== "404") {
+                            if (response.data.code !== 404) {
                                 this.notFound = false
                                 this.resultSearch = response.data.data;
                             } else {

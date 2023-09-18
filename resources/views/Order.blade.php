@@ -41,7 +41,7 @@
         </div>
         @if (!is_null($custom_field))
         <img src="{{ asset('/storage/' . $custom_field->bg_img_on_order_page) }}"
-            class="custom__bg__img w-full md:h-[700px] h-[300px] object-cover bg-no-repeat bg-top z-10 absolute md:top-[119px] top-[85px]"
+            class="custom__bg__img w-full md:h-[700px] h-[300px] object-cover bg-no-repeat bg-top z-10 absolute md:top-[114px] top-[85px]"
             alt="{{ asset('/storage/' . $custom_field->bg_img_on_order_page) }}">
         @else
         <img src="https://source.unsplash.com/random/1920x800"
@@ -138,7 +138,7 @@
                                     <div class="{{ $payment->payment_name }}__payment mb-3" @click.prevent="
                                             paymentSelected = '{{ $payment->payment_name }}'; 
                                             selectedPaymentId = '{{ $payment->id }}'; 
-                                            feeType = '{{ $payment->fee->type_fee }}'; 
+                                            feeType = '{{ $payment->fee ? $payment->fee->type_fee : null }}'; 
                                             fee_flat = '{{ isset($payment->fee->fee_flat) ? $payment->fee->fee_flat : 0 }}'; 
                                             fee_fixed = '{{ isset($payment->fee->fee_fixed) ? $payment->fee->fee_fixed : 0 }}'; 
                                             selectedPayment()">
@@ -210,7 +210,6 @@
                                     </div>
                                 </div>
                                 <div class="btn_checkout md:block hidden mt-5">
-                                    <p x-text="isButtonSubmitDisabled"></p>
                                     <button type="submit" :disabled="isButtonSubmitDisabled"
                                         class="py-3 px-6 rounded-md bg-teal-500 disabled:bg-teal-300 text-white disabled:text-teal-100 cursor-pointer disabled:cursor-not-allowed border-0">
                                         <template x-if="isButtonSubmitDisabled">
@@ -387,12 +386,16 @@
                                     'X-Custom-Token': `${token}`
                                 }
                             }).then(res => {
-                                if (res.status == 201) {
+                                if (res.data.code == 201) {
                                     const invoice = res.data.data.invoice
                                     window.location.replace(`/checkout/${invoice}`)
                                 }
                                 this.isButtonSubmitDisabled = false
                             }).catch(err => {
+                                if (err.response.status == 500) {
+                                    console.log(err.response.data.message)
+                                }
+
                                 if (err.response.status == 422) {
                                     const resErrMess = err.response.data.errors
                                     this.errMess = {

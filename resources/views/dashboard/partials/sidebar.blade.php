@@ -192,6 +192,14 @@
                         </a>
                     </div>
                 </div>
+                <div x-show="open" x-transition.duration.500ms class="mt-2 space-y-2" role="menu" aria-label="Layouts">
+                    <div x-show="open" class="mt-2 space-y-2 px-7" role="menu" arial-label="Components">
+                        <a href="{{ URL('dashboard/settings/payment-gateway') }}" role="menuitem"
+                            class="block p-2 text-sm text-gray-400 transition-colors duration-200 rounded-md dark:text-gray-400 dark:hover:text-light hover:text-gray-700">
+                            Notification
+                        </a>
+                    </div>
+                </div>
             </div>
         </nav>
 

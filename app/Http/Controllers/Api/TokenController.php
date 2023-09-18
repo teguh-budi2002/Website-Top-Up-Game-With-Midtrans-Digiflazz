@@ -10,6 +10,6 @@ class TokenController extends BaseApiController
     public function token() {
         $getToken = $this->getAccessApiToken();
 
-        return $this->success_response('Get Token Successfully', $getToken);
+        return $this->success_response('Get Token Successfully', 200, $getToken);
     }
 }

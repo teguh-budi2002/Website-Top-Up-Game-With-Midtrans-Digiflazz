@@ -7,22 +7,15 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Repositories\Product\ProductRepository;
 
-class ProductController extends Controller
+class ProductController extends BaseApiController
 {
     public function getAllProducts() {
         try {
             $getALlProducts = Product::select("id", "product_name", "img_url", "slug")
-                                        ->get();
-    
-            return response()->json([
-                'message' => 'Get Data is Successfull',
-                'data' => $getALlProducts
-            ], 200);
+                                      ->get();
+       return $this->success_response("Get Data is Successfull", 200, $getALlProducts);
         } catch (\Throwable $th) {
-            return response()->json([
-                'message' => 'Internal Server Error',
-                'error_reason' => $th->getMessage()
-            ], 500);
+            return $this->failed_response("ERROR IN SERVER SIDE!");
         }
     }
 
@@ -36,23 +29,12 @@ class ProductController extends Controller
       try {
         $doSearch = ProductRepository::findResourceWithLiveSearch($search);
         if ($doSearch->isEmpty()) {
-          return response()->json([
-            'id' => 0,
-            'message' => 'Data Not Found',
-            'status' => '404'
-          ]);
+          return $this->failed_response('Data Not Found', 404);
         } else {
-          return response()->json([
-            'message' => 'Data Finding',
-            'data' => $doSearch,
-            'status' => '200'
-          ]);
+          return $this->success_response("Data Found", 200, $doSearch);
         }
       } catch (\Throwable $th) {
-        return response()->json([
-          'message' => 'Error In Server Side',
-          'error' => $th->getMessage()
-        ]);
+        return $this->failed_response("ERROR IN SERVER SIDE!");
       }
     }
   }

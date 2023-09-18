@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PaymentFee;
+use App\Models\PaymentGatewayProvider;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -10,6 +11,15 @@ use App\Repositories\Product\ProductRepository;
 
 class DashboardController extends Controller
 {
+    protected $provider;
+
+    public function __construct()
+    {
+      $this->provider = DB::table('payment_gateway_providers')
+                          ->select("id", "payment_name")
+                          ->where('status', 1)
+                          ->first();
+    }
     public function index() {
       return view('dashboard.views.main');
     }
@@ -43,22 +53,45 @@ class DashboardController extends Controller
     }
 
     public function manage_payment_product() {
-      $getPaymentMethods = DB::table("payment_methods")->select("id", "payment_name", "type_of_payment", "img_static", "is_recommendation")->get();
-      $getProducts = Product::with('paymentMethods')->select("id", "product_name")->paginate(8);
-
-      return view ('dashboard.views.manage_payment_product.main', [
-        'payment_methods' => $getPaymentMethods,
-        'products' => $getProducts
-      ]);
+      $provider = $this->provider; 
+      if (!empty($provider)) {
+        $providerName = $provider->payment_name;
+        $paymentMethods = DB::table("payment_methods")
+                                    ->select("id", "payment_name", "type_of_payment", "img_static", "provider")
+                                    ->where('provider', $provider->payment_name)
+                                    ->groupBy("id", "payment_name", "type_of_payment", "img_static", "provider")
+                                    ->get();
+        $getProducts = Product::with('paymentMethods')->select("id", "product_name")->paginate(8);
+  
+        return view ('dashboard.views.manage_payment_product.main', [
+          'provider_name'   => $providerName,
+          'payment_methods' => $paymentMethods,
+          'products' => $getProducts
+        ]);
+      } else {
+        return view ('dashboard.views.manage_payment_product.main', [
+          'payment_methods' => null
+        ]);
+      }
     }
 
     public function manage_payment_fee() {
-      $getAllPayments = DB::table("payment_methods")->select("id", "payment_name", "img_static")->get();
-      $getPaymentIncludeFees = PaymentFee::with('payment:id,payment_name,img_static')->get();
-      return view('dashboard.views.manage_payment_fee.main', [
-        'payment_methods' => $getAllPayments,
-        'payment_fees' => $getPaymentIncludeFees
-      ]);
+      $provider = $this->provider; 
+      if (!empty($provider)) {
+        $getAllPayments = DB::table("payment_methods")
+                              ->select("id", "payment_name", "img_static")
+                              ->where('provider', $provider->payment_name)
+                              ->get();
+        $getPaymentIncludeFees = PaymentFee::with('payment:id,payment_name,img_static')->get();
+        return view('dashboard.views.manage_payment_fee.main', [
+          'payment_methods' => $getAllPayments,
+          'payment_fees' => $getPaymentIncludeFees
+        ]);
+      } else {
+         return view('dashboard.views.manage_payment_fee.main', [
+          'payment_methods' => null,
+        ]);
+      }
     }
 
     public function manage_discount() {
