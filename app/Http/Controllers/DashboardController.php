@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Notification;
 use App\Models\PaymentFee;
 use App\Models\PaymentGatewayProvider;
 use App\Models\Product;
@@ -142,6 +143,22 @@ class DashboardController extends Controller
       return view('dashboard.views.manage_payment_gateway.main', [
         'payment_gateway' => $paymentGateway,
         'old_payment_gateway' => $oldPg
+      ]);
+    }
+
+    public function manage_notification(Request $request) {
+      $notifications = DB::table('notifications')
+                        ->select("id", "notif_title", "notif_slug", "notif_description", "type_notif", "notif_img")
+                        ->paginate(8);
+                        
+      $oldNotification = DB::table('notifications')
+                            ->select("id", "notif_title", "notif_slug", "notif_description", "type_notif", "notif_img")
+                            ->where('notif_slug', $request->query('notif_slug'))
+                            ->first();
+                            
+      return view("dashboard.views.manage_notification.main", [
+        'notifications' => $notifications,
+        'old_notification' =>  $oldNotification
       ]);
     }
 }

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('product_id')->references('id')->on('products');
             $table->string('invoice');
+            $table->string('trx_id')->unique()->nullable();
             $table->string('email')->nullable();
             $table->string('player_id');
             $table->string("qty");

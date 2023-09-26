@@ -23,14 +23,14 @@ class RefreshAccessToken
         if (!$customToken) {
             $customToken = new CustomAccessApiToken();
             $customToken->token = $this->refreshToken();
-            $customToken->expired_at = now()->addHours(1);
+            $customToken->expired_at = now()->addDays(1);
             $customToken->save();
         } 
 
         $expirationThreshold = now()->addMinutes(5);
         if (!$customToken->expired_at || $customToken->expired_at <= $expirationThreshold) {
             $customToken->token = $this->refreshToken();
-            $customToken->expired_at = now()->addHours(1);
+            $customToken->expired_at = now()->addDays(1);
             $customToken->save();
         }
 

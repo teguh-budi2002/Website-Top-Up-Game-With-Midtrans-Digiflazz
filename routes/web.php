@@ -9,6 +9,7 @@ use App\Http\Controllers\Dashboard\PaymentController;
 use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\DiscountProductController;
 use App\Http\Controllers\FlashSaleController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaymentFeeController;
 use App\Http\Controllers\PaymentGatewayProviderController;
 use App\Http\Controllers\SEOController;
@@ -93,5 +94,8 @@ Route::prefix('dashboard')->group(function () {
     Route::post('/payment-gateway/add-or-update-pg', [PaymentGatewayProviderController::class, 'addOrUpdatePG']);
     Route::post('/payment-gateway/activated-pg/{id}', [PaymentGatewayProviderController::class, 'activatedPG']);
     Route::post('/payment-gateway/deactive-pg/{id}', [PaymentGatewayProviderController::class, 'deactivePG']);
+
+    Route::get('notifications', [DashboardController::class, 'manage_notification']);
+    Route::post('/notifications/add-or-update-notif', [NotificationController::class, 'addOrUpdateNotif']);
   });
 });

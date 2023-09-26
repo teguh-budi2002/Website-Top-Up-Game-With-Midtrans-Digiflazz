@@ -40,19 +40,19 @@
                         </svg>
                     </span>
                 </a>
-                <div x-show="open" class="mt-2 space-y-2 px-7" role="menu" arial-label="Components">
+                <div x-show="open" class="mt-2 ml-2 space-y-2 px-7" role="menu" arial-label="Components">
                     <a href="{{ URL('dashboard/website/order-page/setting') }}" role="menuitem"
                         class="block p-2 text-sm text-gray-400 transition-colors duration-200 rounded-md dark:text-gray-400 dark:hover:text-light hover:text-gray-700">
                         Order Pages
                     </a>
                 </div>
-                <div x-show="open" class="mt-2 space-y-2 px-7" role="menu" arial-label="Components">
+                <div x-show="open" class="mt-2 ml-2 space-y-2 px-7" role="menu" arial-label="Components">
                     <a href="{{ URL('dashboard/layout/banner') }}" role="menuitem"
                         class="block p-2 text-sm text-gray-400 transition-colors duration-200 rounded-md dark:text-gray-400 dark:hover:text-light hover:text-gray-700">
                         Slideshow
                     </a>
                 </div>
-                <div x-show="open" class="mt-2 space-y-2 px-7" role="menu" arial-label="Components">
+                <div x-show="open" class="mt-2 ml-2 space-y-2 px-7" role="menu" arial-label="Components">
                     <a href="{{ URL('dashboard/layout/nav') }}" role="menuitem"
                         class="block p-2 text-sm text-gray-400 transition-colors duration-200 rounded-md dark:text-gray-400 dark:hover:text-light hover:text-gray-700">
                         Navigation
@@ -83,25 +83,25 @@
                         </svg>
                     </span>
                 </a>
-                <div x-show="open" class="mt-2 space-y-2 px-7" role="menu" arial-label="Pages">
+                <div x-show="open" class="mt-2 ml-2 space-y-2 px-7" role="menu" arial-label="Pages">
                     <a href="{{ URL('dashboard/products') }}" role="menuitem"
                         class="block p-2 text-sm text-gray-400 transition-colors duration-200 rounded-md dark:text-gray-400 dark:hover:text-light hover:text-gray-700">
                         Manage Products
                     </a>
                 </div>
-                <div x-show="open" class="mt-2 space-y-2 px-7" role="menu" arial-label="Pages">
+                <div x-show="open" class="mt-2 ml-2 space-y-2 px-7" role="menu" arial-label="Pages">
                     <a href="{{ URL('dashboard/payment-product') }}" role="menuitem"
                         class="block p-2 text-sm text-gray-400 transition-colors duration-200 rounded-md dark:text-gray-400 dark:hover:text-light hover:text-gray-700">
                         Manage Payment Products
                     </a>
                 </div>
-                <div x-show="open" class="mt-2 space-y-2 px-7" role="menu" arial-label="Pages">
+                <div x-show="open" class="mt-2 ml-2 space-y-2 px-7" role="menu" arial-label="Pages">
                     <a href="{{ URL('dashboard/payment-fee') }}" role="menuitem"
                         class="block p-2 text-sm text-gray-400 transition-colors duration-200 rounded-md dark:text-gray-400 dark:hover:text-light hover:text-gray-700">
                         Payment Fee
                     </a>
                 </div>
-                <div x-show="open" class="mt-2 space-y-2 px-7" role="menu" arial-label="Pages">
+                <div x-show="open" class="mt-2 ml-2 space-y-2 px-7" role="menu" arial-label="Pages">
                     <a href="{{ URL('dashboard/discount') }}" role="menuitem"
                         class="block p-2 text-sm text-gray-400 transition-colors duration-200 rounded-md dark:text-gray-400 dark:hover:text-light hover:text-gray-700">
                         Manage Discount
@@ -176,7 +176,7 @@
                         </svg>
                     </span>
                 </a>
-                <div x-show="open" x-transition.duration.500ms class="mt-2 space-y-2" role="menu" aria-label="Layouts">
+                <div x-show="open" x-transition.duration.500ms class="mt-2 ml-2 space-y-2" role="menu" aria-label="Layouts">
                     <div x-show="open" class="mt-2 space-y-2 px-7" role="menu" arial-label="Components">
                         <a href="{{ URL('dashboard/settings/seo') }}" role="menuitem"
                             class="block p-2 text-sm text-gray-400 transition-colors duration-200 rounded-md dark:text-gray-400 dark:hover:text-light hover:text-gray-700">
@@ -184,7 +184,7 @@
                         </a>
                     </div>
                 </div>
-                <div x-show="open" x-transition.duration.500ms class="mt-2 space-y-2" role="menu" aria-label="Layouts">
+                <div x-show="open" x-transition.duration.500ms class="mt-2 ml-2 space-y-2" role="menu" aria-label="Layouts">
                     <div x-show="open" class="mt-2 space-y-2 px-7" role="menu" arial-label="Components">
                         <a href="{{ URL('dashboard/settings/payment-gateway') }}" role="menuitem"
                             class="block p-2 text-sm text-gray-400 transition-colors duration-200 rounded-md dark:text-gray-400 dark:hover:text-light hover:text-gray-700">
@@ -192,9 +192,9 @@
                         </a>
                     </div>
                 </div>
-                <div x-show="open" x-transition.duration.500ms class="mt-2 space-y-2" role="menu" aria-label="Layouts">
+                <div x-show="open" x-transition.duration.500ms class="mt-2 ml-2 space-y-2" role="menu" aria-label="Layouts">
                     <div x-show="open" class="mt-2 space-y-2 px-7" role="menu" arial-label="Components">
-                        <a href="{{ URL('dashboard/settings/payment-gateway') }}" role="menuitem"
+                        <a href="{{ URL('dashboard/settings/notifications') }}" role="menuitem"
                             class="block p-2 text-sm text-gray-400 transition-colors duration-200 rounded-md dark:text-gray-400 dark:hover:text-light hover:text-gray-700">
                             Notification
                         </a>

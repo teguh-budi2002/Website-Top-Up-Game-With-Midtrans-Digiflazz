@@ -387,7 +387,7 @@
                                 }
                             }).then(res => {
                                 if (res.data.code == 201) {
-                                    const invoice = res.data.data.invoice
+                                    const invoice = res.data.data
                                     window.location.replace(`/checkout/${invoice}`)
                                 }
                                 this.isButtonSubmitDisabled = false

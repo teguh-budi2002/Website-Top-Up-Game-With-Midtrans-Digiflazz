@@ -18,9 +18,9 @@ class MidtransServices extends PaymentGateway
 
   public static function init() {
       if (config('midtrans.isProd') === 'production') {
-        self::$endpoint = 'https://api.midtrans.com/v2/charge';
+        self::$endpoint = 'https://api.midtrans.com/v2';
       }
-      self::$endpoint = "https://api.sandbox.midtrans.com/v2/charge";
+      self::$endpoint = "https://api.sandbox.midtrans.com/v2";
   }
 
   public function chargeOrder($order) {
@@ -38,7 +38,7 @@ class MidtransServices extends PaymentGateway
           'curl' => [CURLOPT_SSL_VERIFYPEER => false]
         ]);
   
-        $response = $client->post(self::$endpoint, [
+        $response = $client->post(self::$endpoint . "/charge", [
           'headers' => $headers,
           'json'    => $transaction_detail
         ]);
@@ -46,16 +46,42 @@ class MidtransServices extends PaymentGateway
         $responseBody = $response->getBody();
         $decodeResponse = json_decode($responseBody, true);
        
-        return dd($decodeResponse);
+        return $decodeResponse;
       } else {
         throw new \RuntimeException('Payment Gateway Provider Not Found');
+      }
+  }
+
+  public function getStatusOrder($trx_id) {
+     if ($this->provider) {
+        $server_key = base64_encode($this->provider->server_key);
+        $headers = [
+          'Authorization' => "Basic " . $server_key,
+          'Accept' => 'application/json',
+          'Content-Type' => 'application/json'
+        ];
+        
+        $client = new Client([
+          'curl' => [CURLOPT_SSL_VERIFYPEER => false]
+        ]);
+  
+        $response = $client->get(self::$endpoint . "/" . $trx_id ."/status", [
+          'headers' => $headers,
+        ]);
+  
+        $responseBody = $response->getBody();
+        $decodeResponse = json_decode($responseBody, true);
+       
+        return $decodeResponse;
+      } else {
+        throw new \RuntimeException('Order Not Found');
       }
   }
 
   private static function adjustTransactionDetail($order) {
       $transaction_detail = [
             'transaction_details' => [
-                "order_id" => "ORDER-" . $order->id . "-" . Carbon::now()->timestamp,
+                "order_id" => $order->trx_id,
                 "gross_amount" => $order->total_amount
             ],
             'item_details' => [
@@ -73,7 +99,7 @@ class MidtransServices extends PaymentGateway
             ],
             'custom_expiry' =>  [
                 'order_time' => $order->created_at->format('Y-m-d H:i:s O'),
-                'expiry_duration' => '60',
+                'expiry_duration' => 60,
                 'unit' => 'minute'
             ],
         ];
@@ -84,10 +110,12 @@ class MidtransServices extends PaymentGateway
 
       if (isset($order->payment) && $order->payment->type_of_payment === 'E-Wallet') {
         $transaction_detail['payment_type'] = $order->payment->payment_name;
-        $transaction_detail[$order->payment->payment_name] = [
-              'enable_callback' => $order->payment->callback_url ? true : false , // True Or False depends on callback URL null or not,
-              'callback_url' => $order->payment->callback_url
-        ];
+        if ($order->payment->payment_name !== 'qris') {
+          $transaction_detail[$order->payment->payment_name] = [
+                'enable_callback' => $order->payment->callback_url ? true : false , // True Or False depends on callback URL null or not,
+                'callback_url' => $order->payment->callback_url
+          ];
+        }
       }
 
       if (isset($order->payment) && $order->payment->type_of_payment === 'Bank Transfer') {

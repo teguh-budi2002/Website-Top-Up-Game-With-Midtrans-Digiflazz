@@ -9,6 +9,7 @@ use Carbon\Carbon;
 abstract class PaymentGateway {
   abstract public static function init();
   abstract public function chargeOrder($dataOrder);
+  abstract public function getStatusOrder($trxId);
 
   protected static function createInvoice() {
     $randomStr = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -23,7 +24,7 @@ abstract class PaymentGateway {
       'product_id' => $data['product_id'],
       'payment_id' => $data['payment_id'],
       'player_id' => $data['player_id'],
-      'invoice' => $invoice,  // Hardcode
+      'invoice' => $invoice, 
       'email' => $data['email'],
       'qty' => $data['qty'],
       'price' => (int) $data['price'],

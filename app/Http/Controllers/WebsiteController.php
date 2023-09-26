@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CustomField;
+use App\Rules\ImageRule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,11 +16,10 @@ class WebsiteController extends Controller
         $path = "";
         $filename = "";
         $request->validate([
-            'bg_img_on_order_page' => 'image|mimes:png,jpg,webp|max:2048'
+            'bg_img_on_order_page' => ['image', 'max:2048', new ImageRule]
         ],[
 						'bg_img_on_order_page.uploaded' => 'Maximum image size allowed is 2MB',
 						'bg_img_on_order_page.image'    => 'The Uploaded File Must be an Image.',
-						'bg_img_on_order_page.mimes'    => 'Allowed Extension For Image (png, jpg, webp)',
 				]);
 
         if ($img) {

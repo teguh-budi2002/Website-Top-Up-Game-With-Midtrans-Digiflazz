@@ -33,7 +33,7 @@ Route::middleware(['api.refresh_token', 'api.security'])->group(function() {
 
     Route::prefix('order')->group(function() {
         Route::post('{order}', [OrderController::class, 'createOrder']);  
-        Route::post('/purchase/{id}', [OrderController::class, 'purchaseOrder'])->withoutMiddleware('api.security');  
+        Route::get('/purchase/status/{trx_id}', [OrderController::class, 'statusOrder'])->withoutMiddleware('api.security');  
     });
     Route::prefix('layout')->group(function() {
         Route::get('banner',[LayoutController::class, 'getBannerLayout']);

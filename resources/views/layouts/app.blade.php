@@ -37,10 +37,12 @@
 </head>
 
 <body>
+    @if (!Request::is('checkout/*'))
     <div x-data="{ loading: true }" x-show="loading"
         class="loading fixed inset-0 z-[99999] flex items-center justify-center bg-primary-slate-light">
         <div class="custom_loader"></div>
-    </div>
+    </div>      
+    @endif
 
     <div class="min-h-max max-w-full">
         @include('layouts.navigation')
@@ -63,7 +65,7 @@
         window.addEventListener('load', function () {
             setTimeout(() => {
                 const loader = document.querySelector('.loading');
-                loader.classList.add('hidden');
+                loader ? loader.classList.add('hidden') : null;
             }, 500);
         });
 

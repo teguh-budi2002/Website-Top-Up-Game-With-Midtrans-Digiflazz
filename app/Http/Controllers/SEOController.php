@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\SEO;
+use App\Rules\ImageRule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -15,8 +16,8 @@ class SEOController extends Controller
       'name_of_the_company'   => 'required',
       'keyword'               => 'required',
       'description'           => 'required',
-      'logo_favicon'          => 'image|mimes:png,webp|max:2048',
-      'logo_website'          => 'image|mimes:png,webp|max:2048',
+      'logo_favicon'          => ['image', 'max:2048', new ImageRule],
+      'logo_website'          => ['image', 'max:2048', new ImageRule],
     ], [
       'name_of_the_company.required'  => 'Name The Company Cannot Be Null',
       'keyword.required'              => 'Keyword Cannot Be Null',
@@ -24,7 +25,6 @@ class SEOController extends Controller
       'logo_favicon.uploaded'         => 'Maximum image size allowed is 2MB',
       'logo_favicon.mimes'            => 'Allowed Extension For Image (png, webp)',
       'logo_website.uploaded'         => 'Maximum image size allowed is 2MB',
-      'logo_website.mimes'            => 'Allowed Extension For Image (png, webp)',
     ]);
 
     DB::beginTransaction();

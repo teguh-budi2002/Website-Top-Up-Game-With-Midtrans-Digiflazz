@@ -7,6 +7,7 @@ use App\Models\NavLayout;
 use App\Models\CustomField;
 use App\Models\DiscountProduct;
 use App\Models\FlashSale;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use App\Repositories\Product\ProductRepository;
@@ -56,10 +57,14 @@ class HomeController extends Controller
   }
 
   public function checkoutProduct($invoice) {
-    $getDetailOrder = Order::with(['product:id,product_name', 'payment:id,img_static'])->whereInvoice($invoice)->first();
-    if (is_null($getDetailOrder)) {
-      return redirect('/')->with('order-invalid', 'Checkout Pada Order Invalid.');
+    $detailOrder = Order::with(['product:id,product_name', 'payment:id,img_static'])->whereInvoice($invoice)->first();
+    if (is_null($detailOrder)) {
+      return redirect('/')->with('order-invalid', 'Order Tidak Ditemukan.');
     }
-    return view('Checkout', ['detail_order' => $getDetailOrder]);
+    $detailTrx   = Transaction::select("id", "transaction_time", "transaction_expired", "qr_code_url")->where('trx_id', $detailOrder->trx_id)->first();
+    return view('Checkout', [
+      'detail_order'  => $detailOrder,
+      'detail_trx'    => $detailTrx
+    ]);
   }
 }
