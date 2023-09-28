@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Repositories\Product\ProductRepository;
 
-class ProductController extends BaseApiController
+class ProductApiController extends BaseApiController
 {
     public function getAllProducts() {
         try {

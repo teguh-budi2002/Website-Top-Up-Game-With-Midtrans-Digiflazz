@@ -14,9 +14,11 @@ class ImageRule implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $extension = $value->getClientOriginalExtension();
-          if (!in_array($extension, ['webp', 'png'])) {
-            $fail('Allowed Extension For Image (png, webp)');
-        } 
+        if(!is_null($value)) {
+            $extension = $value->getClientOriginalExtension();
+              if (!in_array($extension, ['webp', 'png'])) {
+                $fail('Allowed Extension For Image (png, webp)');
+            } 
+        }
     }
 }

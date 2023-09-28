@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string("notif_slug")->unique();
             $table->longText("notif_description");
             $table->string("type_notif", 8);
-            $table->string("notif_img");
+            $table->string("notif_img")->nullable();
             $table->timestamps();
         });
     }

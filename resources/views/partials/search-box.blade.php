@@ -192,10 +192,6 @@
                 this.recentSearch = storedSearches ? JSON.parse(storedSearches) : [];
             },
 
-            updateRecentSearches() {
-                localStorage.setItem('__SEARCH__', JSON.stringify(this.recentSearch));
-            },
-
             deleteRecentSearch(id) {
                 let recentSearchStorage = JSON.parse(localStorage.getItem('__SEARCH__')) || []
                 let recentSearchID = id

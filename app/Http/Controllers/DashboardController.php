@@ -149,7 +149,7 @@ class DashboardController extends Controller
     public function manage_notification(Request $request) {
       $notifications = DB::table('notifications')
                         ->select("id", "notif_title", "notif_slug", "notif_description", "type_notif", "notif_img")
-                        ->paginate(8);
+                        ->paginate(5);
                         
       $oldNotification = DB::table('notifications')
                             ->select("id", "notif_title", "notif_slug", "notif_description", "type_notif", "notif_img")

@@ -1,10 +1,11 @@
 <?php
 
 use App\Http\Controllers\Api\ItemApiController;
+use App\Http\Controllers\Api\NotificationApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\OrderController;
-use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\OrderApiController;
+use App\Http\Controllers\Api\ProductApiController;
 use App\Http\Controllers\Api\TokenController;
 use App\Http\Controllers\Layout\LayoutController;
 
@@ -26,14 +27,18 @@ Route::get('get-token', [TokenController::class, 'token'])->withoutMiddleware('a
 
 Route::middleware(['api.refresh_token', 'api.security'])->group(function() {
     // Finding Data Resource
-    Route::get('find-product-with-livesearch', [ProductController::class, 'liveSearchData']);
-    Route::get('get-products', [ProductController::class, 'getAllProducts']);
+    Route::get('find-product-with-livesearch', [ProductApiController::class, 'liveSearchData']);
+    Route::get('get-products', [ProductApiController::class, 'getAllProducts']);
     
     Route::post('get-items-by-product', [ItemApiController::class, 'getItemsByProductId']);
 
+    Route::prefix('notifications')->group(function() {
+        Route::get('get-notifications', [NotificationApiController::class, 'getAllNotifications']);
+    });
+
     Route::prefix('order')->group(function() {
-        Route::post('{order}', [OrderController::class, 'createOrder']);  
-        Route::get('/purchase/status/{trx_id}', [OrderController::class, 'statusOrder'])->withoutMiddleware('api.security');  
+        Route::post('{order}', [OrderApiController::class, 'createOrder']);  
+        Route::get('/purchase/status/{trx_id}', [OrderApiController::class, 'statusOrder'])->withoutMiddleware('api.security');  
     });
     Route::prefix('layout')->group(function() {
         Route::get('banner',[LayoutController::class, 'getBannerLayout']);

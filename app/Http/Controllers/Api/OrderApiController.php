@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Order;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreOrderRequest;
@@ -13,9 +11,8 @@ use App\Services\PaymentGateway\Midtrans\MidtransServices;
 use App\Services\PaymentGateway\Tripay\TripayServices;
 use App\Services\PaymentGateway\Xendit\XenditServices;
 use Carbon\Carbon;
-use GuzzleHttp\Client;
 
-class OrderController extends BaseApiController
+class OrderApiController extends BaseApiController
 {
   protected $services;
 

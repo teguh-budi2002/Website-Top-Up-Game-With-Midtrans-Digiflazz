@@ -34,6 +34,7 @@
             scrollbar-width: none;  /* Firefox */
         } 
     </style>
+    @stack('css-custom')
 </head>
 
 <body>

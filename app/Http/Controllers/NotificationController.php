@@ -26,12 +26,10 @@ class NotificationController extends Controller
     try {
         $file = $request->file('notif_img');
         $filename = null;
-        $oldFile = $request->file('old_notif_img');
-        $extension = $file->getClientOriginalExtension();
-      
-        
+        $oldFile = $request->old_notif_img;
+
         if ($file) {
-          $filename = $file->getClientOriginalName();
+            $filename = $file->getClientOriginalName();
             $path = "page/notification/";				
             $this->deleteOldImage($request->notif_slug);
 

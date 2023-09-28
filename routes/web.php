@@ -4,9 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Layout\LayoutController;
-use App\Http\Controllers\Dashboard\ItemController;
-use App\Http\Controllers\Dashboard\PaymentController;
-use App\Http\Controllers\Dashboard\ProductController;
+use App\Http\Controllers\ItemController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\DiscountProductController;
 use App\Http\Controllers\FlashSaleController;
 use App\Http\Controllers\NotificationController;
@@ -14,7 +14,6 @@ use App\Http\Controllers\PaymentFeeController;
 use App\Http\Controllers\PaymentGatewayProviderController;
 use App\Http\Controllers\SEOController;
 use App\Http\Controllers\WebsiteController;
-use App\Models\FlashSale;
 
 /*
 |--------------------------------------------------------------------------

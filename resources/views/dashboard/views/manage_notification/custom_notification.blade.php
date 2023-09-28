@@ -44,10 +44,10 @@
                     @endif
                 </div>
             </label>
-            <input type="hidden" name="old_notif_img" value="{{ $old_notification->notif_img ?? null }}">
             <input class="w-96 cursor-pointer mt-3 focus:outline-0" type="file" name="notif_img" id="notif_img"
-                @change="fileChosen">
+            @change="fileChosen">
         </div>
+        <input type="hidden" name="old_notif_img" value="{{ $old_notification->notif_img }}">
         <input type="hidden" value="{{ $old_notification->notif_slug }}" name="notif_slug">
         <div class="btn_submit">
             <button class="p-2 w-52 rounded bg-primary text-white mt-5 uppercase">save</button>

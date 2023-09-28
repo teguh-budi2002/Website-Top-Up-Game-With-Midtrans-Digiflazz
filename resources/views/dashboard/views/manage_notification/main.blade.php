@@ -31,9 +31,9 @@ Manage Notification
                       <a href="?notif_slug={{ $notif->notif_slug }}" class="w-full flex justify-between items-center space-x-6 mt-2 p-4 mb-2 no-underline rounded bg-primary-100 hover:bg-primary group">
                           <div>
                               <img src="{{ asset('/storage/page/notification/' . $notif->notif_img) }}"
-                                  class="w-96 h-auto rounded" alt="">
+                                  class="w-28 h-auto object-cover rounded-sm" alt="">
                           </div>
-                          <div class="space-y-1.5">
+                          <div class="space-y-1.5 flex-1">
                               <p class="uppercase text-slate-800 group-hover:text-teal-300 font-extrabold">{{ $notif->notif_title }}</p>
                               <p class="notif_desc text-xs text-slate-400 group-hover:text-teal-300">{{ Illuminate\Support\Str::limit($notif->notif_description, 300, '....') }}</p>
                           </div>
