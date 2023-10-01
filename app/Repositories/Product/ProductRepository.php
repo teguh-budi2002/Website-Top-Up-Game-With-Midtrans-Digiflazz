@@ -14,7 +14,9 @@ class ProductRepository implements ProductRepositoryInterface
 
   public static function getProductForOrder($slug) {
     $product = Product::select("id", "slug", "product_name", "img_url")
-                        ->with("items:id,product_id,item_name,nominal,price", "paymentMethods:id,payment_name,img_static,is_recommendation", 'paymentMethods.fee')
+                        ->with(["items:id,product_id,item_name,nominal,price", "paymentMethods:id,payment_name,img_static,is_recommendation", 'paymentMethods.fee', 'items.discount' => function($q) {
+                          $q->where('status_discount', 1);
+                        }])
                         ->whereSlug($slug)
                         ->first();
     return $product;
@@ -37,6 +39,7 @@ class ProductRepository implements ProductRepositoryInterface
   {
     $data_searching = Product::select("id", "product_name", 'slug')
       ->where('product_name', 'LIKE', '%' . $req_search . '%')
+      ->where("published", 1)
       ->get();
     return $data_searching;
   }

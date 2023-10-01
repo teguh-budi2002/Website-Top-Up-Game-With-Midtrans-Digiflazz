@@ -62,7 +62,7 @@ class DashboardController extends Controller
                                     ->where('provider', $provider->payment_name)
                                     ->groupBy("id", "payment_name", "type_of_payment", "img_static", "provider")
                                     ->get();
-        $getProducts = Product::with('paymentMethods')->select("id", "product_name")->paginate(8);
+        $getProducts = Product::with('paymentMethods')->select("id", "product_name", "published")->paginate(8);
   
         return view ('dashboard.views.manage_payment_product.main', [
           'provider_name'   => $providerName,

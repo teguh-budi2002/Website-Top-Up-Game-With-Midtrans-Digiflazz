@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\DiscountProduct;
+use App\Models\FlashsaleDiscountItem;
 use Illuminate\Support\Facades\DB;
 
 class DiscountProductController extends Controller
@@ -57,9 +58,18 @@ class DiscountProductController extends Controller
     }
 
     public function deactiveDiscount($item_id) {
+        if (FlashsaleDiscountItem::whereItemId($item_id)->count()) {
+            return redirect('dashboard/list-discount')->with('flashsale-failed', 'Failed to deactivate item, item is currently listed on FLASHSALE');
+        }
         $filterByItemId = DiscountProduct::whereItemId($item_id)->first();
         $deactiveFlashSale = $filterByItemId->update(['status_discount' => 0]);
 
         return redirect('dashboard/list-discount')->with('flashsale-failed', 'Item Discount has been deactivated');
+    }
+
+    public function deleteDiscount($item_id) {
+        $discountDeleted = DiscountProduct::whereId($item_id)->delete();
+
+        return redirect('dashboard/list-discount')->with('flashsale-failed', 'Item Discount has been deleted');
     }
 }

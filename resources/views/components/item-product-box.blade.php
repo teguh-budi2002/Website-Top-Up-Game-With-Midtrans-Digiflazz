@@ -19,7 +19,7 @@
       </template>
     </div>
   </template>
-  <template x-if="products.length == 0 && isLoading == false">
+  <template x-if="products.length == 0 && !isLoading">
     <div class="w-full h-auto p-2 border border-solid mb-10 border-slate-400 bg-white/20">
       <p class="text-red-400 text-2xl text-center">Produk Masih Belum Di Buat Oleh Pihak Toko.</p>
     </div>
@@ -50,9 +50,12 @@
           .then(res => {
             const dataProducts = res.data.data
             this.products.push(...dataProducts)
+            this.isLoading = false
+          }).catch(err => {
+            this.isLoading = false
+            console.log("ERROR SERVERSIDE: ".err.response)
           })
         })
-        this.isLoading = false
       },
     }
   }

@@ -54,19 +54,19 @@ class OrderApiController extends BaseApiController
           $chargeOrder = $this->services->chargeOrder($orderCheckout);
 
           $saveToTrx = Transaction::create([
-            'trx_id'              => $chargeOrder['order_id'],
+            'trx_id'              =>  $chargeOrder['order_id'],
             'payment_type_trx'    =>  $chargeOrder['payment_type'],
             'transaction_time'    =>  $chargeOrder['transaction_time'],
             'transaction_expired' =>  $chargeOrder['expiry_time'],
             'transaction_status'  =>  $chargeOrder['transaction_status'],
-            // 'gross_amout'         =>  $chargeOrder['gross_amount'],
+            'gross_amount'         =>  $chargeOrder['gross_amount'],
             'qr_code_url'         =>  $chargeOrder['actions'][0]['url'] 
           ]);
           DB::commit();
           return $this->success_response('Checkout Berhasil Ditambahkan, Silahkan Lakukan Pembayaran.', 201, $orderCheckout->invoice);
         } catch (\Exception $e) {
           DB::rollback();
-          return $this->failed_response('Checkout Gagal. Maaf Kesalahan Di Sisi Server.');
+          return $this->failed_response('Checkout Gagal. Maaf Kesalahan Di Sisi Server.' . $e->getMessage());
         }
     }
 

@@ -12,6 +12,7 @@ class ProductApiController extends BaseApiController
     public function getAllProducts() {
         try {
             $getALlProducts = Product::select("id", "product_name", "img_url", "slug")
+                                      ->where("published", 1)
                                       ->get();
        return $this->success_response("Get Data is Successfull", 200, $getALlProducts);
         } catch (\Throwable $th) {

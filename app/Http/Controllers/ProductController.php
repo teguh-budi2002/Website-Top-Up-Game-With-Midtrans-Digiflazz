@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreProductRequest;
+use App\Models\Item;
+use App\Models\PaymentFee;
+use App\Models\PaymentGatewayProvider;
+use App\Models\ProductPaymentMethod;
 
 class ProductController extends Controller
 {
@@ -80,7 +84,7 @@ class ProductController extends Controller
         if (!$validation) {
           return redirect()->back()->withErrors($validation);
         }
-        Product::update($validation);
+        Product::whereId($id)->update($validation);
         return redirect('some-view')->with('update_success', 'Product Updated Successfully');
     }
 
@@ -100,6 +104,39 @@ class ProductController extends Controller
       $selectedProductRecords =  $request->productIds;
       $isDelete = Product::whereIn('id', $selectedProductRecords)->delete();
       return response()->json(['message' => 'Product Deleted Successfully'], 200);
+    }
+
+    public function publishProduct($product_id) {
+        if (PaymentGatewayProvider::where('status', 1)->count() === 0) {
+            return redirect()->back()->with('product-failed', 'Please set up and activated a payment gateway provider before publishing the product');
+        }
+
+        if (ProductPaymentMethod::whereProductId($product_id)->count() === 0) {
+            return redirect()->back()->with('product-failed', 'Please set up payment support for the product before the product is published');
+        }
+
+        if (PaymentFee::count() === 0) {
+            return redirect()->back()->with('product-failed', 'Please set the payment fee for the support payment method before publishing the product.');
+        }
+
+        if (Item::whereProductId($product_id)->count() === 0) {
+            return redirect()->back()->with('product-failed', 'Please create at least 1 item for the product before the product is published.');
+        }
+
+        Product::whereId($product_id)->update([
+            'published' => 1
+        ]);
+
+        return redirect()->back()->with('update_success', 'Product Has Been Published');
+    }
+
+    public function unpublishProduct($product_id) {
+        $productUnpublished = Product::whereId($product_id)->update([
+            'published' => 0
+        ]);
+        $product = Product::select("product_name")->whereId($product_id)->first();
+
+        return redirect()->back()->with('product-failed', 'Product ' . ucwords($product->product_name) . ' Successfully Unpublished');
     }
 
 }

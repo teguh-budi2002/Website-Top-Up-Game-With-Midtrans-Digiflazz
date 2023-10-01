@@ -19,7 +19,7 @@
             @include('partials.search-box')
     
             <div class="right_menu">
-                <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-3 mt-2">
                     <x-bell-notification />
                 </div>
             </div>

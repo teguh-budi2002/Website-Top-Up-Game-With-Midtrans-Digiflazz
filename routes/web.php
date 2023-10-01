@@ -29,6 +29,7 @@ use App\Http\Controllers\WebsiteController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('order/{slug}', [HomeController::class, 'orderProduct'])->name('order');
 Route::get('checkout/{invoice}', [HomeController::class, 'checkoutProduct'])->name('checkout');
+Route::get('notifikasi/{slug}', [NotificationController::class, 'displayNotif'])->name('notification');
 
 Route::prefix('dashboard')->group(function () {
   Route::get('/', [DashboardController::class, 'index']);
@@ -41,9 +42,12 @@ Route::prefix('dashboard')->group(function () {
 
   // Custom Order Page
   Route::post('order-page/setting', [WebsiteController::class, 'settingCustomOrderPage']);
+
   //Product
   Route::resource('product', ProductController::class);
   Route::delete('delete-checked-products', [ProductController::class, 'deleteManyResource']);
+  Route::patch('published-product/{product_id}', [ProductController::class, 'publishProduct']);
+  Route::patch('unpublished-product/{product_id}', [ProductController::class, 'unpublishProduct']);
 
   // Item
   Route::post('/item/store', [ItemController::class, 'storeItem']);
@@ -60,6 +64,7 @@ Route::prefix('dashboard')->group(function () {
   Route::post('/add-discount-to-product', [DiscountProductController::class, 'addDiscountIntoItemProduct']);
   Route::patch('/activate-discount/{item_id}', [DiscountProductController::class, 'activatedDiscount']);
   Route::patch('/deactive-discount/{item_id}', [DiscountProductController::class, 'deactiveDiscount']);
+  Route::delete('/delete-discount/{item_id}', [DiscountProductController::class, 'deleteDiscount']);
   
   //  FlashSale
   Route::post('/add-flash-sale', [FlashSaleController::class, 'handleFlashSale']);

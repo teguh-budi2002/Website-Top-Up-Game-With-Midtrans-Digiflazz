@@ -4,7 +4,7 @@
     x-transition:leave-start="opacity-100 transform translate-y-0"
     x-transition:leave-end="opacity-0 transform -translate-y-4"
     class="fixed h-full w-full overflow-y-auto bg-gray-600 bg-opacity-50 md:inset-0 top-0 left-0">
-    <div class="bg-primary-slate relative md:top-28 top-28 mx-auto md:w-4/12 w-10/12 cursor-pointer rounded-t-md p-5">
+    <div class="bg-primary-slate relative md:top-28 top-28 mx-auto md:w-4/12 w-10/12 cursor-pointer rounded-t-md p-5" @click.window.prevent.away="isOpen = false">
         <div class="md:mt-3 md-0 text-center">
             {{ $slot }}
         </div>

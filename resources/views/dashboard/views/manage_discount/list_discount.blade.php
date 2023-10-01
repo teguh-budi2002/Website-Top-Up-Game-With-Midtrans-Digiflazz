@@ -284,11 +284,11 @@ List Discount Product
                                             Delete Discount
                                         </x-slot:modalHeader>
                                         <x-slot:inputBox>
-                                          @method('PATCH')
-                                            <div class="">
-                                              <p>Are You Sure Want Delete Discount For Items </p>
-                                              <p class="text-rose-400 text-xl mt-1">{{ $item_discount->nominal }} - {{ $item_discount->item_name }}</p>
-                                            </div>
+                                        @method('DELETE')
+                                        <div class="">
+                                            <p>Are You Sure Want Delete Discount For Items </p>
+                                            <p class="text-rose-400 text-xl mt-1">{{ $item_discount->nominal }} - {{ $item_discount->item_name }}</p>
+                                        </div>
                                         </x-slot:inputBox>
                                     </x-dashboard.form-modal>
                                 </div>

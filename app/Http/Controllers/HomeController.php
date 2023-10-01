@@ -23,7 +23,7 @@ class HomeController extends Controller
 
   public function index()
   {
-    $flashsales = Cache::remember('flashsale', 30, function () {
+    $flashsales = Cache::remember('flashsale', 60, function () {
       return DB::table('flash_sales')
                 ->select('flash_sales.id', 'flash_sales.start_time', 'flash_sales.end_time', 'flash_sales.is_flash_sale',
                         'discount_products.id as discount_product_id', 'discount_products.discount_fixed', 'discount_products.discount_flat', 'discount_products.type_discount', 'discount_products.price_after_discount', 

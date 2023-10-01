@@ -79,6 +79,9 @@
                             <div class="font-semibold text-center">Payment Method</div>
                         </th>
                         <th class="p-2">
+                            <div class="font-semibold text-center">Published</div>
+                        </th>
+                        <th class="p-2">
                             <div class="font-semibold text-left">Created At</div>
                         </th>
                         <th class="p-2">
@@ -174,22 +177,24 @@
                             </x-dashboard.info-modal>
                         </td>
                         <td class="p-2">
+                            <div class="text-center">
+                                <button class="py-1 px-6 rounded {{ $product->published ? 'bg-green-500' : 'bg-rose-500' }} font-medium text-white">{{ $product->published ? 'PUBLISHED' : 'UNPUBLISHED' }}</button>
+                            </div>
+                        </td>
+                        <td class="p-2">
                             <div class="text-left font-medium text-green-500">
                                 {{ DateFormat($product->created_at, 'd-F-Y') }}
                             </div>
                         </td>
                         <td class="p-2">
-                            <div class="flex justify-center">
+                            <div class="flex justify-center items-center space-x-2">
                                 <button data-popover-target="popover-add-items"
                                     data-modal-target="add_item_on_product{{ $product->id }}"
                                     data-modal-toggle="add_item_on_product{{ $product->id }}"
                                     data-popover-placement="bottom" type="button">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor"
-                                        class="w-8 h-8 hover:text-blue-600 rounded-full hover:bg-gray-100 p-1">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M12 4.5v15m7.5-7.5h-15" />
-                                    </svg>
+                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 hover:text-blue-600">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+                                  </svg>
                                 </button>
                                 <div data-popover id="popover-add-items" role="tooltip"
                                     class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border dark:border-primary-dark rounded opacity-0 dark:text-white dark:bg-primary-dark">
@@ -198,9 +203,49 @@
                                     </div>
                                     <div data-popper-arrow></div>
                                 </div>
+                                @if ($product->published)
+                                  <form action="{{ URL("dashboard/unpublished-product/" . $product->id) }}" method="POST">
+                                      @csrf
+                                      @method('PATCH')
+                                      <button data-popover-target="popover-bottom-unpublished"
+                                          data-popover-placement="bottom" type="submit"
+                                          class="mt-1.5 relative">
+                                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-rose-500 -rotate-45">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                                          </svg>
+                                          <i class="fa-solid fa-ban fa-2xl absolute inset-0 top-2.5 -left-1 opacity-70 text-rose-400"></i>
+                                      </button>
+                                      <div data-popover id="popover-bottom-unpublished" role="tooltip"
+                                          class="absolute z-10 invisible inline-block w-fit text-xs text-white transition-opacity duration-300 bg-rose-400 rounded shadow-sm opacity-0">
+                                          <div class="px-2 py-1">
+                                              <p>Unpublish Now</p>
+                                          </div>
+                                          <div data-popper-arrow></div>
+                                      </div>
+                                  </form>
+                                @else
+                                  <form action="{{ URL("dashboard/published-product/" . $product->id) }}" method="POST">
+                                      @csrf
+                                      @method('PATCH')
+                                      <button data-popover-target="popover-bottom-published"
+                                          data-popover-placement="bottom" type="submit"
+                                          class="mt-1.5">
+                                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-green-500">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                                          </svg>
+                                      </button>
+                                      <div data-popover id="popover-bottom-published" role="tooltip"
+                                          class="absolute z-10 invisible inline-block w-fit text-xs text-white transition-opacity duration-300 bg-green-400 rounded shadow-sm opacity-0">
+                                          <div class="px-2 py-1">
+                                              <p>Publish Now</p>
+                                          </div>
+                                          <div data-popper-arrow></div>
+                                      </div>
+                                  </form>
+                                @endif
                                 <button type="button" data-modal-target="deleteProductModal{{ $product->id }}"
                                     data-modal-toggle="deleteProductModal{{ $product->id }}">
-                                    <svg class="w-8 h-8 hover:text-blue-600 rounded-full hover:bg-gray-100 p-1"
+                                    <svg class="w-5 h-5 text-rose-400 hover:text-rose-600"
                                         fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

@@ -1,4 +1,5 @@
 <x-app-layout>
+@push('css-custom')
     <style>
         .container__shadaow {
             -webkit-background-size: cover;
@@ -11,14 +12,12 @@
             background: -o-linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgb(29, 27, 27) 50%, rgb(15, 15, 15) 100%, rgba(0, 0, 0, 0) 0%);
             background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgb(29, 27, 27) 50%, rgb(15, 15, 15) 100%, rgba(0, 0, 0, 0) 0%);
         }
-
-    </style>
-    <x-slot:header>
-
-    </x-slot:header>
+    </style>        
+@endpush
     <div class="w-full h-full overflow-x-hidden bg-[#0F0F0F]" x-data="handleOrder()">
-        <div class="relative z-[99] md:block hidden">
-            <div class="breadcrumbs w-80 h-auto p-1 pb-2 px-3 bg-primary-slate-light/90 border-0 border-solid border-b border-r border-primary-cyan-light absolute">
+        <div class="relative z-[9999] md:block hidden">
+            <div
+                class="breadcrumbs w-80 h-auto p-1 pb-2 px-3 bg-primary-slate-light/90 border-0 border-solid border-b border-r border-primary-cyan-light absolute">
                 <ul class="list-none flex items-center space-x-2 text-sm font-semibold">
                     <li class="flex items-center space-x-2">
                         <a href="{{ Route('home') }}"
@@ -45,7 +44,7 @@
             alt="{{ asset('/storage/' . $custom_field->bg_img_on_order_page) }}">
         @else
         <img src="https://source.unsplash.com/random/1920x800"
-            class="w-full md:h-[700px] h-[300px] object-cover bg-no-repeat bg-top z-10 absolute md:top-[119px] top-[85px]"
+            class="w-full md:h-[700px] h-[300px] object-cover bg-no-repeat bg-top z-10 absolute md:top-[114px] top-[85px]"
             alt="random_img">
         @endif
         <div class="container__shadaow w-full md:h-[900px] h-[400px] absolute overflow-x-hidden z-20 bg-white"></div>
@@ -57,7 +56,8 @@
                     <div class="left_section md:mt-52 mt-5 md:mb-10 mb-0">
                         {{-- #1a1919 --}}
                         {{-- #222224 --}}
-                        <div class="form_wrapper w-full h-fit p-8 rounded-lg md:shadow-lg shadow-slate-800 bg-[#25262b]">
+                        <div
+                            class="form_wrapper w-full h-fit p-8 rounded-lg md:shadow-lg shadow-slate-800 bg-[#25262b]">
                             <form @submit.prevent="checkoutOrder" method="POST">
                                 <div
                                     class="add_player_id bg-primary-slate-light border border-slate-500 text-white border-solid w-full p-4 rounded">
@@ -98,20 +98,38 @@
                                     <ul class="list-none flex flex-wrap justify-center mx-0 items-center gap-3 mt-3">
                                         @foreach ($product->items as $item)
                                         <li>
-                                            @php
-                                            $initialPrice = $item->price * 0.007 + $item->price;
-                                            $roundedPrice = ceil($initialPrice / 500) * 500;
-                                            @endphp
-                                            <div @click.prevent="activeItem = {{ $item->id }}; data.itemSelected = '{{ $item->item_name }}'; data.itemNominal = '{{ $item->nominal }}'; initialPrice = {{ $item->price }}; selectedItemProduct()"
-                                                :class="{ 'bg-slate-300/60 border-rose-500': activeItem === {{ $item->id }}, 'bg-slate-500 hover:bg-slate-300/90 border-[1px] border-white text-white': activeItem !== {{ $item->id }} }"
-                                                class="items w-[180px] h-[100px] flex flex-col justify-center items-center space-y-2 rounded-md p-2
-                                    border border-gray-400 border-solid cursor-pointer" data-item-id="{{ $item->id }}">
-                                                <p class="font-semibold capitalize">{{ $item->nominal }} -
-                                                    {{ $item->item_name }}</p>
-                                                <p class="text-xs">Harga</p>
-                                                <p class="text-sm text-teal-400">Rp. {{ Cash($roundedPrice, 2) }}
-                                                </p>
-                                            </div>
+                                            @if ($item->discount)
+                                                @php
+                                                    $initialPrice = $item->discount->price_after_discount * 0.007 + $item->discount->price_after_discount;
+                                                    $roundedPrice = ceil($initialPrice / 500) * 500;
+                                                @endphp
+                                                <div @click.prevent="activeItem = {{ $item->id }}; data.itemSelected = '{{ $item->item_name }}'; data.itemNominal = '{{ $item->nominal }}'; initialPrice = {{ $item->discount->price_after_discount }}; selectedItemProduct()"
+                                                    :class="{ 'bg-slate-300/60 border-rose-500': activeItem === {{ $item->id }}, 'bg-slate-500 hover:bg-slate-300/90 border-[1px] border-white text-white': activeItem !== {{ $item->id }} }"
+                                                    class="items w-[180px] h-[100px] flex flex-col justify-center items-center space-y-1 rounded-md p-2
+                                                border border-gray-400 border-solid cursor-pointer"
+                                                    data-item-id="{{ $item->id }}">
+                                                    <p class="font-semibold capitalize">{{ $item->nominal }} -
+                                                        {{ $item->item_name }}</p>
+                                                    <p class="text-xs">Harga</p>
+                                                    <p class="text-xs text-rose-500 line-through">Rp. {{ Cash($item->price, 2) }}</p>
+                                                    <p class="text-sm text-teal-400">Rp. {{ Cash($item->discount->price_after_discount, 2) }}</p>
+                                                </div>
+                                            @else
+                                                @php
+                                                    $initialPrice = $item->price * 0.007 + $item->price;
+                                                    $roundedPrice = ceil($initialPrice / 500) * 500;
+                                                @endphp
+                                                <div @click.prevent="activeItem = {{ $item->id }}; data.itemSelected = '{{ $item->item_name }}'; data.itemNominal = '{{ $item->nominal }}'; initialPrice = {{ $item->price }}; selectedItemProduct()"
+                                                    :class="{ 'bg-slate-300/60 border-rose-500': activeItem === {{ $item->id }}, 'bg-slate-500 hover:bg-slate-300/90 border-[1px] border-white text-white': activeItem !== {{ $item->id }} }"
+                                                    class="items w-[180px] h-[100px] flex flex-col justify-center items-center space-y-2 rounded-md p-2
+                                                    border border-gray-400 border-solid cursor-pointer"
+                                                    data-item-id="{{ $item->id }}">
+                                                    <p class="font-semibold capitalize">{{ $item->nominal }} -
+                                                        {{ $item->item_name }}</p>
+                                                    <p class="text-xs">Harga</p>
+                                                    <p class="text-sm text-teal-400">Rp. {{ Cash($roundedPrice, 2) }}</p>
+                                                </div>
+                                            @endif
                                         </li>
                                         @endforeach
                                     </ul>
@@ -153,8 +171,8 @@
                                             </div>
                                             @endif
                                             <label for="{{ $payment->payment_name }}__payment"
-                                                class="flex items-center justify-between py-2 px-4 rounded border border-solid border-slate-500 cursor-pointer "
-                                                :class="{'bg-slate-400/60 border-slate-300' : paymentSelected === '{{ $payment->payment_name }}' }">
+                                                class="flex items-center justify-between py-2 px-4 rounded border border-solid cursor-pointer"
+                                                :class="{'bg-slate-300 border-slate-300/60' : paymentSelected === '{{ $payment->payment_name }}', 'bg-slate-400/90 hover:bg-slate-300 border-gray-400' : paymentSelected !== '{{ $payment->payment_name }}' }">
                                                 <img src="{{ asset('/img/' . $payment->img_static) }}"
                                                     class="w-auto h-8" alt="logo_{{ $payment->payment_name }}">
                                             </label>
@@ -165,10 +183,10 @@
                                         x-transition:leave="transition-opacity duration-300"
                                         x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
                                         x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-                                        class="detail__fee__and__price mb-3 bg-slate-400 rounded-b p-1.5 flex justify-between items-center"
+                                        class="detail__fee__and__price mb-3 bg-slate-300 rounded-b p-1.5 flex justify-between items-center"
                                         :class="{'hidden' : isDisablePaymentMethod === true}">
-                                        <p class="font-extrabold uppercase">Total Harga</p>
-                                        <p class="font-extrabold uppercase" x-text="priceIncludeFee"></p>
+                                        <p class="font-extrabold uppercase text-slate-600">Total Harga</p>
+                                        <p class="font-extrabold uppercase text-slate-600" x-text="priceIncludeFee"></p>
                                     </div>
                                     <div x-show="handleDisblePaymentMethod() && paymentSelected === '{{ $payment->payment_name }}'"
                                         x-transition:enter="transition-opacity duration-300"
@@ -211,9 +229,9 @@
                                 </div>
                                 <div class="btn_checkout md:block hidden mt-5">
                                     <button type="submit" :disabled="isButtonSubmitDisabled"
-                                        class="py-3 px-6 rounded-md bg-teal-500 disabled:bg-teal-300 text-white disabled:text-teal-100 cursor-pointer disabled:cursor-not-allowed border-0">
+                                        class="py-3 px-6 rounded-md bg-teal-500 disabled:bg-teal-400 text-white disabled:text-teal-100 cursor-pointer disabled:cursor-not-allowed border-0">
                                         <template x-if="isButtonSubmitDisabled">
-                                            <span>Process</span>
+                                            <span>Pesanan Di Proses</span>
                                         </template>
                                         <template x-if="!isButtonSubmitDisabled">
                                             <span>Bayar Sekarang</span>
@@ -247,9 +265,9 @@
                                             </div>
                                             <div class="btn_checkout_submit">
                                                 <button type="submit" :disabled="isButtonSubmitDisabled"
-                                                    class="py-3 px-10 rounded-lg bg-teal-600 disabled:bg-teal-300 text-white cursor-pointer disabled:cursor-not-allowed border-0">
+                                                    class="py-3 px-10 rounded-lg bg-teal-600 disabled:bg-teal-400 text-white cursor-pointer disabled:cursor-not-allowed border-0">
                                                     <template x-if="isButtonSubmitDisabled">
-                                                        <span>Process</span>
+                                                        <span>Pesanan Di Proses</span>
                                                     </template>
                                                     <template x-if="!isButtonSubmitDisabled">
                                                         <span>Bayar Sekarang</span>
@@ -364,6 +382,10 @@
                 selectedPayment() {
                     this.handlePaymentFee()
                     this.priceIncludeFee = this.formatPriceToRupiah(this.priceIncludeFee)
+                },
+
+                checkDiscountItem() {
+
                 },
 
                 checkoutOrder() {

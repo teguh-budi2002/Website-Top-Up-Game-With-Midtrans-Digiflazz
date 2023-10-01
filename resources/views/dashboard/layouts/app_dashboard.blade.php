@@ -47,8 +47,8 @@
 
                         <!-- Brand -->
                         <a href="index.html"
-                            class="inline-block text-2xl font-bold tracking-wider uppercase text-primary-dark dark:text-light">
-                            Budi_shop TOP UP Games Murah
+                            class="inline-block text-xl font-bold tracking-tight uppercase text-primary-dark dark:text-light">
+                            {{ app('seo_data')->name_of_the_company }}
                         </a>
 
                         <!-- Mobile sub menu button -->

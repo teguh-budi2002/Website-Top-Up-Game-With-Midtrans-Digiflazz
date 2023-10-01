@@ -42,7 +42,7 @@ class StoreOrderRequest extends FormRequest
         return [
             'email.email'           => 'Alamat Email Harus Valid.',
             'email.ends_with'       => 'Alamat Email Harus Terdaftar Dari Domain @gmail.com',
-            'player_id.required'    => 'Player ID Tidak Boleh Kosong.',
+            'player_id.required'    => 'Game ID Tidak Boleh Kosong.',
             'player_id.regex'       => 'Format Player ID Tidak Valid.',
             'payment_id.required'   => 'Metode Pembayaran Wajib Dipilih.',
             'qty.required'          => 'Cantumkan Jumlah Order.',

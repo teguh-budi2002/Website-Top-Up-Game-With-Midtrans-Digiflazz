@@ -36,6 +36,14 @@ Manage Games Product
             </x-slot:textMess>
         </x-alert>
     </div>
+    @elseif ($mess = Session::get('update_success'))
+    <div class="mx-16 mt-4">
+        <div class="p-2 rounded text-green-500 text-center bg-green-300">{{ $mess }}</div>
+    </div>
+    @elseif ($mess = Session::get('product-failed'))
+    <div class="mx-16 mt-4">
+        <div class="p-2 rounded text-red-500 text-center bg-red-300">{{ $mess }}</div>
+    </div>
     @elseif ($mess = Session::get('delete_success'))
     <div class="p-2 px-16 mt-2">
         <x-alert bg-color="bg-red-400">
