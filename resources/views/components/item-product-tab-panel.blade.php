@@ -1,29 +1,29 @@
   <div class="w-full flex justify-center">
       <div class="md:w-3/4 w-11/12 flex items-center justify-between">
-          @foreach ($categories as $category)
-          <div class="pb-2 cursor-pointer"
-              @click.prevent="isPanelActive = '{{ $category->id }}'; getProductsByCategory('{{ $category->id }}')"
-              :class="{'border-b-2 border-solid border-cyan-300' : isPanelActive === '{{ $category->id }}' }">
-              <p class="category_panel font-semibold text-cyan-700 hover:text-cyan-300 transition-colors duration-200"
-                  :class="{ 'text-cyan-300': isPanelActive === '{{ $category->id }}' }">
-                  @if ($category->name_category === 'Mobile Games')
-                  <i class="fas fa-regular fa-gamepad mr-1"
-                      :class="{ 'text-cyan-300': isPanelActive === '{{ $category->id }}' }"></i>
-                  @elseif ($category->name_category === 'PC Games')
-                  <i class="fas fa-reguler fa-desktop mr-1"
-                      :class="{ 'text-cyan-300': isPanelActive === '{{ $category->id }}' }"></i>
-                  @elseif ($category->name_category === 'Voucher')
-                  <i class="fas fa-reguler fa-ticket mr-1"
-                      :class="{ 'text-cyan-300': isPanelActive === '{{ $category->id }}' }"></i>
-                  @elseif ($category->name_category === 'Pulsa')
-                  <i class="fas fa-reguler fa-phone mr-1"
-                      :class="{ 'text-cyan-300': isPanelActive === '{{ $category->id }}' }"></i>
-                  @endif
-                  <span
-                      :class="{ 'text-cyan-300': isPanelActive === '{{ $category->id }}' }">{{ $category->name_category }}</span>
-              </p>
-          </div>
-          @endforeach
+            @foreach ($categories as $category)
+            <div class="w-full md:pb-2 pb-1 cursor-pointer text-center m-0"
+                @click.prevent="isPanelActive = '{{ $category->id }}'; getProductsByCategory('{{ $category->id }}')"
+                :class="{'border-b-2 border-solid border-cyan-300' : isPanelActive === '{{ $category->id }}' }">
+                <div class="category_panel font-semibold text-cyan-700 hover:text-cyan-300 transition-colors duration-200 md:text-base text-xs"
+                    :class="{ 'text-cyan-300': isPanelActive === '{{ $category->id }}' }">
+                    @if ($category->name_category === 'Mobile Games')
+                    <i class="fas fa-regular fa-gamepad fa-lg mr-1 md:inline-block block md:text-left text-center md:mb-0 mb-5"
+                        :class="{ 'text-cyan-300': isPanelActive === '{{ $category->id }}' }"></i>
+                    @elseif ($category->name_category === 'PC Games')
+                    <i class="fas fa-reguler fa-desktop fa-lg mr-1 md:inline-block block md:text-left text-center md:mb-0 mb-5"
+                        :class="{ 'text-cyan-300': isPanelActive === '{{ $category->id }}' }"></i>
+                    @elseif ($category->name_category === 'Voucher')
+                    <i class="fas fa-reguler fa-ticket fa-lg mr-1 md:inline-block block md:text-left text-center md:mb-0 mb-5"
+                        :class="{ 'text-cyan-300': isPanelActive === '{{ $category->id }}' }"></i>
+                    @elseif ($category->name_category === 'Pulsa')
+                    <i class="fas fa-reguler fa-phone fa-lg mr-1 md:inline-block block md:text-left text-center md:mb-0 mb-5"
+                        :class="{ 'text-cyan-300': isPanelActive === '{{ $category->id }}' }"></i>
+                    @endif
+                    <span
+                        :class="{ 'text-cyan-300': isPanelActive === '{{ $category->id }}' }">{{ $category->name_category }}</span>
+                </div>
+            </div>
+            @endforeach
       </div>
   </div>
   <div class="loading__panel flex justify-center mt-24" x-show="isLoading">
