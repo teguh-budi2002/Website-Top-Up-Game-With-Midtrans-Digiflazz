@@ -16,7 +16,6 @@ class BaseApiController extends Controller
             "data" => $data
         ])->withHeaders([
             'Content-Type'   => "application/json",
-            // 'X-Custom-Token' => $this->getAccessApiToken()
         ]);
     }
 

@@ -18,9 +18,11 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
-            'product_name' => $this->faker->name(),
-            'slug' => Str::slug($this->faker->name()),
-            'img_url' => 'https://source.unsplash.com/collection/190727/200x200'
+            'product_name' => $productName = $this->faker->name(),
+            'category_id'   => mt_rand(1, 4),
+            'slug' => Str::slug($productName),
+            'img_url' => 'IMG_DEV',
+            'published' => 1
         ];
     }
 }

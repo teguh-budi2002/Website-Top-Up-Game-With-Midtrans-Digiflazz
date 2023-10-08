@@ -33,15 +33,21 @@
   @foreach ($categories as $category)
   <div class="body__panel mt-5 mb-5 flex justify-center" x-show="isPanelActive == '{{ $category->id }}' && !isLoading">
       <div class="md:w-3/4 w-11/12 h-auto">
-          <div :class="{'grid sm:grid-cols-5 grid-cols-2 gap-3' : productNotFound === false}" x-intersect.once.full="isMobile ? loadMoreProduct('{{ $category->id }}') : null">
+          <div :class="{'grid sm:grid-cols-5 grid-cols-2 gap-3' : productNotFound === false}">
               <template x-if="!productNotFound">
                   <template x-for="product in productByCategory" :key="product.id">
                       <div class="item_box group w-full bg-primary-slate rounded-md text-center" x-show="isPanelActive"
                           x-transition:enter="transition ease-out duration-1500"
                           x-transition:enter-start="opacity-0 scale-75" x-transition:enter-end="opacity-100 scale-100">
                           <a :href="'order/' + product.slug" class="no-underline">
-                              <img :src="`/storage/product/${product.product_name}/${product.img_url}`"
-                                  class="w-full rounded-t-md" :alt="`image product${product.product_name}`">
+                              <template x-if="product.img_url !== 'IMG_DEV'">
+                                  <img :src="`/storage/product/${product.product_name}/${product.img_url}`"
+                                      class="w-full rounded-t-md" :alt="`image product${product.product_name}`">
+                              </template>
+                              <template x-if="product.img_url === 'IMG_DEV'">
+                                  <img src="https://source.unsplash.com/collection/190727/200x200"
+                                      class="w-full rounded-t-md" alt="logo product [DEV]">
+                              </template>
                               <span
                                   class="block pb-5 pt-3 capitalize text-primary-cyan-light/80 group-hover:text-cyan-300 transition-colors duration-200"
                                   x-text="product.product_name"></span>
@@ -50,11 +56,12 @@
                   </template>
               </template>
           </div>
-          <div class="loading__loadmore__panel flex justify-center md:mt-0 mt-5" x-show="isLoadingLoadMore">
-            <div class="custom_loader"></div>
+          <div class="loading__loadmore__panel flex justify-center md:mt-3 mt-5" x-show="isLoadingLoadMore">
+              <div class="custom_loader"></div>
           </div>
           <div class="load__more text-center">
-              <button x-show="!isLoading && loadMore && !isLoadingLoadMore" @click="loadMoreProduct('{{ $category->id }}')"
+              <button x-show="!isLoading && loadMore && !isLoadingLoadMore"
+                  @click="loadMoreProduct('{{ $category->id }}')"
                   class="text-primary-cyan-light text-sm text-center mt-5 mb-2 cursor-pointer">Load More</button>
           </div>
           <template x-if="productNotFound">
@@ -71,86 +78,83 @@
   <script>
       function handleProductByCategory() {
           return {
-            isMobile: window.innerWidth < 768,
-            isPanelActive: '1',
-            productByCategory: [],
-            productNotFound: false,
-            productLoadMoreNotFound: false,
-            isLoading: false,
-            isLoadingLoadMore: false,
-            loadMore: false,
-            page: 2,
+              isPanelActive: '1',
+              productByCategory: [],
+              productNotFound: false,
+              productLoadMoreNotFound: false,
+              isLoading: false,
+              isLoadingLoadMore: false,
+              loadMore: false,
+              page: 2,
 
-            init() {
-                window.addEventListener('resize', () => {
-                    this.isMobile = window.innerWidth < 768;
-                });
-                this.getProductsByCategory('1')
-            },
+              init() {
+                  this.getProductsByCategory('1')
+              },
 
-            getProductsByCategory(category_id) {
-                this.isLoading = true
-                // re initialize variable productNotFound && loadMore
-                this.productNotFound = false
-                this.loadMore = false
-                axios.get('/api/get-token').then(res => {
-                    const token = res.data.data
-                    axios.get(`/api/get-products-by-category?category_id=${category_id}`, {
-                        headers: {
-                            'X-Custom-Token': `${token}`
-                        }
-                    }).then(res => {
-                        if (res.data.code === 404) {
-                            this.productNotFound = true
-                        }
-                        if (res.data.code === 200) {
-                            this.productByCategory = res.data.data.data
+              getProductsByCategory(category_id) {
+                  this.isLoading = true
+                  // Re initialize or Reset value variable productNotFound && loadMore && page
+                  this.page = 2
+                  this.productNotFound = false
+                  this.loadMore = false
+                  axios.get('/api/get-token').then(res => {
+                      const token = res.data.data
+                      axios.get(`/api/get-products-by-category?category_id=${category_id}`, {
+                          headers: {
+                              'X-Custom-Token': `${token}`
+                          }
+                      }).then(res => {
+                          if (res.data.code === 404) {
+                              this.productNotFound = true
+                          }
+                          if (res.data.code === 200) {
+                              this.productByCategory = res.data.data.data
 
-                            if (res.data.data.next_page_url !== null) {
-                                this.loadMore = true
-                            }
-                        }
-                    }).catch(err => {
-                        console.log("ERROR GET PRODUCT BY CATEGORY: ", err)
-                        this.isLoading = false
-                    }).finally(() => {
-                        this.isLoading = false
-                    })
+                              if (res.data.data.next_page_url !== null) {
+                                  this.loadMore = true
+                              }
+                          }
+                      }).catch(err => {
+                          console.log("ERROR GET PRODUCT BY CATEGORY: ", err)
+                          this.isLoading = false
+                      }).finally(() => {
+                          this.isLoading = false
+                      })
 
-                })
-            },
+                  })
+              },
 
-            loadMoreProduct(category_id) {
-                this.isLoadingLoadMore = true
-                axios.get('/api/get-token').then(res => {
-                    const token = res.data.data
-                    axios.get(`/api/get-products-by-category?category_id=${category_id}&page=${this.page}`, {
-                        headers: {
-                            'X-Custom-Token': `${token}`
-                        }
-                    }).then(res => {
-                        if (res.data.code === 404) {
-                            this.productLoadMoreNotFound = true
-                        }
+              loadMoreProduct(category_id) {
+                  this.isLoadingLoadMore = true
+                  axios.get('/api/get-token').then(res => {
+                      const token = res.data.data
+                      axios.get(`/api/get-products-by-category?category_id=${category_id}&page=${this.page}`, {
+                          headers: {
+                              'X-Custom-Token': `${token}`
+                          }
+                      }).then(res => {
+                          if (res.data.code === 404) {
+                              this.productLoadMoreNotFound = true
+                          }
 
-                        if (res.data.code === 200) {
-                            this.productByCategory.push(...res.data.data.data)
+                          if (res.data.code === 200) {
+                              this.productByCategory.push(...res.data.data.data)
+                              if (res.data.data.next_page_url) {
+                                  this.page++
+                              } else {
+                                  this.loadMore = false
+                              }
+                          }
+                      }).catch(err => {
+                          console.log("ERROR GET LOADMORE PRODUCT BY CATEGORY: ", err)
+                          this.isLoadingLoadMore = false
+                      })
+                      .finally(() => {
+                          this.isLoadingLoadMore = false
+                      })
 
-                            if (res.data.data.next_page_url) {
-                                this.page++
-                            } else {
-                                this.loadMore = false
-                            }
-                        }
-                    }).catch(err => {
-                        console.log("ERROR GET LOADMORE PRODUCT BY CATEGORY: ", err)
-                        this.isLoadingLoadMore = false
-                    }).finally(() => {
-                        this.isLoadingLoadMore = false
-                    })
-
-                })
-            }
+                  })
+              }
           }
       }
 

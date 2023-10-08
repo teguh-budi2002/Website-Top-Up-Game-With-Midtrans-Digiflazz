@@ -53,6 +53,7 @@ class ProductController extends Controller
         $validation['slug'] = Str::slug($request->product_name);
         Product::create([
             'product_name' => $request->get('product_name'),
+            'category_id'  => $request->category_id,
             'slug' => Str::slug($request->get('product_name')),
             'img_url' => $filename
         ]);

@@ -148,7 +148,7 @@
         </div>
         <template x-if="notifications.length == 0">
             <div x-show="!isLoading" class="mt-2 mb-5">
-                <img src="{{ asset('/img/StaticImage/Notif_Not_Found.webp') }}" alt="">
+                <img src="{{ asset('/img/StaticImage/Notif_Not_Found.webp') }}" class="w-full h-auto" alt="Not Found Notification">
                 <p class="text-center text-xl uppercase text-rose-400 mt-4">tidak ada notifikasi</p>
             </div>
         </template>

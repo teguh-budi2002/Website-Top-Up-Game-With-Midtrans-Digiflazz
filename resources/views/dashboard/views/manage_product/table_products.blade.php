@@ -34,8 +34,15 @@
                 Add Product
             </x-slot:modalHeader>
             <x-slot:inputBox>
-                <x-form.input type="text" inputName="product_name" name="name_game" label="Masukkan Nama Product" />
-                {{-- <x-form.input type="text" inputName="img_url" name="img_url" label="Masukkan Img URL Product" /> --}}
+                <x-form.input type="text" inputName="product_name" name="name_game" label="Insert Name of Product" />
+                <label for="categoryProduct" class="block mt-3 text-slate-600 dark:text-primary-dark text-sm">
+                    Category Product
+                </label>
+                <select name="category_id" class="p-2" id="categoryProduct" style="box-shadow: none;padding: 8px">
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name_category }}</option>
+                    @endforeach
+                </select>
                 <div class="image_for_product">
                     <label for="custom_bg_product" class="block mt-3 text-slate-600 dark:text-primary-dark text-sm">Add Photo Into Product</label>
                     <div x-data="previewImage()">
@@ -312,6 +319,10 @@
 </div>
  @push('dashboard-js')
 <script>
+    new SlimSelect({
+        select: '#categoryProduct'
+    })
+
     function handleTableProducts() {
         return {
             showBtn: false, 

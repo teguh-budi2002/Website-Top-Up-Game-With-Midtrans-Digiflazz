@@ -29,6 +29,7 @@ Route::middleware(['api.refresh_token', 'api.security'])->group(function() {
     // Finding Data Resource
     Route::get('find-product-with-livesearch', [ProductApiController::class, 'liveSearchData']);
     Route::get('get-products', [ProductApiController::class, 'getAllProducts']);
+    Route::get('get-products-by-category', [ProductApiController::class, 'getProductByCategory']);
     
     Route::post('get-items-by-product', [ItemApiController::class, 'getItemsByProductId']);
 

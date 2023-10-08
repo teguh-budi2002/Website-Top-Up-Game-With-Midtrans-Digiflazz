@@ -10,7 +10,12 @@
           x-transition:enter="transition ease-out duration-1500"
           x-transition:enter-start="opacity-0 scale-75" x-transition:enter-end="opacity-100 scale-100">
           <a :href="'order/' + product.slug" class="no-underline">
-            <img :src="`/storage/product/${product.product_name}/${product.img_url}`" class="w-full rounded-t-md" :alt="`image product${product.product_name}`">
+            <template x-if="product.img_url !== 'IMG_DEV'">
+              <img :src="`/storage/product/${product.product_name}/${product.img_url}`" class="w-full rounded-t-md" :alt="`image product${product.product_name}`">
+            </template>
+            <template x-if="product.img_url === 'IMG_DEV'">
+               <img src="https://source.unsplash.com/collection/190727/200x200" class="w-full rounded-t-md" alt="logo product [DEV]">
+            </template>
             <span
             class="block pb-5 pt-3 capitalize text-primary-cyan-light/80 group-hover:text-cyan-300 transition-colors duration-200"
             x-text="product.product_name"></span>

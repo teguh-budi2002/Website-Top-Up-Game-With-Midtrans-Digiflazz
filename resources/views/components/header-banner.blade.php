@@ -29,6 +29,7 @@
         </template>
     </div>
  </div>
+ @push('js-custom')
  <script>
      function handleBanner() {
          return {
@@ -67,3 +68,4 @@
      }
 
  </script>
+ @endpush

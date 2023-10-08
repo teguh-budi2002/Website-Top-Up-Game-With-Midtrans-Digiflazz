@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CategoryProduct;
 use App\Models\Order;
 use App\Models\NavLayout;
 use App\Models\CustomField;
@@ -37,8 +38,15 @@ class HomeController extends Controller
                 ->get();
     });
 
+    $product_categories = Cache::remember('category', now()->addDay(), function() {
+        return DB::table('category_products')
+                  ->select("id", "name_category")
+                  ->get();
+    }); 
+
     return view('Main', [
-      'flash_sales' => $flashsales
+      'flash_sales' => $flashsales,
+      'product_categories'  => $product_categories
     ]);
   }
 

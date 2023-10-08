@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CategoryProduct;
 use App\Models\Notification;
 use App\Models\PaymentFee;
 use App\Models\PaymentGatewayProvider;
@@ -46,9 +47,12 @@ class DashboardController extends Controller
         $getProduct = Product::with(['items', 'paymentMethods' => function($q) {
           $q->select("payment_methods.img_static", "payment_methods.payment_name");
         }])->paginate(10);
+
+        $categoryProduct = CategoryProduct::select("id", "name_category")->get();
       }
       return view('dashboard.views.manage_product.main', [
-        'products' => $getProduct
+        'products' => $getProduct,
+        'categories'  => $categoryProduct
       ]);
 
     }

@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\CategoryProduct;
 use App\Repositories\Product\ProductRepository;
+use Illuminate\Support\Facades\DB;
 
 class ProductApiController extends BaseApiController
 {
@@ -13,11 +15,35 @@ class ProductApiController extends BaseApiController
         try {
             $getALlProducts = Product::select("id", "product_name", "img_url", "slug")
                                       ->where("published", 1)
+                                      ->take(10)
                                       ->get();
-       return $this->success_response("Get Data is Successfull", 200, $getALlProducts);
+            return $this->success_response("Get Data is Successfull", 200, $getALlProducts);
         } catch (\Throwable $th) {
             return $this->failed_response("ERROR IN SERVER SIDE!");
         }
+    }
+
+    public function getProductByCategory(Request $request) {
+      try {
+        $page = (int) $request->page;
+        $productByCategory = DB::table('products')
+                                ->whereCategoryId($request->category_id)
+                                ->where('published', 1)
+                                ->select("id", "category_id", "product_name", "img_url", "slug")
+                                ->orderBy('id')
+                                ->paginate(10)
+                                ->appends([
+                                  'category_id' => $request->category_id
+                                ]);
+
+        if ($productByCategory->isNotEmpty()) {
+          return $this->success_response("Get Product By Category is Successfully", 200, $productByCategory);
+        } else {
+          return $this->success_response("Get Product By Category is Not Found", 404, $request->all());
+        }
+      } catch (\Throwable $th) {
+        return $this->failed_response("ERROR IN SERVER SIDE!" . $th->getMessage());
+      }
     }
 
    /**

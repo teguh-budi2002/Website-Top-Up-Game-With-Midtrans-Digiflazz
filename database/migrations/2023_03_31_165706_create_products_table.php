@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('category_id')->references('id')->on('category_products');
             $table->string('product_name');
             $table->boolean('published')->default(0);
             $table->timestamps();
