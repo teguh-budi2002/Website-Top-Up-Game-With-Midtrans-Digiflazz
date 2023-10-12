@@ -2,9 +2,8 @@
 namespace App\Services\PaymentGateway\Midtrans;
 
 use App\Services\PaymentGateway\PaymentGateway;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Http;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\DB;
 
 class MidtransServices extends PaymentGateway
 {
@@ -52,6 +51,49 @@ class MidtransServices extends PaymentGateway
       }
   }
 
+  public function callbackNotifMidtrans($requestBody) {
+    $notifBody = json_decode($requestBody->getContent(), TRUE);
+
+    $trx_id = $notifBody['transaction_id'];
+    $trx_status = $notifBody['transaction_status'];
+    $invoice = $notifBody['order_id'];
+    $payment_type = $notifBody['payment_type'];
+
+    $currentTransaction = DB::table('transactions')
+                              ->where('trx_id', $trx_id)
+                              ->where('payment_type_trx', $payment_type)
+                              ->where('invoice', $invoice)
+                              ->first();
+
+    if (!$currentTransaction) {
+      throw new \Exception('Invoice ID Not Found in Any Transaction');
+    }
+
+    DB::beginTransaction();
+    try {
+      switch ($trx_status) {
+        case 'settlement':
+          $currentTransaction->transaction_status = "Success";
+          break;
+  
+        case 'expire':
+           $currentTransaction->transaction_status = "Expired";
+           break;
+  
+        case 'failure':
+           $currentTransaction->transaction_status = "Failure";
+           break;
+      }
+  
+      $currentTransaction->save();
+      DB::commit();
+    } catch (\Throwable $th) {
+      throw new \Exception("Services ERROR: " . $th->getMessage());
+      DB::rollBack();
+    }
+                              
+  }
+
   public function getStatusOrder($trx_id) {
      if ($this->provider) {
         $server_key = base64_encode($this->provider->server_key);
@@ -81,7 +123,7 @@ class MidtransServices extends PaymentGateway
   private static function adjustTransactionDetail($order) {
       $transaction_detail = [
             'transaction_details' => [
-                "order_id" => $order->trx_id,
+                "order_id" => $order->invoice,
                 "gross_amount" => $order->total_amount
             ],
             'item_details' => [
