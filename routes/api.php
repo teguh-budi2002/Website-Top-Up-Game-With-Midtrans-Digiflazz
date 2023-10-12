@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ItemApiController;
+use App\Http\Controllers\Api\MarketplaceApiController;
 use App\Http\Controllers\Api\NotificationApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -39,8 +40,18 @@ Route::middleware(['api.refresh_token', 'api.security'])->group(function() {
 
     Route::prefix('order')->group(function() {
         Route::post('{order}', [OrderApiController::class, 'createOrder']);  
-        Route::get('/purchase/status/{trx_id}', [OrderApiController::class, 'statusOrder'])->withoutMiddleware('api.security');  
+        Route::get('/purchase/status/{trx_id}', [OrderApiController::class, 'statusOrder'])->withoutMiddleware('api.security');
+        Route::get('/detail-order/{invoice}', [OrderApiController::class, 'getDetailOrder']);
+
+        // URL Callback Payment Method
+        Route::post('/notification', [OrderApiController::class, 'httpNotifCallback'])->withoutMiddleware('api.security');  
     });
+
+    // URL Callback Marketplace
+    Route::prefix('marketplace')->group(function() {
+        Route::get('/digilfazz/transaction', [MarketplaceApiController::class, 'transactionTopUpDigiflazz'])->withoutMiddleware('api.security');;
+    });
+
     Route::prefix('layout')->group(function() {
         Route::get('banner',[LayoutController::class, 'getBannerLayout']);
     });

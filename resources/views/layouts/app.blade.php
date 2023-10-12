@@ -32,7 +32,11 @@
         .no-scrollbar {
             -ms-overflow-style: none;  /* IE and Edge */
             scrollbar-width: none;  /* Firefox */
-        } 
+        }
+        
+        [x-cloak]{
+            display: none;
+        }
     </style>
     @stack('css-custom')
 </head>

@@ -22,10 +22,11 @@ class StoreItemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'product_id' => 'required',
-            'item_name' => 'required',
-            'nominal' => 'required',
-            'price' => 'required|integer'
+            'product_id'    => 'required',
+            'item_name'     => 'required',
+            'code_item'     =>  'required',
+            'nominal'       => 'required',
+            'price'         => 'required|integer'
         ];
     }
 
@@ -37,10 +38,11 @@ class StoreItemRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'item_name.required' => 'Nama Item Tidak Boleh Kosong.',
-            'nominal.required' => 'Jumlah Nominal Pada Item Tidak Boleh Kosong.',
-            'price.required' => 'Harga Harus Dicantumkan.',
-            'price.integer' => 'Harga Harus Berupa Angka.',
+            'item_name.required'    => 'Name of Item Cannot Be Null.',
+            'code_item.required'    => 'Code of Item Cannot Be Null.',
+            'nominal.required'      => 'Nominal of Item Cannot Be Null.',
+            'price.required'        => 'Price of Item Cannot Be Null.',
+            'price.integer'         => 'Allowed Character is Only Numeric.',
         ];
     }
 }

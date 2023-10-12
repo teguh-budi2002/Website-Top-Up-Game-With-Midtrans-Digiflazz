@@ -287,18 +287,20 @@
                                 </x-slot:modalHeader>
                                 <x-slot:inputBox>
                                     @if ($product->items->count())
-                                    @foreach ($product->items->take(1) as $item)
-                                    <x-form.input type="text" inputName="item_name"
-                                        value="{{ old('item_name', $item->item_name) }}" name="item_name"
-                                        label="Masukkan Nama Item" />
-                                    @endforeach
+                                        @foreach ($product->items->take(1) as $item)
+                                        <x-form.input type="text" inputName="item_name"
+                                            value="{{ old('item_name', $item->item_name) }}" name="item_name"
+                                            label="Insert Name of Item" />
+                                        @endforeach
                                     @else
-                                    <x-form.input type="text" inputName="item_name" name="item_name"
-                                        label="Masukkan Nama Item" />
+                                        <x-form.input type="text" inputName="item_name" name="item_name"
+                                            label="Insert Name of Item" />
                                     @endif
+                                    <x-form.input type="text" inputName="code_item" name="code_item"
+                                        label="Insert Code Item" />
                                     <x-form.input type="text" inputName="nominal" name="nominal"
-                                        label="Jumlah Nominal Pada Item" />
-                                    <x-form.input type="number" inputName="price" name="price" label="Harga Item" />
+                                        label="Insert Nominal Item" />
+                                    <x-form.input type="number" inputName="price" name="price" label="Set Item Price" />
                                     <input type="hidden" name="product_id" value="{{ $product->id }}">
                                 </x-slot:inputBox>
                             </x-dashboard.form-modal>

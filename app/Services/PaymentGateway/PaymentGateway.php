@@ -21,16 +21,17 @@ abstract class PaymentGateway {
     $total_amount = (int) $data['qty'] * (int) $data['price'];
     $invoice = "INV" . Carbon::now()->format("dmy") . $this->createInvoice();
     return Order::create([
-      'product_id' => $data['product_id'],
-      'payment_id' => $data['payment_id'],
-      'player_id' => $data['player_id'],
-      'invoice' => $invoice, 
-      'email' => $data['email'],
-      'qty' => $data['qty'],
-      'price' => (int) $data['price'],
-      'before_amount' => (int) $data['before_amount'],
-      'total_amount' => $total_amount,
-      'payment_status' => PaymentStatusEnum::Pending
+      'product_id'  => $data['product_id'],
+      'payment_id'  => $data['payment_id'],
+      'item_id'     => $data['item_id'],
+      'player_id'   => $data['player_id'],
+      'invoice'     => $invoice, 
+      'email'       => $data['email'],
+      'qty'         => $data['qty'],
+      'price'       => (int) $data['price'],
+      'before_amount'   => (int) $data['before_amount'],
+      'total_amount'    => $total_amount,
+      'payment_status'  => PaymentStatusEnum::Pending
     ]);
   }
 }

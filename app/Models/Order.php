@@ -13,11 +13,16 @@ class Order extends Model
     protected $guarded = ['id'];
 
     protected $casts = [
-      'payment_status' => PaymentStatusEnum::class
+      'payment_status'  => PaymentStatusEnum::class,
+      'created_at'      => 'datetime:d F Y',
     ];
 
     public function product() {
       return $this->belongsTo(Product::class, 'product_id');
+    }
+
+    public function item() {
+      return $this->belongsTo(Item::class, 'item_id');
     }
 
     public function payment() {

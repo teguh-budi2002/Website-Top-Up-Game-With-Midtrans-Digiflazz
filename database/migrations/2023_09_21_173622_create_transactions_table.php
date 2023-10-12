@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->string("trx_id");
+            $table->string('invoice');
             $table->string("payment_type_trx", 11);
             $table->dateTime("transaction_time");
             $table->dateTime("transaction_expired");

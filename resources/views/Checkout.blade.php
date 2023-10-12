@@ -51,51 +51,64 @@
                     <p class="font-semibold text-slate-500 text-xl">Mohon Tunggu Sebentar, Kami Sedang Memproses Pesanan
                         Kamu.</p>
                 </div>
-                <div x-show="!isLoading" class="box__invoice mt-10 mb-10 w-3/4 h-auto p-2 bg-white border border-solid border-black">
-                    <div class="header_inv flex items-center justify-between">
-                        <p class="text-start font-extrabold text-slate-600 text-2xl">INVOICE</p>
-                        <div class="right_section flex items-center space-x-2">
-                            <div class="store_name_and_logo">
-                                <p class="text-xl font-bold text-end">{{ env('APP_NAME') }}</p>
-                                <p class="text-xs">{{ $navigation->text_head_nav ?? "Website Top Up Game Termurah" }}
-                                </p>
+                <div x-show="!isLoading" x-cloak
+                    class="box__invoice mt-10 mb-10 sm:w-5/6 md:w-3/4 w-11/12 h-auto p-6 bg-primary-slate border border-solid border-black rounded-lg">
+                    <div class="header_inv flex items-center justify-between md:flex-row flex-col">
+                        <div class="left_section flex items-start space-x-2">
+                            @if (app('seo_data')->logo_website)
+                            <img src="{{ asset('/storage/seo/logo/website/' . app('seo_data')->logo_website) }}"
+                                class="w-20 h-20 rounded md:block hidden" alt="logo_website">
+                            @else
+                            <img src="{{ asset('/img/logo_with_bg.png') }}" class="w-20 h-20 rounded md:block hidden"
+                                alt="logo_website">
+                            @endif
+                            <div class="store_name_and_logo md:text-start text-center">
+                                <p class="text-2xl font-bold text-slate-300">{{ app('seo_data')->name_of_the_company }}</p>
+                                <p class="text-xs text-slate-100">{{ app('seo_data')->description }}</p>
                             </div>
-                            <img src="{{ asset('/img/logo_with_bg.png') }}" class="w-20 h-20" alt="logo_website">
+                        </div>
+                        <p class="font-extrabold text-slate-300 text-4xl md:mt-0 mt-4">INVOICE</p>
+                    </div>
+                    <p class="font-extrabold text-xl md:mt-10 mt-8 text-slate-100">DETAIL PESANAN</p>
+                    <hr class="dashed_border mt-1 mb-1">
+                    <div class="detail_invoice grid md:grid-cols-2 grid-cols-7 gap-2">
+                        <div class="title_inv text-slate-300 md:col-span-1 col-span-2">
+                            <p>Invoice</p>
+                            <p>Tanggal</p>
+                        </div>
+                        <div class="description_inv text-slate-300 md:text-base text-sm md:col-span-1 col-span-5">
+                            <div class="flex items-center space-x-1">
+                                <p class="font-semibold">:</p>
+                                <p id="invoice-order" class="font-semibold" x-text="detail_order.invoice"></p>
+                                <i @click="copyToClipboardInvoice()" class="fa-solid fa-copy cursor-pointer ml-2 text-yellow-400 click_to_copy"></i>
+                                <span x-show="copiedInvoice" x-transition.duration.300ms class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2 rounded ml-2 sm:block hidden">Invoice Copied</span>
+                                <i x-show="copiedInvoice" x-transition.duration.300ms class="fa-solid fa-check sm:hidden block p-0.5 bg-green-100 border-solid border-[1px] border-green-500 text-green-600 rounded text-center"></i>
+                            </div>
+                            <p class="font-semibold md:mt-0 mt-1.5">: <span x-text="detail_order.created_at"></span></p>
                         </div>
                     </div>
                     <hr class="dashed_border mt-2 mb-1">
-                    <div class="detail_invoice grid grid-cols-2 gap-2">
-                        <div class="title_inv">
-                            <p>Nomor Invoice</p>
-                            <p>Tanggal</p>
+                    <div class="detail_customer grid md:grid-cols-2 grid-cols-7 gap-2">
+                        <div class="title_inv text-slate-300 md:col-span-1 col-span-2">
+                            <p>Email</p>
                         </div>
-                        <div class="description_inv">
-                            <p class="text-slate-600 font-semibold">: {{ $detail_order->invoice }}</p>
-                            <p class="text-slate-600 font-semibold">: {{ $detail_order->created_at->format('d F y') }}
+                        <div class="description_inv md:col-span-1 col-span-5">
+                            <p class="text-slate-100 md:text-base text-sm font-semibold ">:
+                                <span x-text="detail_order.email ? detail_order.email : 'Keterangan Email Tidak Dicantumkan'"></span>
                             </p>
                         </div>
                     </div>
                     <hr class="dashed_border mt-2 mb-1">
-                    <div class="detail_customer grid grid-cols-2 gap-2">
-                        <div class="title_inv">
-                            <p>Email</p>
-                        </div>
-                        <div class="description_inv">
-                            <p class="text-slate-600 font-semibold">:
-                                {{ $detail_order->email ? $detail_order->email : "XXXXXX@gmail.com" }}</p>
-                        </div>
-                    </div>
-                    <hr class="dashed_border mt-2 mb-1">
-                    <div class="detail_customer_order mt-4">
-                        <table class="table-auto w-full">
+                    <div class="detail_customer_order mt-4 overflow-x-scroll no-scrollbar">
+                        <table class="sm:w-full w-[500px]">
                             <thead class="bg-slate-600 text-slate-400 border-0 border-b border-solid border-slate-400">
-                                <th class="p-1.5">No</th>
-                                <th class="p-1.5">Nama Produk</th>
-                                <th class="p-1.5">Jumlah Pembelian</th>
-                                <th class="p-1.5">Total Harga</th>
+                                <th class="p-1.5 md:text-base text-sm">#</th>
+                                <th class="p-1.5 md:text-base text-sm">Nama Produk</th>
+                                <th class="p-1.5 md:text-base text-sm">Jumlah Pembelian</th>
+                                <th class="p-1.5 md:text-base text-sm">Total Harga</th>
                             </thead>
                             <tr>
-                                <tbody class="bg-slate-400">
+                                <tbody class="bg-slate-400 md:w-full w-72">
                                     <td class="p-1.5">
                                         <div class="text-center">
                                             <p class="text-white font-semibold">1</p>
@@ -103,18 +116,24 @@
                                     </td>
                                     <td class="p-1.5">
                                         <div class="text-center">
-                                            <p class="text-white font-semibold">
-                                                {{ $detail_order->product->product_name }}</p>
+                                            <p class="text-white font-semibold md:text-base text-sm">
+                                              <span x-text="detail_order && detail_order.product ? detail_order.product.product_name : ''"></span>
+                                            </p>
                                         </div>
                                     </td>
                                     <td class="p-1.5">
                                         <div class="text-center">
-                                            <p class="text-white font-semibold">{{ $detail_order->qty }}</p>
+                                            <p class="text-white font-semibold md:text-base text-sm">
+                                              <span x-text="detail_order && detail_order.item ? detail_order.item.nominal : ''"></span>
+                                              <span>-</span>
+                                              <span x-text="detail_order && detail_order.item ? detail_order.item.item_name : ''"></span>
+                                            </p>
                                         </div>
                                     </td>
                                     <td class="p-1.5">
                                         <div class="text-center">
-                                            <p class="text-white font-semibold">Rp. {{ Cash($detail_order->price, 2) }}
+                                            <p class="text-white font-semibold md:text-base text-sm">
+                                              Rp. <span x-text="detail_order.price ? detail_order.price.toLocaleString('id-ID', {'currency' : 'IDR'}) : ''"></span>
                                             </p>
                                         </div>
                                     </td>
@@ -122,115 +141,215 @@
                             </tr>
                         </table>
                     </div>
-                    <hr class="dashed_border mt-2 mb-1">
-                    <div class="detail_payment grid grid-cols-2 gap-2">
-                        <div class="title_payment">
+                    <hr class="dashed_border mt-3 mb-1">
+                    <div class="detail_player_id grid md:grid-cols-2 grid-cols-7 gap-2">
+                        <div class="title_player_id text-slate-300 md:col-span-1 col-span-3">
+                            <p>Game ID</p>
+                        </div>
+                        <div class="description_player_id md:col-span-1 col-span-4">
+                            <p class="text-slate-100 md:text-base text-sm font-semibold">: <span x-text="detail_order.player_id"></span></p>
+                        </div>
+                    </div>
+                    <hr class="dashed_border mt-2 mb-3">
+                    <div class="detail_payment grid md:grid-cols-2 grid-cols-7 gap-2">
+                        <div class="title_payment text-slate-300 md:col-span-1 col-span-3">
                             <p>Pembayaran</p>
                         </div>
-                        <div class="description_payment">
-                            <img src="{{ asset('/img/' . $detail_order->payment->img_static) }}" class="w-20 h-auto"
+                        <div class="description_payment bg-white w-fit rounded p-1 md:col-span-1 col-span-4">
+                            <img :src="`/img/${detail_order && detail_order.payment ? detail_order.payment.img_static : ''}`" class="w-20 h-auto"
                                 alt="detail payment">
                         </div>
                     </div>
-                    <hr class="dashed_border mt-1 mb-1">
-                    <div class="detail_player_id grid grid-cols-2 gap-2">
-                        <div class="title_player_id">
-                            <p>Game ID</p>
+                    <hr class="dashed_border mt-3 mb-1">
+                    <div class="detail_status_transaction grid md:grid-cols-2 grid-cols-7 gap-2 mt-2">
+                        <div class="title_player_id text-slate-300 md:col-span-1 col-span-3">
+                            <p>Status Pembayaran</p>
                         </div>
-                        <div class="description_player_id">
-                            <p class="text-slate-600 font-semibold">: {{ $detail_order->player_id }}</p>
-                        </div>
-                    </div>
-                    <hr class="dashed_border mt-1 mb-1">
-                    <div class="detail_status_transaction grid grid-cols-2 gap-2 mt-2">
-                        <div class="title_player_id">
-                            <p>Status Transaksi</p>
-                        </div>
-                        <div class="description_player_id">
-                            <button type="button" class="text-white py-1.5 px-6 rounded font-semibold"
-                             :class="{
-                                'bg-yellow-400': transaction_status === 'pending',
-                                'bg-rose-400': transaction_status === 'expire',
-                                'bg-green-400': transaction_status === 'settlement'
+                        <div class="status_payment md:text-base text-sm md:col-span-1 col-span-4">
+                            <button type="button" class="text-white md:py-1 md:px-2 px-1 rounded font-semibold" 
+                            :class="{
+                                'bg-yellow-100 border-solid border-2 border-yellow-500 text-yellow-600':  detail_trx.transaction_status   === 'Pending',
+                                'bg-rose-100 border-solid border-2 border-rose-500 text-rose-600':    detail_trx.transaction_status   === 'Expired',
+                                'bg-rose-100 border-solid border-2 border-rose-500 text-rose-600':    detail_trx.transaction_status   === 'Failure',
+                                'bg-green-100 border-solid border-2 border-green-500 text-green-600':   detail_trx.transaction_status   === 'Success',
                             }">
-                                <p x-text="transaction_status === 'pending' ? 'Belum Dibayar' : (transaction_status === 'expire' ? 'Kadaluarsa' : 'Sudah Dibayar')"></p>
+                            <p x-text="detail_trx.transaction_status=== 'Pending' ? 'Menunggu Pembayaran' : (detail_trx.transaction_status === 'Expired' ? 'Kadaluarsa' : (detail_trx.transaction_status === 'Failure') ? 'Pembayaran Gagal' : 'Pembayaran Berhasil')"></p>
                             </button>
                         </div>
                     </div>
-                    <hr class="dashed_border mt-1 mb-1">
-                    <div class="expired_order grid grid-cols-2 gap-2 mt-2">
-                        <div class="text_expirder_order">
+                    <hr class="dashed_border mt-3 mb-3">
+                    <div class="expired_order grid md:grid-cols-2 grid-cols-7 gap-2 mt-2">
+                        <div class="text_expirder_order text-slate-300 md:col-span-1 col-span-3">
                             <p>Bayar Sebelum</p>
                         </div>
-                        <div class="description_expired_order">
-                          <div class="right_item flex items-center space-x-2">
-                            <div class="minutes w-fit text-center p-1 px-2 bg-primary-slate flex items-center space-x-2 rounded">
-                              <p class="text-rose-400 font-semibold" x-text="countdown.minutes"></p>
-                              <p class="text-slate-500 font-semibold">Menit</p>
+                        <div class="description_expired_order md:col-span-1 col-span-4">
+                            <div class="right_item flex items-center space-x-2">
+                                <div
+                                    class="minutes w-fit text-center p-1 px-2 bg-primary-slate-light flex items-center space-x-2 rounded">
+                                    <p class="text-rose-400 font-semibold" x-text="countdown.minutes"></p>
+                                    <p class="text-slate-500 font-semibold">Menit</p>
+                                </div>
+                                <p class="font-extrabold text-primary-slate-light">:</p>
+                                <div
+                                    class="minutes w-fit text-center p-1 px-2 bg-primary-slate-light flex items-center space-x-2 rounded">
+                                    <p class="text-rose-400 font-semibold" x-text="countdown.seconds"></p>
+                                    <p class="text-slate-500 font-semibold">Detik</p>
+                                </div>
                             </div>
-                            <p class="font-extrabold text-primary-slate">:</p>
-                            <div class="minutes w-fit text-center p-1 px-2 bg-primary-slate flex items-center space-x-2 rounded">
-                              <p class="text-rose-400 font-semibold" x-text="countdown.seconds"></p>
-                              <p class="text-slate-500 font-semibold">Detik</p>
-                            </div>
-                          </div>
                         </div>
                     </div>
-                    <img src="{{ $detail_trx->qr_code_url }}" alt="QR Code">
+                    <hr class="dashed_border mt-3 mb-1">
+                    <div class="barcode mt-5">
+                        <p class="font-extrabold text-xl text-slate-300">PEMBAYARAN</p>
+                        <p class="md:text-sm text-xs text-slate-300">Silahkan scan QR Code berikut untuk melanjutkan pembayaran</p>
+                        <img :src="`${detail_trx.qr_code_url}`" class="object-cover w-48 h-48 rounded-md mt-3 md:mx-0 mx-auto"
+                            alt="QR Code">
+                    </div>
+                    <div class="intruction_payment mt-5">
+                        <p class="font-extrabold text-xl text-slate-300">INTRUKSI PEMBAYARAN</p>
+                        <div class="mt-5 mb-3 text-white">
+                            <div class="accordion-1 md:w-2/3 w-full text-left">
+                                <button
+                                    class="w-full flex items-center justify-between bg-primary-slate-light p-4 px-4 rounded-t-md"
+                                    @click="selectedAccordion = (selectedAccordion === 1) ? null : 1">
+                                    <span class=" font-bold capitalize">cara bayar aplikasi dengan Go-jek</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="w-6 h-6"
+                                        :class="{'rotate-180 transition-transform transform origin-center duration-150' : selectedAccordion === 1}">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                                    </svg>
+                                </button>
+                                <div x-show="selectedAccordion === 1" x-transition:enter="transition duration-300"
+                                    x-transition:enter-start="opacity-0 transform -translate-y-4"
+                                    x-transition:enter-end="opacity-100 transform translate-y-0"
+                                    x-transition:leave="transition duration-150"
+                                    x-transition:leave="opacity-20 transform translate-y-0"
+                                    x-transition:leave-end="opacity-0 transform -translate-y-4" x-cloak
+                                    class=" bg-primary-slate-light p-3 px-6 h-auto">
+                                    <ul class="list-disc mx-6 font-semibold">
+                                        <li>Download atau Screenshot foto GoPay QRIS diatas</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="accordion-2 md:w-2/3 w-full mt-4 text-left">
+                                <button
+                                    class="w-full flex items-center justify-between bg-primary-slate-light p-4 px-4 rounded-t-md"
+                                    @click="selectedAccordion = (selectedAccordion === 2) ? null : 2">
+                                    <span class=" font-bold capitalize">cara bayar aplikasi dengan Gopay</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="w-6 h-6"
+                                        :class="{'rotate-180 transition duration-150' : selectedAccordion === 2}">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                                    </svg>
+                                </button>
+                                <div x-show="selectedAccordion === 2" x-transition:enter="transition duration-300"
+                                    x-transition:enter-start="opacity-0 transform -translate-y-4"
+                                    x-transition:enter-end="opacity-100 transform translate-y-0"
+                                    x-transition:leave="transition duration-150"
+                                    x-transition:leave="opacity-20 transform translate-y-0"
+                                    x-transition:leave-end="opacity-0 transform -translate-y-4" x-cloak
+                                    class=" bg-primary-slate-light p-3 px-6 h-auto">
+                                    <ul class="list-disc mx-6 font-semibold">
+                                        <li>Download atau Screesnhot Barcode GoPay QRIS diatas</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
     </div>
     @push('js-custom')
     <script>
-        const orderStart = "{{ date('Y-m-d\\TH:i:s', strtotime($detail_trx->transaction_time)) }}"
-        const orderEnd = "{{ date('Y-m-d\\TH:i:s', strtotime($detail_trx->transaction_expired)) }}"
-        const getEndTime = new Date(orderEnd).getTime(); 
-        function handlePurchaseOrder() {
+      
+      function handlePurchaseOrder() {
             return {
+                detail_order: [],
+                detail_trx: [],
                 transaction_status: '',
-                isLoading: null,
-                end: getEndTime,
+                isLoading: false,
+                end: null,
                 countdown: {
                     minutes: 0,
                     seconds: 0,
                 },
+                selectedAccordion: null,
+                copiedInvoice: false,
 
                 init() {
-                  this.initializeStaturOrder()
-
-                  this.isLoading = true
-                  this.getStatusOrder('{{ $detail_order->trx_id }}')
+                  this.getStatusOrder('{{ $invoice }}')
                 },
 
-                initializeStaturOrder() {
-                  const intervalCheckStatusOrder = setInterval(() => {
-                      const now = Date.now();
-                      if (now <= this.end) {
-                          this.calculateCountdown(this.end);
+                initializeCountdownOrder(detail_trx) {
+                    const orderStart = new Date(detail_trx.transaction_time)
+                    const orderEnd = new Date(detail_trx.transaction_expired)
+                    this.end = orderEnd.getTime();
+
+                    const intervalCheckExpiredOrder = setInterval(() => {
+                        const now = Date.now();
+                        if (now <= this.end) {
+                            this.calculateCountdown(this.end);
                         } else {
-                          clearInterval(intervalCheckStatusOrder);
+                            clearInterval(intervalCheckExpiredOrder);
                         }
                     }, 1000);
                 },
 
-                getStatusOrder(trx_id) {
-                    axios.get(`/api/order/purchase/status/${trx_id}`)
-                        .then(res => {
-                            this.isLoading = false
+                getStatusOrder(invoice) {
+                  this.isLoading = true
+                  axios.get('/api/get-token').then(res => {
+                        const token = res.data.data
+                        axios.get(`/api/order/detail-order/${invoice}`, {
+                            headers: {
+                                'X-Custom-Token' : `${token}`
+                            }
+                        }).then(res => {
                             const response = res.data.data
-                            this.transaction_status = response.transaction_status
+                            this.detail_order = response.detail_order
+                            this.detail_trx = response.detail_trx
+                            this.initializeCountdownOrder(this.detail_trx)
+
+                            this.isLoading = false
                         }).catch(err => {
-                           this.isLoading = false
-                          console.log("STATUS ORDER ERROR")
+                            this.isLoading = false
+                            console.log("DETAIL ORDER ERROR", err.response)
                         })
+                    })
                 },
 
                 calculateCountdown(targetTime) {
                     const timeDiff = targetTime - Date.now();
-                    this.countdown.minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+                    this.countdown.minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60)).toString()
+                        .padStart(2, '0');
                     this.countdown.seconds = Math.floor((timeDiff % (1000 * 60)) / 1000).toString().padStart(2, '0');
                 },
+
+                copyToClipboardInvoice() {
+                    this.copiedInvoice = false
+
+                    const textToCopy = document.getElementById('invoice-order').textContent;
+                    const targetElement = document.createElement('textarea');
+                    targetElement.value = textToCopy;
+                    document.body.appendChild(targetElement);
+                    targetElement.select();
+                    
+                    try {
+                        document.execCommand('copy');
+                        this.copiedInvoice = true
+                    } catch (err) {
+                        console.error('Gagal menyalin teks ke clipboard:', err);
+                        this.copiedInvoice = false
+                    } finally {
+                        document.body.removeChild(targetElement);
+                    }
+
+                    setTimeout(() => {
+                        this.copiedInvoice = false;
+                    }, 3000);
+                }
             }
         }
 

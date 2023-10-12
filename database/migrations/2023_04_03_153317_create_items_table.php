@@ -17,6 +17,7 @@ return new class extends Migration
                   ->constrained()
                   ->onUpdate('cascade')
                   ->onDelete('cascade');
+            $table->string('code_item');
             $table->string('item_name');
             $table->string('nominal');
             $table->integer('price');

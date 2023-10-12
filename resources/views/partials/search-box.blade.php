@@ -57,7 +57,7 @@
                 </div>
             </div>
 
-            <div x-show="resultSearch" x-transition:enter="transition ease-out duration-300"
+            <div x-show="resultSearch" x-cloak x-transition:enter="transition ease-out duration-300"
                 x-transition:enter-start="opacity-0 transform translate-x-full"
                 x-transition:enter-end="opacity-100 transform translate-x-0">
                 <template x-for="result in resultSearch" :key="result.id">

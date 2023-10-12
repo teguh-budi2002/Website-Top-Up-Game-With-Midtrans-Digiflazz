@@ -384,15 +384,12 @@
                     this.priceIncludeFee = this.formatPriceToRupiah(this.priceIncludeFee)
                 },
 
-                checkDiscountItem() {
-
-                },
-
                 checkoutOrder() {
                     let productName = '{{ $product->slug }}'
                     let dataOrder = {
                         player_id: this.data.player_id,
                         product_id: this.data.product_id,
+                        item_id: this.activeItem,
                         payment_id: this.handleDisblePaymentMethod() ? '' : this.selectedPaymentId,
                         email: this.data.email,
                         price: this.convertPriceIntoInteger(),

@@ -1,4 +1,4 @@
-<div x-show="isOpen" @keydown.window.prevent.esc="isOpen = false" x-transition:enter="transition duration-300"
+<div x-show="isOpen" x-cloak @keydown.window.prevent.esc="isOpen = false" x-transition:enter="transition duration-300"
     x-transition:enter-start="opacity-0 transform -translate-y-4"
     x-transition:enter-end="opacity-100 transform translate-y-0" x-transition:leave="transition duration-300"
     x-transition:leave-start="opacity-100 transform translate-y-0"

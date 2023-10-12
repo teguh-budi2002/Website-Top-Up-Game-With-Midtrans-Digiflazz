@@ -24,6 +24,7 @@ class StoreOrderRequest extends FormRequest
         return [
             'product_id'    => 'required|integer',
             'payment_id'    => 'required',
+            'item_id'       => 'required',
             'email'         => 'nullable|email|ends_with:@gmail.com',
             'player_id'     => 'required|regex:/^[^\s\p{P}]+$/',
             'qty'           => 'required',
@@ -45,6 +46,7 @@ class StoreOrderRequest extends FormRequest
             'player_id.required'    => 'Game ID Tidak Boleh Kosong.',
             'player_id.regex'       => 'Format Player ID Tidak Valid.',
             'payment_id.required'   => 'Metode Pembayaran Wajib Dipilih.',
+            'item_id.required'      => 'Item Wajib Dipilih.',
             'qty.required'          => 'Cantumkan Jumlah Order.',
             'price'                 => "Pilih Minimal Satu Item Agar Dapat Melanjutkan Pembelian."
         ];

@@ -3,7 +3,7 @@
             @foreach ($categories as $category)
             <div class="w-full md:pb-2 pb-1 cursor-pointer text-center m-0"
                 @click.prevent="isPanelActive = '{{ $category->id }}'; getProductsByCategory('{{ $category->id }}')"
-                :class="{'border-b-2 border-solid border-cyan-300' : isPanelActive === '{{ $category->id }}' }">
+                :class="{'md:border-b-2 border-b-0 border-solid border-cyan-300' : isPanelActive === '{{ $category->id }}' }">
                 <div class="category_panel font-semibold text-cyan-700 hover:text-cyan-300 transition-colors duration-200 md:text-base text-xs"
                     :class="{ 'text-cyan-300': isPanelActive === '{{ $category->id }}' }">
                     @if ($category->name_category === 'Mobile Games')
