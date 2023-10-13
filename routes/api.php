@@ -26,6 +26,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::get('get-token', [TokenController::class, 'token'])->withoutMiddleware('api.security');
 
+// URL Callback Payment Method
+Route::post('order/notification', [OrderApiController::class, 'httpNotifCallback'])->withoutMiddleware('api.security'); 
+
 Route::middleware(['api.refresh_token', 'api.security'])->group(function() {
     // Finding Data Resource
     Route::get('find-product-with-livesearch', [ProductApiController::class, 'liveSearchData']);
@@ -41,10 +44,7 @@ Route::middleware(['api.refresh_token', 'api.security'])->group(function() {
     Route::prefix('order')->group(function() {
         Route::post('{order}', [OrderApiController::class, 'createOrder']);  
         Route::get('/purchase/status/{trx_id}', [OrderApiController::class, 'statusOrder'])->withoutMiddleware('api.security');
-        Route::get('/detail-order/{invoice}', [OrderApiController::class, 'getDetailOrder']);
-
-        // URL Callback Payment Method
-        Route::post('/notification', [OrderApiController::class, 'httpNotifCallback'])->withoutMiddleware('api.security');  
+        Route::get('/detail-order/{invoice}', [OrderApiController::class, 'getDetailOrder']); 
     });
 
     // URL Callback Marketplace
