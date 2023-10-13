@@ -15,12 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string("trx_id");
             $table->string('invoice');
-            $table->string("payment_type_trx", 11);
+            $table->string("payment_type_trx", 20);
             $table->dateTime("transaction_time");
             $table->dateTime("transaction_expired");
             $table->string("transaction_status", 11);
             $table->string("gross_amount", 20);
-            $table->string("qr_code_url");
+            $table->string("qr_code_url")->nullable();
+            $table->string("va_number")->nullable();
+            $table->string("bank_name", 20)->nullable();
             $table->timestamps();
         });
     }

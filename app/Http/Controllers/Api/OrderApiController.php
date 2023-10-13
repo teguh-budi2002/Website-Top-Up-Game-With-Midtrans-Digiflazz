@@ -52,19 +52,9 @@ class OrderApiController extends BaseApiController
         try {
          
           $orderCheckout = $this->services->checkout($request->all());
-          // $orderCheckout->update(['invoice' => "ORDER-" . $orderCheckout->id . "-" . Carbon::now()->timestamp]);
           $chargeOrder = $this->services->chargeOrder($orderCheckout);
+          $saveToTrx = self::saveToTransaction($chargeOrder);
 
-          $saveToTrx = Transaction::create([
-            'trx_id'              =>  $chargeOrder['transaction_id'],
-            'invoice'             =>  $chargeOrder['order_id'],
-            'payment_type_trx'    =>  $chargeOrder['payment_type'],
-            'transaction_time'    =>  $chargeOrder['transaction_time'],
-            'transaction_expired' =>  $chargeOrder['expiry_time'],
-            'transaction_status'  =>  ucfirst($chargeOrder['transaction_status']),
-            'gross_amount'        =>  $chargeOrder['gross_amount'],
-            'qr_code_url'         =>  $chargeOrder['actions'][0]['url'] 
-          ]);
           DB::commit();
           return $this->success_response('Checkout Berhasil Ditambahkan, Silahkan Lakukan Pembayaran.', 201, $orderCheckout->invoice);
         } catch (\Exception $e) {
@@ -100,10 +90,57 @@ class OrderApiController extends BaseApiController
 
     public function httpNotifCallback(Request $request) {
       try {
-        $handleCallback = $this->services->callbackNotifMidtrans($request);
+        $handleCallback = $this->services->callbackNotifPaymentGateway(json_decode($request->getContent(), TRUE));
         return $this->success_response('PING! Notification Dari Pihak Midtrans', 200);
       } catch (\Exception $e) {
         return $this->failed_response('Kesalahan Di Sisi Server: ' . $e->getMessage());
       }
+    }
+
+    private static function saveToTransaction($chargeOrder) {
+      $url = '';
+      $va_number = '';
+      $bank_name = '';
+
+      if (isset($chargeOrder['actions']) && isset($chargeOrder['actions'][0])) {
+        if ($chargeOrder['actions'][0]['name'] === 'deeplink-redirect') {
+          // Deeplink Shopee Redirect
+          $url = $chargeOrder['actions'][0]['url'];
+        } elseif ($chargeOrder['actions'][0]['name'] === 'generate-qr-code') {
+          //  QR Code URL
+          $url = $chargeOrder['actions'][0]['url'];
+        }
+      }
+
+      switch ($chargeOrder) {
+        // BCA && BRI && BNI
+        case array_key_exists('va_numbers', $chargeOrder):
+          $va_number = $chargeOrder['va_numbers'][0]['va_number'];
+          $bank_name = $chargeOrder['va_numbers'][0]['bank'];
+          break;
+        // Permata
+        case array_key_exists('permata_va_number', $chargeOrder):
+          $va_number = $chargeOrder['permata_va_number'];
+          $bank_name = 'permata';
+          break;
+        // CIMB
+        case array_key_exists('approval_code', $chargeOrder):
+          $va_number = $chargeOrder['approval_code'];
+          $bank_name = 'cimb';
+          break;
+      }
+
+      Transaction::create([
+        'trx_id'              =>  $chargeOrder['transaction_id'],
+        'invoice'             =>  $chargeOrder['order_id'],
+        'payment_type_trx'    =>  $chargeOrder['payment_type'],
+        'transaction_time'    =>  $chargeOrder['transaction_time'],
+        'transaction_expired' =>  $chargeOrder['expiry_time'],
+        'transaction_status'  =>  ucfirst($chargeOrder['transaction_status']),
+        'gross_amount'        =>  $chargeOrder['gross_amount'],
+        'qr_code_url'         =>  $url,
+        'va_number'           =>  $va_number,
+        'bank_name'           =>  $bank_name,
+      ]);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace App\Services\PaymentGateway\Midtrans;
 
+use App\Models\Transaction;
 use App\Services\PaymentGateway\PaymentGateway;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
@@ -44,27 +45,22 @@ class MidtransServices extends PaymentGateway
   
         $responseBody = $response->getBody();
         $decodeResponse = json_decode($responseBody, true);
-       
         return $decodeResponse;
       } else {
         throw new \RuntimeException('Payment Gateway Provider Not Found');
       }
   }
 
-  public function callbackNotifMidtrans($requestBody) {
-    $notifBody = json_decode($requestBody->getContent(), TRUE);
-
+  public function callbackNotifPaymentGateway($notifBody) {
     $trx_id = $notifBody['transaction_id'];
     $trx_status = $notifBody['transaction_status'];
     $invoice = $notifBody['order_id'];
     $payment_type = $notifBody['payment_type'];
 
-    $currentTransaction = DB::table('transactions')
-                              ->where('trx_id', $trx_id)
-                              ->where('payment_type_trx', $payment_type)
-                              ->where('invoice', $invoice)
-                              ->first();
-
+    $currentTransaction = Transaction::where('trx_id', $trx_id)
+                                      ->where('payment_type_trx', $payment_type)
+                                      ->where('invoice', $invoice)
+                                      ->first();
     if (!$currentTransaction) {
       throw new \Exception('Invoice ID Not Found in Any Transaction');
     }

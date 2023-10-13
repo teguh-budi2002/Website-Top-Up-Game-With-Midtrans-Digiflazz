@@ -10,6 +10,7 @@ abstract class PaymentGateway {
   abstract public static function init();
   abstract public function chargeOrder($dataOrder);
   abstract public function getStatusOrder($trxId);
+  abstract public function callbackNotifPaymentGateway($requst);
 
   protected static function createInvoice() {
     $randomStr = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";

@@ -27,7 +27,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('get-token', [TokenController::class, 'token'])->withoutMiddleware('api.security');
 
 // URL Callback Payment Method
-Route::post('order/notification', [OrderApiController::class, 'httpNotifCallback'])->withoutMiddleware('api.security'); 
+Route::post('notification-callback', [OrderApiController::class, 'httpNotifCallback'])->withoutMiddleware(['api.security', 'api.refresh_token']); 
+
+// URL Callback Marketplace
+Route::prefix('marketplace')->group(function() {
+    Route::get('/digilfazz/transaction', [MarketplaceApiController::class, 'transactionTopUpDigiflazz'])->withoutMiddleware(['api.security', 'api.refresh_token']);;
+});  
 
 Route::middleware(['api.refresh_token', 'api.security'])->group(function() {
     // Finding Data Resource
@@ -42,14 +47,10 @@ Route::middleware(['api.refresh_token', 'api.security'])->group(function() {
     });
 
     Route::prefix('order')->group(function() {
-        Route::post('{order}', [OrderApiController::class, 'createOrder']);  
+        Route::post('{order}', [OrderApiController::class, 'createOrder'])->withoutMiddleware('api.security');
+
         Route::get('/purchase/status/{trx_id}', [OrderApiController::class, 'statusOrder'])->withoutMiddleware('api.security');
         Route::get('/detail-order/{invoice}', [OrderApiController::class, 'getDetailOrder']); 
-    });
-
-    // URL Callback Marketplace
-    Route::prefix('marketplace')->group(function() {
-        Route::get('/digilfazz/transaction', [MarketplaceApiController::class, 'transactionTopUpDigiflazz'])->withoutMiddleware('api.security');;
     });
 
     Route::prefix('layout')->group(function() {
