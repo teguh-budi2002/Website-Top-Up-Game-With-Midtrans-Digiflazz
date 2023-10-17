@@ -34,6 +34,7 @@ class WebsiteController extends Controller
             ['page_slug' => $slug],
             [
                 'text_title_on_order_page' => $request->get('text_title_on_order_page'),
+                'has_zone_id' => $request->has('has_zone_id') ? 1 : 0,
                 'description_on_order_page' => $request->get('description_on_order_page'),
                 'detail_for_product' => $request->get('detail_for_product'),
                 'page_slug' => $slug,
@@ -47,8 +48,7 @@ class WebsiteController extends Controller
 
 		protected function deleteOldImage($path, $filename, $slug) {
 				$customField = CustomField::select("id", "bg_img_on_order_page")->wherepageSlug($slug)->first();
-		
-				if (!is_null($customField)) {
+				if (!is_null($customField) && !is_null($customField->bg_img_on_order_page)) {
 					//Check If Any Old BG Image
 					if ($customField->bg_img_on_order_page != $path . $filename) {
 						// Delete Old Image from Storage

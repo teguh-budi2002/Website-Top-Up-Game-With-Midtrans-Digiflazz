@@ -9,12 +9,14 @@ use Illuminate\View\Component;
 class ItemProductTabPanel extends Component
 {
     public $categories;
+    public $token;
     /**
      * Create a new component instance.
      */
-    public function __construct($categories)
+    public function __construct($categories, $token)
     {
         $this->categories = $categories;
+        $this->token = $token;
     }
 
     /**

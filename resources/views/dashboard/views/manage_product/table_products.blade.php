@@ -25,7 +25,12 @@
                     </button>
                 </div>
             </div>
-
+            
+        </div>
+        <div class="px-5 py-4">
+            @foreach ($categories as $category)
+                <a href="?category_id={{ $category->id }}" class="bg-primary-100 rounded-md w-fit h-auto p-2 text-xs font-semibold text-primary">{{ $category->name_category }}</a>
+            @endforeach
         </div>
 
         {{-- Modal ADD PRODUCT Component --}}
@@ -80,6 +85,9 @@
                             <div class="font-semibold text-left">Product Name</div>
                         </th>
                         <th class="p-2">
+                            <div class="font-semibold text-left">Category Product</div>
+                        </th>
+                        <th class="p-2">
                             <div class="font-semibold text-center">Items</div>
                         </th>
                         <th class="p-2">
@@ -109,11 +117,22 @@
                                 value="{{ $product->id }}" />
                         </td>
                         <td class="p-2">
-                            <img class="w-10 h-10 rounded mx-auto" src="{{ asset('/storage/product/' . $product->product_name . '/' . $product->img_url) }}" alt="image_{{ $product->product_name }}">
+                            @if ($product->is_testing)
+                                <img src="{{ asset($product->img_url) }}" class="w-10 h-10 rounded mx-auto" alt="">
+                            @else
+                                <img class="w-10 h-10 rounded mx-auto" src="{{ asset('/storage/product/' . $product->product_name . '/' . $product->img_url) }}" alt="image_{{ $product->product_name }}">
+                            @endif
                         </td>
                         <td class="p-2">
                             <div class="font-medium">
                                 {{ $product->product_name }}
+                            </div>
+                        </td>
+                        <td class="p-2">
+                            <div>
+                                <button type="button" class="w-fit h-auto p-1 bg-primary-50 font-semibold text-primary text-xs rounded-md">
+                                    {{ $product->category->name_category }}
+                                </button>
                             </div>
                         </td>
                         <td class="p-2 text-center">

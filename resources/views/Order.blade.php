@@ -38,7 +38,7 @@
                 </ul>
             </div>
         </div>
-        @if (!is_null($custom_field))
+        @if (!is_null($custom_field) && !is_null($custom_field->bg_img_on_order_page))
         <img src="{{ asset('/storage/' . $custom_field->bg_img_on_order_page) }}"
             class="custom__bg__img w-full md:h-[700px] h-[300px] object-cover bg-no-repeat bg-top z-10 absolute md:top-[114px] top-[85px]"
             alt="{{ asset('/storage/' . $custom_field->bg_img_on_order_page) }}">
@@ -49,18 +49,40 @@
         @endif
         <div class="container__shadaow w-full md:h-[900px] h-[400px] absolute overflow-x-hidden z-20 bg-white"></div>
         <section class="content w-full h-full md:mx-10 mx-0 z-50 relative">
-
+        {{-- Custom Modal Invalid user ID --}}
+        <div @keydown.escape="showInvalidUserIDModal = false">
+            <div class="fixed inset-0 z-40 flex items-center justify-center overflow-auto" x-show="showInvalidUserIDModal"
+                    x-transition:enter="motion-safe:ease-out duration-300"
+                    x-transition:enter-start="opacity-0 scale-90"
+                    x-transition:enter-end="opacity-100 scale-100"
+                    x-transition:leave="motion-safe:ease-in duration-300"
+                    x-transition:leave-start="opacity-100 scale-100"
+                    x-transition:leave-end="opacity-0 scale-90">
+                <div class="w-3/4 max-w-3xl px-4 py-4 mx-auto text-left bg-primary-slate-light border-2 border-solid border-primary-cyan-light rounded-lg" @click.away="showInvalidUserIDModal = false">
+                    <div class="title">
+                        <h5 class="text-center text-3xl text-rose-500 max-w-none">PERHATIAN</h5>
+                    </div>
+                    <div class="text-center mt-5 mb-5">
+                      <template x-if="errMessTooManyAttemptReq">
+                          <p class="text-lg text-slate-300" x-text="errMessTooManyAttemptReq"></p>
+                      </template>
+                      <template x-if="!errMessTooManyAttemptReq">
+                          <p class="text-lg text-slate-300">User ID Dengan <span class="text-primary-cyan-light" x-text="data.player_id && data.zone_id ? `${data.player_id} - (${data.zone_id})` : data.player_id === '' ? '??????' : `${data.player_id}`"></span> Tidak Ditemukan!</p>
+                      </template>
+                    </div>
+                </div>
+            </div>
+        </div>
             @include('mobile.header_order_mobile')
             <div class="wrapper_grid">
-                <div class="grid md:grid-cols-2 grid-cols-1 gap-5">
+                <div class="grid md:grid-cols-2 grid-cols-1 md:gap-5 gap-1">
                     <div class="left_section md:mt-52 mt-5 md:mb-10 mb-0">
                         {{-- #1a1919 --}}
                         {{-- #222224 --}}
-                        <div
-                            class="form_wrapper w-full h-fit p-8 rounded-lg md:shadow-lg shadow-slate-800 bg-[#25262b]">
-                            <form @submit.prevent="checkoutOrder" method="POST">
-                                <div
-                                    class="add_player_id bg-primary-slate-light border border-slate-500 text-white border-solid w-full p-4 rounded">
+                        {{-- bg-[#25262b] --}}
+                        <div class="form_wrapper w-full h-fit sm:p-8 p-4 rounded-xl md:shadow-lg shadow-slate-200 bg-primary-slate">
+                            <form @submit.prevent="checkingValidationForm" method="POST">
+                                <div class="add_player_id bg-primary-slate-light/70 border-2 border-primary-cyan-light text-white border-solid w-full p-4 rounded-lg">
                                     <div class="step_one flex justify-between items-center mb-3">
                                         <p class="font-semibold text-slate-300 capitalize">{!!
                                             $custom_field->text_title_on_order_page ?? 'Masukkan Player ID Anda'
@@ -75,14 +97,19 @@
                                             class="w-full bg-red-300 rounded text-red-700 p-1.5 font-normal"
                                             role="errorPLayerIDMessage"></p>
                                     </div>
-                                    <x-form.input type="text" label="" modelBinding="data.player_id" name="player_id"
-                                        inputClass="bg-primary-slate text-white p-4 border-slate-500 rounded-md focus:ring-0 focus:border-slate-400"
-                                        inputName="player_id" placeholder="Player ID ex: '45878782'" />
-                                    <p class="text-xs mt-3 italic text-gray-300 font-thin">
-                                        {!! $custom_field->description_on_order_page ?? '' !!}</p>
+                                    <div class="grid {{ isset($custom_field) && $custom_field->has_zone_id ? 'grid-cols-2' : 'grid-cols-1' }} gap-3">
+                                        <x-form.input type="text" label="" modelBinding="data.player_id" name="player_id"
+                                            inputClass="bg-primary-slate-light text-center text-white p-4 border-2 border-slate-400 rounded-lg focus:ring-0 focus:border-slate-400"
+                                            inputName="player_id" placeholder="Masukkan Player ID" />
+                                        @if (isset($custom_field) && $custom_field->has_zone_id)
+                                        <x-form.input type="text" label="" modelBinding="data.zone_id" name="zone_id" maxInput="4"
+                                            inputClass="bg-primary-slate-light text-center text-white p-4 border-2 border-slate-400 rounded-lg focus:ring-0 focus:border-slate-400"
+                                            inputName="zone_id" placeholder="(2179)" />
+                                        @endif
+                                    </div>
+                                    <p class="text-xs mt-3 italic text-gray-300 font-thin">{!! $custom_field->description_on_order_page ?? '' !!}</p>
                                 </div>
-                                <div
-                                    class="item_product mt-5 bg-primary-slate-light border border-slate-500 text-white border-solid w-full p-4 rounded">
+                                <div class="item_product mt-5 bg-primary-slate-light/70 border-2 border-primary-cyan-light text-white border-solid w-full p-4 rounded-lg">
                                     <div class="step_two flex items-center justify-between">
                                         <p class="capitalize font-semibold text-slate-300">Pilih jumlah nominal item.
                                         </p>
@@ -104,15 +131,13 @@
                                                     $roundedPrice = ceil($initialPrice / 500) * 500;
                                                 @endphp
                                                 <div @click.prevent="activeItem = {{ $item->id }}; data.itemSelected = '{{ $item->item_name }}'; data.itemNominal = '{{ $item->nominal }}'; initialPrice = {{ $item->discount->price_after_discount }}; selectedItemProduct()"
-                                                    :class="{ 'bg-slate-300/60 border-rose-500': activeItem === {{ $item->id }}, 'bg-slate-500 hover:bg-slate-300/90 border-[1px] border-white text-white': activeItem !== {{ $item->id }} }"
-                                                    class="items w-[180px] h-[100px] flex flex-col justify-center items-center space-y-1 rounded-md p-2
-                                                border border-gray-400 border-solid cursor-pointer"
+                                                    :class="{ 'bg-slate-600 border-2 border-solid border-primary-cyan-light': activeItem === {{ $item->id }}, 'bg-primary-slate hover:bg-slate-500/90 border-2 border-white text-white': activeItem !== {{ $item->id }} }"
+                                                    class="items sm:w-[180px] w-[150px] sm:h-[100px] h-[120px] flex flex-col justify-center items-center space-y-1 rounded-md sm:p-2 p-1 cursor-pointer"
                                                     data-item-id="{{ $item->id }}">
-                                                    <p class="font-semibold capitalize">{{ $item->nominal }} -
+                                                    <p class="font-semibold capitalize sm:text-base text-sm">{{ $item->nominal }} -
                                                         {{ $item->item_name }}</p>
-                                                    <p class="text-xs">Harga</p>
                                                     <p class="text-xs text-rose-500 line-through">Rp. {{ Cash($item->price, 2) }}</p>
-                                                    <p class="text-sm text-teal-400">Rp. {{ Cash($item->discount->price_after_discount, 2) }}</p>
+                                                    <p class="text-sm text-teal-400 ">Rp. {{ Cash($item->discount->price_after_discount, 2) }}</p>
                                                 </div>
                                             @else
                                                 @php
@@ -120,13 +145,11 @@
                                                     $roundedPrice = ceil($initialPrice / 500) * 500;
                                                 @endphp
                                                 <div @click.prevent="activeItem = {{ $item->id }}; data.itemSelected = '{{ $item->item_name }}'; data.itemNominal = '{{ $item->nominal }}'; initialPrice = {{ $item->price }}; selectedItemProduct()"
-                                                    :class="{ 'bg-slate-300/60 border-rose-500': activeItem === {{ $item->id }}, 'bg-slate-500 hover:bg-slate-300/90 border-[1px] border-white text-white': activeItem !== {{ $item->id }} }"
-                                                    class="items w-[180px] h-[100px] flex flex-col justify-center items-center space-y-2 rounded-md p-2
-                                                    border border-gray-400 border-solid cursor-pointer"
+                                                    :class="{ 'bg-slate-600 border-2 border-solid border-primary-cyan-light': activeItem === {{ $item->id }}, 'bg-primary-slate hover:bg-slate-500/90 border-2 border-solid border-white text-white': activeItem !== {{ $item->id }} }"
+                                                    class="items sm:w-[180px] w-[150px] sm:h-[100px] h-[120px] flex flex-col justify-center items-center space-y-2 rounded-lg sm:p-2 p-1 cursor-pointer"
                                                     data-item-id="{{ $item->id }}">
-                                                    <p class="font-semibold capitalize">{{ $item->nominal }} -
+                                                    <p class="font-semibold capitalize sm:text-base text-sm">{{ $item->nominal }} -
                                                         {{ $item->item_name }}</p>
-                                                    <p class="text-xs">Harga</p>
                                                     <p class="text-sm text-teal-400">Rp. {{ Cash($roundedPrice, 2) }}</p>
                                                 </div>
                                             @endif
@@ -134,7 +157,7 @@
                                         @endforeach
                                     </ul>
                                 </div>
-                                <div class="payment__type mt-5 bg-primary-slate-light border border-slate-500 text-white border-solid w-full p-4 rounded"
+                                <div class="payment__type mt-5 bg-primary-slate-light/70 border-2 border-primary-cyan-light text-white border-solid w-full p-4 rounded-lg"
                                     x-show="activeItem !== null" x-transition:enter="transition duration-300"
                                     x-transition:enter-start="opacity-0 transform -translate-y-4"
                                     x-transition:enter-end="opacity-100 transform translate-y-0"
@@ -160,22 +183,22 @@
                                             fee_flat = '{{ isset($payment->fee->fee_flat) ? $payment->fee->fee_flat : 0 }}'; 
                                             fee_fixed = '{{ isset($payment->fee->fee_fixed) ? $payment->fee->fee_fixed : 0 }}'; 
                                             selectedPayment()">
-                                        <div
-                                            class="relative cursor-pointer group hover:bg-slate-400/60 transition duration-300">
+                                        <div class="relative cursor-pointer group hover:bg-slate-400/60 transition duration-300">
                                             @if ($payment->is_recommendation)
-                                            <div class="best_deal_payment absolute top-1 right-2">
+                                            <div class="best_deal_payment absolute top-2.5 right-2">
                                                 <img src="{{ asset('/img/StaticImage/best_deal.png') }}"
-                                                    class="w-auto h-10 grayscale group-hover:grayscale-0 filter"
+                                                    class="w-auto h-10 grayscale group-hover:grayscale-0 filter transition duration-150"
                                                     :class="{'grayscale-0' : paymentSelected === '{{ $payment->payment_name }}' }"
                                                     alt="best_deal_logo">
                                             </div>
                                             @endif
-                                            <label for="{{ $payment->payment_name }}__payment"
-                                                class="flex items-center justify-between py-2 px-4 rounded border border-solid cursor-pointer"
-                                                :class="{'bg-slate-300 border-slate-300/60' : paymentSelected === '{{ $payment->payment_name }}', 'bg-slate-400/90 hover:bg-slate-300 border-gray-400' : paymentSelected !== '{{ $payment->payment_name }}' }">
-                                                <img src="{{ asset('/img/' . $payment->img_static) }}"
-                                                    class="w-auto h-8" alt="logo_{{ $payment->payment_name }}">
-                                            </label>
+                                            <div class="flex items-center justify-between py-2 px-4 rounded border-2 border-solid cursor-pointer"
+                                                :class="{'bg-primary-slate border-primary-cyan-light' : paymentSelected === '{{ $payment->payment_name }}', 'bg-slate-700 hover:bg-slate-500 border-slate-300' : paymentSelected !== '{{ $payment->payment_name }}' }">
+                                                <div class="sm:w-24 w-20 bg-white p-1">
+                                                    <img src="{{ asset('/img/' . $payment->img_static) }}"
+                                                        class="w-auto h-8 mx-auto filter transition duration-150" :class="{'grayscale-0 contrast-200' : paymentSelected === '{{ $payment->payment_name }}', 'grayscale group-hover:grayscale-0' : paymentSelected !== '{{ $payment->payment_name }}'}" alt="logo_{{ $payment->payment_name }}">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div x-show="!handleDisblePaymentMethod() && paymentSelected === '{{ $payment->payment_name }}'"
@@ -200,9 +223,9 @@
                                     @endforeach
                                 </div>
                                 <div
-                                    class="additional_input mt-5 bg-primary-slate-light border border-slate-500 text-white border-solid w-full p-4 rounded">
+                                    class="additional_input mt-5 bg-primary-slate-light/70 border-2 border-primary-cyan-light text-white border-solid w-full p-4 rounded-lg">
                                     <div class="step_four flex items-center justify-between mb-5">
-                                        <p class="capitalize font-semibold text-slate-300">Detail Pembeli (Opsional)</p>
+                                        <p class="capitalize font-semibold text-slate-300">Detail Pembeli</p>
                                         <div class="w-fit bg-primary-slate text-white p-2 rounded-lg md:block hidden">
                                             <p>STEP 4</p>
                                         </div>
@@ -210,21 +233,19 @@
                                     <div>
                                         <div class="ERR_MESS mb-3" x-show="Object.keys(errMess).length > 0">
                                             <ul>
-                                                <template x-for="errEmail in errMess.errorEmail" :key="errEmail">
+                                                <template x-for="errNumbPhone in errMess.errorNumberPhone" :key="errNumbPhone">
                                                     <li class="list-none mb-2 w-full bg-red-300 rounded p-1.5">
-                                                        <p x-text="errEmail" class="text-red-700 font-normal"
-                                                            role="errorEmailMessage"></p>
+                                                        <p x-text="errNumbPhone" class="text-red-700 font-normal"
+                                                            role="errNumbPhone"></p>
                                                     </li>
                                                 </template>
                                             </ul>
                                         </div>
-                                        <x-form.input type="text" label="Email" labelClass="text-white" name="email"
-                                            inputClass="bg-primary-slate text-white p-4 border-slate-500 rounded-md focus:ring-0 focus:border-slate-400"
-                                            inputName="email" placeholder="Masukkan Alamat Email Valid Anda...."
-                                            modelBinding="data.email" />
-                                        <p class="text-xs mt-3 italic text-gray-300 font-thin">Silahkan masukkan
-                                            email
-                                            anda jika ingin menerima bukti pembelian Anda</p>
+                                        <x-form.input type="text" label="No. HP (Whatsapp)" labelClass="text-white" name="number_phone"
+                                            inputClass="bg-primary-slate-light text-white p-4 border-2 border-slate-400 rounded-lg focus:ring-0 focus:border-slate-400" labelClass="font-semibold text-white"
+                                            inputName="number_phone" placeholder="Masukkan Nomor Yang Terdaftar Pada Nomor Whatsapp"
+                                            modelBinding="data.number_phone" />
+                                        <p class="text-xs mt-3 italic text-gray-300 font-thin">Silahkan masukkan No HP (Whatsapp) untuk menerima bukti pembelian Anda</p>
                                     </div>
                                 </div>
                                 <div class="btn_checkout md:block hidden mt-5">
@@ -280,13 +301,17 @@
                             </form>
                         </div>
                     </div>
-                    <div class="right_section md:mt-52 mt-5 md:mx-0 mx-4 mb-10">
+                    <div class="right_section md:mt-52 mt-0 md:mx-0 mx-4 mb-10">
                         <div class="wrapper">
                             <div
                                 class="top_section md:block hidden border-0 border-b border-solid border-slate-500 pb-4 mr-20">
-                                <img src="{{ asset('/storage/product/' . $product->product_name . '/' . $product->img_url) }}"
-                                    class="w-28 h-28 rounded-full border border-solid border-slate-400"
-                                    alt="logo {{ $product->product_name }}">
+                                @if (!$product->is_testing)
+                                    <img src="{{ asset('/storage/product/' . $product->product_name . '/' . $product->img_url) }}"
+                                        class="w-28 h-28 rounded-full border-2 border-solid border-primary-cyan-light"
+                                        alt="logo {{ $product->product_name }}">
+                                @else
+                                    <img src="{{ asset($product->img_url) }}" class="w-28 h-28 rounded-full border-2 border-solid border-primary-cyan-light" alt="Logo Product [DEV]">
+                                @endif
                                 <p class="mt-5 font-bold text-2xl text-white">Top Up
                                     Game [{{ $product->product_name }}]</p>
                             </div>
@@ -321,7 +346,7 @@
                             </div>
                             <div class="guide_topup md:mt-5 mt-0">
                                 <p class="text-white">Cara Top Up <span
-                                        class="font-semibold underline">{{ $product->product_name }} :</span></p>
+                                        class="font-semibold text-primary-cyan-light">{{ $product->product_name }} :</span></p>
                                 <ol class="list-decimal text-white text-sm space-y-2 ml-5 mt-2">
                                     <li>Masukkan ID.</li>
                                     <li>Pilih Nominal Item.</li>
@@ -332,11 +357,12 @@
                                     </li>
                                 </ol>
                             </div>
-                            <div class="describe_about_{{ $product->product_name }} mt-5">
-                                <p class="text-slate-400 text-4xl font-extrabold">{{ $product->product_name }}</p>
-                                <p class="text-slate-300 pr-20 text-sm leading-normal pt-3">{!!
-                                    $custom_field->detail_for_product ?? '' !!}</p>
-                            </div>
+                            @if (isset($custom_field) && $custom_field->detail_for_product)
+                                <div class="describe_about_{{ $product->product_name }} mt-5">
+                                    <p class="text-slate-400 text-4xl font-extrabold ">{{ $product->product_name }}</p>
+                                    <p class="text-slate-300 pr-20 text-sm leading-normal pt-3">{!! $custom_field->detail_for_product !!}</p>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -347,12 +373,15 @@
     <script>
         function handleOrder() {
             return {
+                accessApiToken: '{{ $token }}',
                 data: {
                     player_id: '',
                     product_id: '',
+                    code_game: '',
+                    zone_id: '',
                     itemSelected: '',
                     itemNominal: '',
-                    email: '',
+                    number_phone: '',
                     qty: 1,
                 },
                 fee_flat: 0,
@@ -367,9 +396,12 @@
                 showBestDealBanner: false,
                 isButtonSubmitDisabled: false,
                 errMess: {},
+                showInvalidUserIDModal: false,
+                errMessTooManyAttemptReq: '',
 
                 init() {
                     this.data.product_id = '{{ $product->id }}'
+                    this.data.code_game = '{{ $product->code_product }}'
                 },
 
                 // Immediately Update Price When Item Clicked
@@ -384,52 +416,84 @@
                     this.priceIncludeFee = this.formatPriceToRupiah(this.priceIncludeFee)
                 },
 
+                checkingValidationForm() {
+                  this.isButtonSubmitDisabled = true
+                  this.errMessTooManyAttemptReq = ''
+                  let dataValidationUsername = 
+                  {
+                      code_game: this.data.code_game,
+                      player_id: this.data.player_id,
+                      zone_id: this.data.zone_id
+                  }
+                  axios.post('/api/validation-id', dataValidationUsername, {
+                      headers: {
+                          'X-Custom-Token': this.accessApiToken
+                      }
+                  }).then(res => {
+                          // IF USERNAME VALID
+                          if(res.data.code == 200) {
+                              if (res.data.data.IS_USER_VALID) {
+                                this.checkoutOrder()
+                                this.isButtonSubmitDisabled = false
+                              } 
+                          }
+
+                          if(res.data.code == 400) {
+                              // IF USERNAME INVALID
+                              this.showInvalidUserIDModal = true
+                              this.isButtonSubmitDisabled = false
+                          }
+
+                          if (res.data.code == 429) {
+                              this.errMessTooManyAttemptReq = res.data.message
+                              this.showInvalidUserIDModal = true
+                              this.isButtonSubmitDisabled = false
+                          }
+                  }).catch(err => { 
+                    console.log("ERROR SERVERSIDE VALIDATION USER-ID | Server Sedang Sibuk")
+                    this.isButtonSubmitDisabled = false
+                  })
+                },
+
                 checkoutOrder() {
                     let productName = '{{ $product->slug }}'
-                    let dataOrder = {
+                    let dataOrder = 
+                    {
                         player_id: this.data.player_id,
+                        zone_id: this.data.zone_id,
                         product_id: this.data.product_id,
                         item_id: this.activeItem,
                         payment_id: this.handleDisblePaymentMethod() ? '' : this.selectedPaymentId,
-                        email: this.data.email,
+                        number_phone: this.data.number_phone,
                         price: this.convertPriceIntoInteger(),
                         before_amount: this.initialPrice,
                         qty: this.data.qty
                     }
-                    this.isButtonSubmitDisabled = true
-                    try {
-                        axios.get('/api/get-token').then(res => {
-                            const token = res.data.data
-                            axios.post(`/api/order/${productName}`, dataOrder, {
-                                headers: {
-                                    'X-Custom-Token': `${token}`
-                                }
-                            }).then(res => {
-                                if (res.data.code == 201) {
-                                    const invoice = res.data.data
-                                    window.location.replace(`/checkout/${invoice}`)
-                                }
-                                this.isButtonSubmitDisabled = false
-                            }).catch(err => {
-                                if (err.response.status == 500) {
-                                    console.log(err.response.data.message)
-                                }
+                    
+                    axios.post(`/api/order/${productName}`, dataOrder, {
+                        headers: {
+                            'X-Custom-Token': this.accessApiToken
+                        }
+                    }).then(res => {
+                        if (res.data.code == 201) {
+                            const invoice = res.data.data
+                            window.location.replace(`/checkout/${invoice}`)
+                        }
+                    }).catch(err => {
+                        if (err.response.status == 500) {
+                            console.log(err.response.data.message)
+                        }
 
-                                if (err.response.status == 422) {
-                                    const resErrMess = err.response.data.errors
-                                    this.errMess = {
-                                        errorPlayerId: resErrMess.player_id,
-                                        errorItem: resErrMess.price,
-                                        errorPaymentId: resErrMess.payment_id,
-                                        errorEmail: resErrMess.email
-                                    }
-                                }
-                                this.isButtonSubmitDisabled = false
-                            })
-                        })
-                    } catch (error) {
-                        console.log("ERROR STATUS CODE 500")
-                    }
+                        if (err.response.status == 422) {
+                            const resErrMess = err.response.data.errors
+                            this.errMess = {
+                                errorPlayerId: resErrMess.player_id,
+                                errorItem: resErrMess.price,
+                                errorPaymentId: resErrMess.payment_id,
+                                errorNumberPhone: resErrMess.number_phone
+                            }
+                        }
+                    })
                 },
 
                 handlePaymentFee() {
@@ -465,7 +529,7 @@
                     let normalPrice = this.initialPrice
                     let feeType = this.feeType
 
-                    return normalPrice < 11000 && feeType === 'fee_flat';
+                    return normalPrice < 25000 && feeType === 'fee_flat';
                 }
             }
         }

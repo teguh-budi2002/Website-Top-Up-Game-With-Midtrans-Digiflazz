@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('category_id')->references('id')->on('category_products');
             $table->string('product_name');
+            $table->string('code_product');
             $table->boolean('published')->default(0);
+            $table->boolean('is_testing')->default(0);
             $table->timestamps();
         });
     }

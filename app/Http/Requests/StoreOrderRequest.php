@@ -25,7 +25,7 @@ class StoreOrderRequest extends FormRequest
             'product_id'    => 'required|integer',
             'payment_id'    => 'required',
             'item_id'       => 'required',
-            'email'         => 'nullable|email|ends_with:@gmail.com',
+            'number_phone'  => 'required|digits_between:10,13',
             'player_id'     => 'required|regex:/^[^\s\p{P}]+$/',
             'qty'           => 'required',
             'price'         => 'required',
@@ -41,8 +41,8 @@ class StoreOrderRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.email'           => 'Alamat Email Harus Valid.',
-            'email.ends_with'       => 'Alamat Email Harus Terdaftar Dari Domain @gmail.com',
+            'number_phone.required' => 'No HP (Whatsapp) Harus Dicantumkan.',
+            'number_phone.digits_between'  => 'Format No HP Tidak Valid.',
             'player_id.required'    => 'Game ID Tidak Boleh Kosong.',
             'player_id.regex'       => 'Format Player ID Tidak Valid.',
             'payment_id.required'   => 'Metode Pembayaran Wajib Dipilih.',

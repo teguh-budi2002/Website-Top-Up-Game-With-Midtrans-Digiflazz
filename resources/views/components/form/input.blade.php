@@ -9,11 +9,15 @@
   'value' => null,
   'modelBinding' => null,
   'inputBinding' => null,
-  'initAlpine'  => null
+  'initAlpine'  => null,
+  'maxInput' => null
 ])
 <div>
     <label for="{{ $name }}" class="block mb-2 text-sm font-medium text-gray-800 dark:text-primary-darker {{ $labelClass }}">{{ $label }}</label>
     <input
+      @if ($maxInput)
+        maxLength="{{ $maxInput }}"  
+      @endif
       @if ($inputBinding)
         @input="{{ $inputBinding }}"  
       @endif

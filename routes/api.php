@@ -36,7 +36,7 @@ Route::prefix('marketplace')->group(function() {
 
 Route::middleware(['api.refresh_token', 'api.security'])->group(function() {
     // Finding Data Resource
-    Route::get('find-product-with-livesearch', [ProductApiController::class, 'liveSearchData']);
+    Route::get('find-product-with-livesearch', [ProductApiController::class, 'liveSearchData'])->withoutMiddleware('api.security');;
     Route::get('get-products', [ProductApiController::class, 'getAllProducts']);
     Route::get('get-products-by-category', [ProductApiController::class, 'getProductByCategory']);
     
@@ -46,9 +46,10 @@ Route::middleware(['api.refresh_token', 'api.security'])->group(function() {
         Route::get('get-notifications', [NotificationApiController::class, 'getAllNotifications']);
     });
 
-    Route::prefix('order')->group(function() {
-        Route::post('{order}', [OrderApiController::class, 'createOrder'])->withoutMiddleware('api.security');
+    Route::post('validation-id', [OrderApiController::class, 'checkUsernameGame']);
 
+    Route::prefix('order')->group(function() {
+        Route::post('{order}', [OrderApiController::class, 'createOrder']);
         Route::get('/purchase/status/{trx_id}', [OrderApiController::class, 'statusOrder'])->withoutMiddleware('api.security');
         Route::get('/detail-order/{invoice}', [OrderApiController::class, 'getDetailOrder']); 
     });

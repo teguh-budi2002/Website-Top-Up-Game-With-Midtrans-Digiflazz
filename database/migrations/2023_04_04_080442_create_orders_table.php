@@ -16,8 +16,9 @@ return new class extends Migration
             $table->foreignId('product_id')->references('id')->on('products');
             $table->foreignId('item_id')->references('id')->on('items');
             $table->string('invoice');
-            $table->string('email')->nullable();
+            $table->string('number_phone', 13)->nullable();
             $table->string('player_id');
+            $table->string('zone_id')->nullable();
             $table->string("qty");
             $table->integer('price');
             $table->integer("before_amount");

@@ -1,5 +1,5 @@
 <?php
 
 return [
-  'SECRET_TOKEN' => env('API_SECRET_TOKEN', null)
+  'API_URL_GET_TOKEN' => env('APP_URL', null)
 ];

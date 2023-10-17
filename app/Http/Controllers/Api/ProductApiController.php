@@ -13,7 +13,7 @@ class ProductApiController extends BaseApiController
 {
     public function getAllProducts() {
         try {
-            $getALlProducts = Product::select("id", "product_name", "img_url", "slug")
+            $getALlProducts = Product::select("id", "product_name", "img_url", "slug", "is_testing")
                                       ->where("published", 1)
                                       ->take(10)
                                       ->get();
@@ -27,9 +27,9 @@ class ProductApiController extends BaseApiController
       try {
         $page = (int) $request->page;
         $productByCategory = DB::table('products')
+                                ->select("id", "category_id", "product_name", "img_url", "slug", "is_testing")
                                 ->whereCategoryId($request->category_id)
                                 ->where('published', 1)
-                                ->select("id", "category_id", "product_name", "img_url", "slug")
                                 ->orderBy('id')
                                 ->paginate(10)
                                 ->appends([

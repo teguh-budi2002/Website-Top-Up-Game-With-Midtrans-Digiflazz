@@ -19,6 +19,97 @@ body {
     font-family: "Montserrat", sans-serif;
 }
 
+.triangle__notif__bell {
+    position: absolute;
+    right: 72px;
+    top: 77px;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 20px solid white;
+}
+
+@media screen and (max-width: 768px) {
+    .triangle__notif__bell {
+        right: 25px;
+        top: 60px;
+    }
+}
+
+.loader_notif {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    position: absolute;
+    top: 65px;
+    animation: rotate 1s linear infinite;
+}
+
+.loader_notif::before {
+    content: "";
+    box-sizing: border-box;
+    position: absolute;
+    inset: 0px;
+    border-radius: 50%;
+    border: 5px solid #353349;
+    animation: prixClipFix 2s linear infinite;
+}
+
+@keyframes rotate {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes prixClipFix {
+    0% {
+        clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0);
+    }
+
+    25% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0);
+    }
+
+    50% {
+        clip-path: polygon(
+            50% 50%,
+            0 0,
+            100% 0,
+            100% 100%,
+            100% 100%,
+            100% 100%
+        );
+    }
+
+    75% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%);
+    }
+
+    100% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0);
+    }
+}
+
+.underline__magical {
+    background-image: linear-gradient(120deg, #42e2eb 0%, #0c85c2 100%);
+    background-repeat: no-repeat;
+    background-size: 100% 0.2em;
+    background-position: 0 88%;
+    transition: background-size 0.25s ease-in;
+    padding: 8px;
+}
+
+.underline__magical:hover {
+    color: white;
+    background-size: 100% 88%;
+}
+
+@media screen and (max-width: 768px) {
+    .underline__magical {
+        color: white;
+        background-size: 100% 88%;
+    }
+}
+
 /* Box Product Custom Loader */
 .custom_loader {
     width: 50px;
@@ -187,4 +278,77 @@ body {
     100% {
         transform: rotate(1turn);
     }
+}
+
+.flashsale_text {
+    animation: glitch 2s linear infinite;
+}
+
+@keyframes glitch {
+    2%,
+    64% {
+        transform: translate(2px, 0) skew(0deg);
+    }
+    4%,
+    60% {
+        transform: translate(-2px, 0) skew(0deg);
+    }
+    62% {
+        transform: translate(0, 0) skew(5deg);
+    }
+}
+
+.flashsale_text:before,
+.flashsale_text:after {
+    content: attr(title);
+    position: absolute;
+    left: 0;
+}
+
+.flashsale_text:before {
+    animation: glitchTop 1s linear infinite;
+    clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+    -webkit-clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+}
+
+@keyframes glitchTop {
+    2%,
+    64% {
+        transform: translate(2px, -2px);
+    }
+    4%,
+    60% {
+        transform: translate(-2px, 2px);
+    }
+    62% {
+        transform: translate(13px, -1px) skew(-13deg);
+    }
+}
+
+.flashsale_text:after {
+    animation: glitchBotom 1.5s linear infinite;
+    clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+    -webkit-clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+}
+
+@keyframes glitchBotom {
+    2%,
+    64% {
+        transform: translate(-2px, 0);
+    }
+    4%,
+    60% {
+        transform: translate(-2px, 0);
+    }
+    62% {
+        transform: translate(-22px, 5px) skew(21deg);
+    }
+}
+
+.flickity-viewport {
+    height: 240px !important;
+}
+
+.discount_flashsale {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 51% 90%, 0% 100%);
 }

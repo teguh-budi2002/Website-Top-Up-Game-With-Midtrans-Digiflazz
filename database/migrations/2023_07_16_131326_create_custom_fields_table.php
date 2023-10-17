@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('custom_fields', function (Blueprint $table) {
             $table->id();
             $table->string("text_title_on_order_page", 50)->nullable();
+            $table->boolean('has_zone_id')->default(0);
             $table->string("description_on_order_page")->nullable();
             $table->string("page_slug");
             $table->string("bg_img_on_order_page")->nullable();

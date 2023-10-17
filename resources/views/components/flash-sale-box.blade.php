@@ -1,92 +1,35 @@
 @props(['flash_sales' => null])
-<style>
-    .flashsale_text{
-      animation: glitch 2s linear infinite;
-    }
-
-    @keyframes glitch{
-      2%,64%{
-        transform: translate(2px,0) skew(0deg);
-      }
-      4%,60%{
-        transform: translate(-2px,0) skew(0deg);
-      }
-      62%{
-        transform: translate(0,0) skew(5deg); 
-      }
-    }
-
-    .flashsale_text:before,
-    .flashsale_text:after{
-      content: attr(title);
-      position: absolute;
-      left: 0;
-    }
-
-    .flashsale_text:before{
-      animation: glitchTop 1s linear infinite;
-      clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
-      -webkit-clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
-    }
-
-    @keyframes glitchTop{
-      2%,64%{
-        transform: translate(2px,-2px);
-      }
-      4%,60%{
-        transform: translate(-2px,2px);
-      }
-      62%{
-        transform: translate(13px,-1px) skew(-13deg); 
-      }
-    }
-
-    .flashsale_text:after{
-      animation: glitchBotom 1.5s linear infinite;
-      clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
-      -webkit-clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
-    }
-
-    @keyframes glitchBotom{
-      2%,64%{
-        transform: translate(-2px,0);
-      }
-      4%,60%{
-        transform: translate(-2px,0);
-      }
-      62%{
-        transform: translate(-22px,5px) skew(21deg); 
-      }
-    }
-
-    .flickity-viewport {
-        height: 240px !important;
-    }
-
-    .discount_flashsale {
-      clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 51% 90%, 0% 100%); 
-    }
-
-    /* .description_flashsale {
-      clip-path: polygon(16% 0, 85% 0, 100% 50%, 100% 100%, 0 100%, 0% 50%);
-    } */
-</style>
 <div x-data="handleFlashsale()">
-  <div class="header_countdown flex justify-between items-center bg-black p-2 px-6 rounded-t-md">
-      <div class="left_item flex items-center space-x-2">
-          <p class="text-2xl font-extrabold text-yellow-400 flashsale_text" title="FLASH SALE" style="text-shadow: 2px 0 10px #fbf2c8;">FLASH SALE</p>
+  <div class="header_countdown flex sm:flex-row flex-col justify-between items-center bg-black p-2 sm:px-6 px-0 rounded-t-md">
+      <div class="left_item flex items-center space-x-2 sm:mb-0 mb-3">
+          <p class="sm:text-2xl text-xl sm:text-start text-center font-extrabold text-yellow-400 flashsale_text" title="FLASH SALE" style="text-shadow: 2px 0 10px #fbf2c8;">FLASH SALE</p>
       </div>
-      <div class="right_item flex items-center space-x-2">
-        <p class="w-8 text-center p-1 bg-white text-rose-400 font-semibold rounded" x-text="countdown.days"></p>
-        <p class="font-extrabold text-white">:</p>
-        <p class="w-8 text-center p-1 bg-white text-rose-400 font-semibold rounded" x-text="countdown.hours"></p>
-        <p class="font-extrabold text-white">:</p>
-        <p class="w-8 text-center p-1 bg-white text-rose-400 font-semibold rounded" x-text="countdown.minutes"></p>
-        <p class="font-extrabold text-white">:</p>
-        <p class="w-8 text-center p-1 bg-white text-rose-400 font-semibold rounded" x-text="countdown.seconds"></p>
+      <div class="right_item flex items-center sm:space-x-2 space-x-0.5 sm:mb-0 mb-3">
+          <div class="minutes w-fit text-center p-1 px-2 bg-primary-slate-light flex items-center sm:space-x-2 space-x-1 rounded">
+              <p class="text-rose-400 font-semibold" x-text="countdown.days"></p>
+              <p class="text-slate-500 font-semibold">Hari</p>
+          </div>
+          <p class="font-extrabold text-primary-slate-light">:</p>
+          <div
+              class="minutes w-fit text-center p-1 px-2 bg-primary-slate-light flex items-center sm:space-x-2 space-x-1 rounded">
+              <p class="text-rose-400 font-semibold" x-text="countdown.hours"></p>
+              <p class="text-slate-500 font-semibold">Jam</p>
+          </div>
+          <p class="font-extrabold text-primary-slate-light">:</p>
+          <div
+              class="minutes w-fit text-center p-1 px-2 bg-primary-slate-light flex items-center sm:space-x-2 space-x-1 rounded">
+              <p class="text-rose-400 font-semibold" x-text="countdown.minutes"></p>
+              <p class="text-slate-500 font-semibold">Menit</p>
+          </div>
+          <p class="font-extrabold text-primary-slate-light">:</p>
+          <div
+              class="minutes w-fit text-center p-1 px-2 bg-primary-slate-light flex items-center sm:space-x-2 space-x-1 rounded">
+              <p class="text-rose-400 font-semibold" x-text="countdown.seconds"></p>
+              <p class="text-slate-500 font-semibold">Detik</p>
+          </div>
       </div>
   </div>
-  <div class="product_flashsale bg-white p-2 whitespace-nowrap space-x-2 overflow-x-autp overflow-y-hidden no-scrollbar">
+  <div class="product_flashsale bg-primary-slate-light/70 p-2 whitespace-nowrap space-x-2 overflow-x-autp overflow-y-hidden no-scrollbar">
       <div class="grid grid-cols-1">
           <div class="row-start-2 col-start-1" x-transition:enter="transition ease-out duration-300"
               x-transition:enter-start="opacity-0 transform scale-90"
@@ -97,10 +40,10 @@
               <div class="grid grid-cols-1 grid-rows-1 py-2">
                   <div class="carousel" x-ref="carousel">
                    @foreach ($flash_sales as $item)
-                      <div class="flashsale_items w-auto flickity-viewport px-2">
+                      <div class="flashsale_items w-auto rounded-md flickity-viewport px-2">
                         <a href="{{ URL('/order/' . $item->slug) }}" class="no-underline">
                           <div class="relative w-full h-full">
-                            <div class="discount_flashsale p-1.5 rounded-tr-md bg-yellow-300 absolute right-[7px] top-0">
+                            <div class="discount_flashsale p-1.5 rounded-tr-md bg-yellow-300 absolute sm:right-[7px] right-[8px] top-0">
                               <p class="font-semibold text-rose-500 text-center text-sm">  
                                   {{ $item->type_discount === 'discount_flat' ? 
                                     (
@@ -118,13 +61,18 @@
                               <p class="font-semibold text-white text-xs">OFF</p>
                             </div>
                             <figure class="w-full h-full">
-                              <img class="w-[188px] h-[240px] object-cover object-center mr-2 rounded-md" data-flickity-lazyload="{{ asset('/storage/product/' . $item->product_name . '/' . $item->img_url) }}"
-                                    loading="lazy">
+                              @if (!$item->is_testing)
+                                <img class="sm:w-[188px] sm:h-[158px] w-[170px] h-[164px] object-cover object-center mr-2 rounded-t-md" data-flickity-lazyload="{{ asset('/storage/product/' . $item->product_name . '/' . $item->img_url) }}"
+                                      loading="lazy">      
+                              @else        
+                                <img class="sm:w-[188px] sm:h-[158px] w-[170px] h-[164px] object-cover object-center mr-2 rounded-t-md" data-flickity-lazyload="{{ asset($item->img_url) }}"
+                                      loading="lazy">
+                              @endif
                             </figure>
-                            <div class="description_flashsale absolute bg-blue-500/90 shadow-md shadow-blue-700 rounded-b-md w-[188px] p-2 left-0 right-0 bottom-0">
+                            <div class="description_flashsale absolute left-0 right-0 bottom-0 bg-primary-slate rounded-b-md sm:w-[188px] w-[170px] h-auto p-2">
                               <p class="item_name text-xs font-semibold truncate text-white">{{ $item->nominal }} - {{ $item->item_name }}</p>
-                              <p class="price_after_discount text-sm font-extrabold text-green-500 bg-green-200 py- px-2 mt-1 mb-1 rounded-md w-fit">Rp {{ Cash($item->price_after_discount) }}</p>
-                              <p class="price_before_discount text-xs text-rose-300 line-through">Rp {{ Cash($item->price) }}</p>
+                              <p class="price_after_discount text-sm font-bold text-primary-cyan-light border-2 border-solid border-primary-cyan-light py- px-2 mt-1 mb-1 rounded w-fit">Rp {{ Cash($item->price_after_discount) }}</p>
+                              <p class="price_before_discount text-xs text-rose-500 line-through">Rp {{ Cash($item->price) }}</p>
                             </div>
                           </div>
                         </a>

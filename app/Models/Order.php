@@ -14,7 +14,7 @@ class Order extends Model
 
     protected $casts = [
       'payment_status'  => PaymentStatusEnum::class,
-      'created_at'      => 'datetime:d F Y',
+      'created_at'      => 'datetime:d F Y | H:i:s',
     ];
 
     public function product() {

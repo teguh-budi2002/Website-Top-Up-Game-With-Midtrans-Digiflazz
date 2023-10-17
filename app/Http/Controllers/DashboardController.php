@@ -29,7 +29,7 @@ class DashboardController extends Controller
     public function manage_website(Request $request) {
       $getNameAndSlugProduct = DB::table('products')->select("id", "product_name", 'slug')->paginate(8);
       $getCustomFields = DB::table('custom_fields')
-                            ->select("id", "text_title_on_order_page", "description_on_order_page", "bg_img_on_order_page", "detail_for_product", "page_slug")
+                            ->select("id", "text_title_on_order_page", "description_on_order_page", "bg_img_on_order_page", "detail_for_product", "page_slug", "has_zone_id")
                             ->where('page_slug', $request->query('slug'))
                             ->get();
       return view('dashboard.views.manage_website.main', [
@@ -44,12 +44,16 @@ class DashboardController extends Controller
         $getProduct = ProductRepository::searchProduct($request->get('search_product'));
         $getProduct->appends(['search_product' => $request->get('search_product')]);
       } else {
-        $getProduct = Product::with(['items', 'paymentMethods' => function($q) {
-          $q->select("payment_methods.img_static", "payment_methods.payment_name");
-        }])->paginate(10);
+        if ($request->query('category_id')) {
+            $category_id = $request->query('category_id');
 
-        $categoryProduct = CategoryProduct::select("id", "name_category")->get();
+            $getProduct = Product::with(['items', 'category:id,name_category', 'paymentMethods:id,img_static,payment_name'])->where('category_id', $category_id)->paginate(10);
+        } else {
+          $getProduct = Product::with(['items', 'category:id,name_category', 'paymentMethods:id,img_static,payment_name'])->paginate(10);
+        }
       }
+
+      $categoryProduct = CategoryProduct::select("id", "name_category")->get();
       return view('dashboard.views.manage_product.main', [
         'products' => $getProduct,
         'categories'  => $categoryProduct

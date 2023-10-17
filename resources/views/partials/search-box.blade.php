@@ -1,6 +1,6 @@
-<div x-data="liveSearch()" x-init="init()" class="search_box z-[999]">
+<div x-data="liveSearch()" class="search_box z-[999]">
     <div class="search__btn__desktop md:block hidden">
-        <div class="bg-primary-slate-light border-primary-cyan-light flex h-auto w-80 cursor-pointer flex-row items-center justify-between space-x-3 rounded border border-solid p-2"
+        <div class="bg-primary-slate border-primary-cyan-light flex h-auto w-80 cursor-pointer flex-row items-center justify-between space-x-3 rounded-md border-2 border-solid p-2"
             @keydown.window.prevent.ctrl.k="isOpen = true" @click="isOpen = true">
             <div class="space-x-2">
                 <i class="fa-solid fa-magnifying-glass text-primary-light"></i>
@@ -38,7 +38,7 @@
                 </div>
             </div>
             <input type="text" name="search_product" @click="isOpen = true" x-model="search" x-on:input="debounceSearch"
-                class="bg-primary-slate-light text-primary-cyan-light border-primary-cyan-light w-full rounded border border-solid"
+                class="bg-primary-slate-light text-primary-cyan-light border-primary-cyan-light w-full rounded-lg border-2 border-solid"
                 autofocus placeholder="Cari Games Yang Kamu Inginkan" autocomplete="off">
 
             <div x-show="noRecentSearch" class="mt-3 text-center text-white/90">
@@ -146,27 +146,21 @@
                     let params = new URLSearchParams({
                         search_product: this.search
                     });
-                    axios.get('/api/get-token').then(res => {
-                        const token = res.data.data
-                        axios.get(`/api/find-product-with-livesearch?${params.toString()}`, {
-                            headers: {
-                                'X-Custom-Token': `${token}`
-                            }
-                        })
-                        .then(response => {
-                            if (response.data.code !== 404) {
-                                this.isLoading = false
-                                this.notFound = false
-                                this.resultSearch = response.data.data;
-                            } else {
-                                // resultSearch will be empty array when product not found
-                                this.isLoading = false
-                                this.resultSearch = [];
-                                this.notFound = true
-                            }
-                        }).catch(err => {
-                            console.log("ERROR in Server Side")
-                        })
+                    
+                    axios.get(`/api/find-product-with-livesearch?${params.toString()}`)
+                    .then(response => {
+                        if (response.data.code !== 404) {
+                            this.isLoading = false
+                            this.notFound = false
+                            this.resultSearch = response.data.data;
+                        } else {
+                            // resultSearch will be empty array when product not found
+                            this.isLoading = false
+                            this.resultSearch = [];
+                            this.notFound = true
+                        }
+                    }).catch(err => {
+                        console.log("ERROR in Server Side")
                     })
                 } else {
                     this.isLoading = false

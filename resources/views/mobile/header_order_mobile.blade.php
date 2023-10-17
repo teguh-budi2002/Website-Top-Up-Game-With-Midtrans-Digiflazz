@@ -1,10 +1,14 @@
 <div class="mobile__display__header md:hidden block md:mx-0 mx-3 mb-10">
     <div>
-        <div class="top_section md:mt-0 mt-36 border-0 border-b border-solid border-slate-500 pb-4 flex items-center space-x-4">
-            <img src="{{ asset('/storage/product/' . $product->product_name . '/' . $product->img_url) }}"
-                class="w-20 h-20 rounded-full border border-solid border-slate-400"
-                alt="logo {{ $product->product_name }}">
-            <p class="mt-5 font-bold text-xl text-white">Top Up
+        <div class="top_section md:mt-0 mt-32 border-0 border-b border-solid border-slate-500 pb-4">
+            @if (!$product->is_testing)
+                <img src="{{ asset('/storage/product/' . $product->product_name . '/' . $product->img_url) }}"
+                    class="w-28 h-28 rounded-full border-2 border-solid border-primary-cyan-light"
+                    alt="logo {{ $product->product_name }}">
+            @else
+                <img src="{{ asset($product->img_url) }}" class="w-28 h-28 rounded-full border-2 border-solid border-primary-cyan-light" alt="Logo Product [DEV]">
+            @endif
+            <p class="mt-5 font-bold text-md text-white">Top Up
                 Game [{{ $product->product_name }}]</p>
         </div>
         <div class="badge mt-5">

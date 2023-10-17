@@ -3,7 +3,9 @@ namespace App\Services\PaymentGateway\Midtrans;
 
 use App\Models\Transaction;
 use App\Services\PaymentGateway\PaymentGateway;
+use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\BadResponseException;
 use Illuminate\Support\Facades\DB;
 
 class MidtransServices extends PaymentGateway
@@ -25,27 +27,31 @@ class MidtransServices extends PaymentGateway
 
   public function chargeOrder($order) {
       if ($this->provider) {
-        $transaction_detail = self::adjustTransactionDetail($order);
-
-        $server_key = base64_encode($this->provider->server_key);
-        $headers = [
-          'Authorization' => "Basic " . $server_key,
-          'Accept' => 'application/json',
-          'Content-Type' => 'application/json'
-        ];
-        
-        $client = new Client([
-          'curl' => [CURLOPT_SSL_VERIFYPEER => false]
-        ]);
+        try {
+          $transaction_detail = self::adjustTransactionDetail($order);
   
-        $response = $client->post(self::$endpoint . "/charge", [
-          'headers' => $headers,
-          'json'    => $transaction_detail
-        ]);
-  
-        $responseBody = $response->getBody();
-        $decodeResponse = json_decode($responseBody, true);
-        return $decodeResponse;
+          $server_key = base64_encode($this->provider->server_key);
+          $headers = [
+            'Authorization' => "Basic " . $server_key,
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json'
+          ];
+          
+          $client = new Client([
+            'curl' => [CURLOPT_SSL_VERIFYPEER => false]
+          ]);
+    
+          $response = $client->post(self::$endpoint . "/charge", [
+            'headers' => $headers,
+            'json'    => $transaction_detail
+          ]);
+    
+          $responseBody = $response->getBody();
+          $decodeResponse = json_decode($responseBody, true);
+          return $decodeResponse;
+        } catch (BadResponseException $br) {
+          throw new Exception('ERROR Create Order: ' . $br->getMessage());
+        }
       } else {
         throw new \RuntimeException('Payment Gateway Provider Not Found');
       }
@@ -84,7 +90,7 @@ class MidtransServices extends PaymentGateway
       $currentTransaction->save();
       DB::commit();
     } catch (\Throwable $th) {
-      throw new \Exception("Services ERROR: " . $th->getMessage());
+      throw new \Exception("Notif Callback ERROR: " . $th->getMessage());
       DB::rollBack();
     }
                               

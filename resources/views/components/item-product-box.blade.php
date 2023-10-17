@@ -6,15 +6,15 @@
     <template x-if="products.length > 0">
       <div class="grid sm:grid-cols-5 grid-cols-2 gap-3" x-intersect.threshold.50="showImg = true">
         <template x-for="product in products" :key="product.id">
-          <div class="item_box group w-full bg-primary-slate rounded-md text-center" x-show="showImg"
+          <div class="item_box group w-full bg-primary-slate-light/90 rounded-lg text-center" x-show="showImg"
           x-transition:enter="transition ease-out duration-1500"
           x-transition:enter-start="opacity-0 scale-75" x-transition:enter-end="opacity-100 scale-100">
           <a :href="'order/' + product.slug" class="no-underline">
-            <template x-if="product.img_url !== 'IMG_DEV'">
+            <template x-if="!product.is_testing">
               <img :src="`/storage/product/${product.product_name}/${product.img_url}`" class="w-full rounded-t-md" :alt="`image product${product.product_name}`">
             </template>
-            <template x-if="product.img_url === 'IMG_DEV'">
-               <img src="https://source.unsplash.com/collection/190727/200x200" class="w-full rounded-t-md" alt="logo product [DEV]">
+            <template x-if="product.is_testing">
+               <img :src="product.img_url" class="w-full rounded-t-md" alt="logo product [DEV]">
             </template>
             <span
             class="block pb-5 pt-3 capitalize text-primary-cyan-light/80 group-hover:text-cyan-300 transition-colors duration-200"
@@ -26,43 +26,40 @@
   </template>
   <template x-if="products.length == 0 && !isLoading">
     <div class="w-full h-auto p-2 border border-solid mb-10 border-slate-400 bg-white/20">
-      <p class="text-red-400 text-2xl text-center">Produk Masih Belum Di Buat Oleh Pihak Toko.</p>
+      <p class="text-red-400 md:text-2xl text-md text-center">Produk Masih Belum Di Buat Oleh Pihak Toko.</p>
     </div>
   </template>
 </div>
 </div>
+@push('js-custom')
 <script>
-  function handleGetProducts() {
-    return {
-      products: [],
-      showImg: false,
-      isLoading: false,
-      
-      init() {
-        this.getProducts()
-      },
-      
-      getProducts() {
-        this.isLoading = true
-        axios.get('/api/get-token').then(res => {
-          const token = res.data.data
-
-          axios.get('/api/get-products', {
-            headers: {
-              'X-Custom-Token': `${token}`
-            }
-          })
-          .then(res => {
-            const dataProducts = res.data.data
-            this.products.push(...dataProducts)
-            this.isLoading = false
-          }).catch(err => {
-            this.isLoading = false
-            console.log("ERROR SERVERSIDE: ".err.response)
-          })
-        })
-      },
-    }
+function handleGetProducts() {
+  return {
+    products: [],
+    showImg: false,
+    isLoading: false,
+    
+    init() {
+      this.getProducts()
+    },
+    
+    getProducts() {
+      this.isLoading = true
+      axios.get('/api/get-products', {
+        headers: {
+          'X-Custom-Token': '{{ $accessApiToken }}'
+        }
+      })
+      .then(res => {
+        const dataProducts = res.data.data
+        this.products.push(...dataProducts)
+        this.isLoading = false
+      }).catch(err => {
+        this.isLoading = false
+        console.log("ERROR SERVERSIDE: ".err.response)
+      })
+    },
   }
-  
+}
 </script>
+@endpush
