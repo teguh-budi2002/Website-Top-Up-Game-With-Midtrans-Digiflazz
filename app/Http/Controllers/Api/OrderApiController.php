@@ -8,6 +8,7 @@ use App\Http\Requests\StoreOrderRequest;
 use App\Models\Order;
 use App\Models\PaymentGatewayProvider;
 use App\Models\Transaction;
+use App\Services\CheckIDGames\CheckIDGames;
 use App\Services\PaymentGateway\Midtrans\MidtransServices;
 use App\Services\PaymentGateway\Tripay\TripayServices;
 use App\Services\PaymentGateway\Xendit\XenditServices;
@@ -17,8 +18,10 @@ use Illuminate\Http\Request;
 class OrderApiController extends BaseApiController
 {
   protected $services;
+  protected $username_game_validation;
 
     public function __construct() {
+      $this->username_game_validation = new CheckIDGames;
       try {
         $this->initServices();
       } catch (\Exception $e) {
@@ -40,6 +43,27 @@ class OrderApiController extends BaseApiController
             break;
         }
         $this->services->init($provider);
+    }
+
+    public function checkUsernameGame(Request $request) {
+      $codeGame = $request->code_game;
+      $IDgame = $request->player_id;
+      $ZoneID = $request->zone_id;
+      try {
+        $checkingGameID = $this->username_game_validation->checkIDGame($codeGame, $IDgame, $ZoneID);
+
+        if (isset($checkingGameID['RESULT_CODE']) && $checkingGameID['RESULT_CODE'] == '10001') {
+          return $this->failed_response("Server Sedang Sibuk, Mohon Tunggu Beberapa Detik dan Coba Lagi.", 429);
+        } else {
+            if (isset($checkingGameID['success']) && empty($checkingGameID['errorMsg'])) {
+                return $this->success_response(" Berhasil Check ID Game", 200,  ['User-ID' => $checkingGameID['confirmationFields']['username'], 'IS_USER_VALID' => $checkingGameID['isUserConfirmation']]);
+            } else {
+                return $this->failed_response("ID Game Tidak Ditemukan", 400);
+            }
+        }
+      } catch (\Exception $e) {
+        return $this->failed_response("ERROR CHECK USERNAME GAME: " . $e->getMessage(), 500);
+      }
     }
 
     /**
