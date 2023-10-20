@@ -31,7 +31,8 @@ Route::post('notification-callback', [OrderApiController::class, 'httpNotifCallb
 
 // URL Callback Marketplace
 Route::prefix('marketplace')->group(function() {
-    Route::get('/digilfazz/transaction', [MarketplaceApiController::class, 'transactionTopUpDigiflazz'])->withoutMiddleware(['api.security', 'api.refresh_token']);;
+    // URL Callback When The Payment Transaction Successfully Paid
+    Route::post('/digilfazz/transaction', [MarketplaceApiController::class, 'transactionTopUpDigiflazz'])->withoutMiddleware(['api.security', 'api.refresh_token']);;
 });  
 
 Route::middleware(['api.refresh_token', 'api.security'])->group(function() {

@@ -16,7 +16,7 @@ body {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-    font-family: "Montserrat", sans-serif;
+    font-family: "Oxanium", sans-serif;
 }
 
 .triangle__notif__bell {
@@ -136,7 +136,7 @@ body {
 
 .sidebar {
     width: 48px;
-    transition: 0.3s;
+    transition: 0.05s;
 }
 
 .sidebar:hover {

@@ -42,7 +42,7 @@ class OrderApiController extends BaseApiController
             $this->services = new XenditServices;
             break;
         }
-        $this->services->init($provider);
+        $this->services->init();
     }
 
     public function checkUsernameGame(Request $request) {
@@ -103,12 +103,12 @@ class OrderApiController extends BaseApiController
             return redirect('/')->with('order-invalid', 'Order Tidak Ditemukan.');
           }
   
-          $detailTrx   = Transaction::select("id", "transaction_time", "transaction_expired", "transaction_status", "qr_code_url")
+          $detailTrx   = Transaction::select("id", "transaction_time", "transaction_expired", "transaction_payment_status", "transaction_order_status", "qr_code_url")
                                     ->where('invoice', $detailOrder->invoice)
                                     ->first();
           return $this->success_response("Berhasil Mendapatkan Detail Order", 200, ['detail_order' => $detailOrder, 'detail_trx' => $detailTrx]);
         } catch (\Throwable $th) {
-          return $this->failed_response("Gagal Mendapatkan Detail Order. Maaf Kesalahan Di Sisi Server.");
+          return $this->failed_response("Gagal Mendapatkan Detail Order. Maaf Kesalahan Di Sisi Server." . $th->getMessage());
         }
     }
 
@@ -160,7 +160,8 @@ class OrderApiController extends BaseApiController
         'payment_type_trx'    =>  $chargeOrder['payment_type'],
         'transaction_time'    =>  $chargeOrder['transaction_time'],
         'transaction_expired' =>  $chargeOrder['expiry_time'],
-        'transaction_status'  =>  ucfirst($chargeOrder['transaction_status']),
+        'transaction_payment_status'  =>  ucfirst($chargeOrder['transaction_status']),
+        'transaction_order_status'    =>  'Pending',
         'gross_amount'        =>  $chargeOrder['gross_amount'],
         'qr_code_url'         =>  $url,
         'va_number'           =>  $va_number,

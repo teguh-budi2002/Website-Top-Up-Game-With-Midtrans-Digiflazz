@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string("payment_type_trx", 20);
             $table->dateTime("transaction_time");
             $table->dateTime("transaction_expired");
-            $table->string("transaction_status", 11);
+            $table->string("transaction_payment_status", 11);
+            $table->string("transaction_order_status", 11);
             $table->string("gross_amount", 20);
             $table->string("qr_code_url")->nullable();
             $table->string("va_number")->nullable();

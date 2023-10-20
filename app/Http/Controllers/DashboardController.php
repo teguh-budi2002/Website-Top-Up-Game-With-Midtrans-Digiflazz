@@ -169,4 +169,21 @@ class DashboardController extends Controller
         'old_notification' =>  $oldNotification
       ]);
     }
+
+    public function manage_provider(Request $request) {
+      $providers = DB::table('providers')
+                      ->select('id', 'provider_name', 'username', 'key', 'status')
+                      ->paginate(5);
+      $oldProvider = null;
+      if ($request->query('provider_name')) {
+        $oldProvider = DB::table('providers')
+                      ->select('id', 'provider_name', 'username', 'key', 'status')
+                      ->where('provider_name', $request->query('provider_name'))
+                      ->first();
+      } 
+      return view('dashboard.views.manage_provider.main', [ 
+        'providers' => $providers,
+        'oldProvider' => $oldProvider 
+      ]);
+    }
 }

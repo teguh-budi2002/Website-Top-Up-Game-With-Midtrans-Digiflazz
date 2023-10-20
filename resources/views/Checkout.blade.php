@@ -175,19 +175,19 @@
                         <div class="status_payment md:text-base text-sm md:col-span-1 col-span-4">
                             <button type="button" class="text-white md:py-1 md:px-2 px-1 rounded font-semibold" 
                             :class="{
-                                'bg-yellow-100 border-solid border-2 border-yellow-500 text-yellow-600':  detail_trx.transaction_status   === 'Pending',
-                                'bg-rose-100 border-solid border-2 border-rose-500 text-rose-600':    detail_trx.transaction_status   === 'Expired',
-                                'bg-rose-100 border-solid border-2 border-rose-500 text-rose-600':    detail_trx.transaction_status   === 'Failure',
-                                'bg-green-100 border-solid border-2 border-green-500 text-green-600':   detail_trx.transaction_status   === 'Success',
+                                'bg-yellow-100 border-solid border-2 border-yellow-500 text-yellow-600':  detail_trx.transaction_payment_status   === 'Pending',
+                                'bg-rose-100 border-solid border-2 border-rose-500 text-rose-600':    detail_trx.transaction_payment_status   === 'Expired',
+                                'bg-rose-100 border-solid border-2 border-rose-500 text-rose-600':    detail_trx.transaction_payment_status   === 'Failure',
+                                'bg-green-100 border-solid border-2 border-green-500 text-green-600':   detail_trx.transaction_payment_status   === 'Success',
                             }">
                             <p
                              :class="{
-                                'text-yellow-600':  detail_trx.transaction_status   === 'Pending',
-                                'text-rose-600':    detail_trx.transaction_status   === 'Expired',
-                                'text-rose-600':    detail_trx.transaction_status   === 'Failure',
-                                'text-green-600':   detail_trx.transaction_status   === 'Success',
+                                'text-yellow-600':  detail_trx.transaction_payment_status   === 'Pending',
+                                'text-rose-600':    detail_trx.transaction_payment_status   === 'Expired',
+                                'text-rose-600':    detail_trx.transaction_payment_status   === 'Failure',
+                                'text-green-600':   detail_trx.transaction_payment_status   === 'Success',
                             }"
-                             x-text="detail_trx.transaction_status=== 'Pending' ? 'Menunggu Pembayaran' : (detail_trx.transaction_status === 'Expired' ? 'Kadaluarsa' : (detail_trx.transaction_status === 'Failure') ? 'Pembayaran Gagal' : 'Pembayaran Berhasil')"></p>
+                             x-text="detail_trx.transaction_payment_status === 'Pending' ? 'Menunggu Pembayaran' : (detail_trx.transaction_payment_status === 'Expired' ? 'Kadaluarsa' : (detail_trx.transaction_payment_status === 'Failure') ? 'Pembayaran Gagal' : 'Pembayaran Berhasil')"></p>
                             </button>
                         </div>
                     </div>
@@ -329,7 +329,7 @@
                             this.isLoading = false
                         }).catch(err => {
                             this.isLoading = false
-                            console.log("DETAIL ORDER ERROR", err.response)
+                            console.log("DETAIL ORDER ERROR", err)
                         })
                     })
                 },

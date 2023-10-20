@@ -12,6 +12,7 @@ use App\Http\Controllers\FlashSaleController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaymentFeeController;
 use App\Http\Controllers\PaymentGatewayProviderController;
+use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\SEOController;
 use App\Http\Controllers\WebsiteController;
 
@@ -93,6 +94,11 @@ Route::prefix('dashboard')->group(function () {
   Route::prefix('settings')->group(function() {
     Route::get('seo', [DashboardController::class, 'manage_seo_website']);
     Route::post('add-or-update-seo', [SEOController::class, 'addOrUpdateSeo']);
+
+    Route::get('provider', [DashboardController::class, 'manage_provider']);
+    Route::post('/provider/add-or-update-provider', [ProviderController::class, 'addOrUpdateProvider']);
+    Route::post('/provider/activated-provider/{id}', [ProviderController::class, 'activatedProvider']);
+    Route::post('/provider/deactive-provider/{id}', [ProviderController::class, 'deactiveProvider']);
 
     Route::get('payment-gateway', [DashboardController::class, 'manage_payment_gateway']);
     Route::post('/payment-gateway/add-or-update-pg', [PaymentGatewayProviderController::class, 'addOrUpdatePG']);

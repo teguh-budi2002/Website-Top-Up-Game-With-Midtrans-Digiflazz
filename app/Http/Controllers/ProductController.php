@@ -12,6 +12,7 @@ use App\Models\Item;
 use App\Models\PaymentFee;
 use App\Models\PaymentGatewayProvider;
 use App\Models\ProductPaymentMethod;
+use App\Models\Provider;
 
 class ProductController extends Controller
 {
@@ -110,6 +111,10 @@ class ProductController extends Controller
     public function publishProduct($product_id) {
         if (PaymentGatewayProvider::where('status', 1)->count() === 0) {
             return redirect()->back()->with('product-failed', 'Please set up and activated a payment gateway provider before publishing the product');
+        }
+
+        if (Provider::where('status', 1)->count() === 0) {
+            return redirect()->back()->with('product-failed', 'Please set up and activated a marketplace provider before publishing the product');
         }
 
         if (ProductPaymentMethod::whereProductId($product_id)->count() === 0) {

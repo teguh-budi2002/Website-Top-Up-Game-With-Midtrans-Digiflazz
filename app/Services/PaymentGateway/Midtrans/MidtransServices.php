@@ -75,15 +75,15 @@ class MidtransServices extends PaymentGateway
     try {
       switch ($trx_status) {
         case 'settlement':
-          $currentTransaction->transaction_status = "Success";
+          $currentTransaction->transaction_payment_status = "Success";
           break;
   
         case 'expire':
-           $currentTransaction->transaction_status = "Expired";
+           $currentTransaction->transaction_payment_status = "Expired";
            break;
   
         case 'failure':
-           $currentTransaction->transaction_status = "Failure";
+           $currentTransaction->transaction_payment_status = "Failure";
            break;
       }
   

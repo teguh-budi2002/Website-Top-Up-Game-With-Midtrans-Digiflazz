@@ -51,14 +51,14 @@
         <section class="content w-full h-full md:mx-10 mx-0 z-50 relative">
         {{-- Custom Modal Invalid user ID --}}
         <div @keydown.escape="showInvalidUserIDModal = false">
-            <div class="fixed inset-0 z-40 flex items-center justify-center overflow-auto" x-show="showInvalidUserIDModal"
+            <div class="fixed inset-0 z-50 flex items-center justify-center bg-primary-slate/80 overflow-auto" x-show="showInvalidUserIDModal"
                     x-transition:enter="motion-safe:ease-out duration-300"
                     x-transition:enter-start="opacity-0 scale-90"
                     x-transition:enter-end="opacity-100 scale-100"
                     x-transition:leave="motion-safe:ease-in duration-300"
                     x-transition:leave-start="opacity-100 scale-100"
                     x-transition:leave-end="opacity-0 scale-90">
-                <div class="w-3/4 max-w-3xl px-4 py-4 mx-auto text-left bg-primary-slate-light border-2 border-solid border-primary-cyan-light rounded-lg" @click.away="showInvalidUserIDModal = false">
+                <div class="sm:w-3/4 w-11/12 max-w-3xl sm:px-4 px-1 py-4 sm:mx-auto mx-4 text-left bg-primary-slate-light border-2 border-solid border-primary-cyan-light rounded-lg" @click.away="showInvalidUserIDModal = false">
                     <div class="title">
                         <h5 class="text-center text-3xl text-rose-500 max-w-none">PERHATIAN</h5>
                     </div>
@@ -67,7 +67,7 @@
                           <p class="text-lg text-slate-300" x-text="errMessTooManyAttemptReq"></p>
                       </template>
                       <template x-if="!errMessTooManyAttemptReq">
-                          <p class="text-lg text-slate-300">User ID Dengan <span class="text-primary-cyan-light" x-text="data.player_id && data.zone_id ? `${data.player_id} - (${data.zone_id})` : data.player_id === '' ? '??????' : `${data.player_id}`"></span> Tidak Ditemukan!</p>
+                          <p class="sm:text-lg text-sm text-slate-300">User ID Dengan <span class="text-primary-cyan-light" x-text="data.player_id && data.zone_id ? `${data.player_id} - (${data.zone_id})` : data.player_id === '' ? '??????' : `${data.player_id}`"></span> Tidak Ditemukan!</p>
                       </template>
                     </div>
                 </div>
@@ -432,7 +432,7 @@
                   }).then(res => {
                           // IF USERNAME VALID
                           if(res.data.code == 200) {
-                              if (res.data.data.IS_USER_VALID) {
+                            if (res.data.data.IS_USER_VALID) {
                                 this.checkoutOrder()
                                 this.isButtonSubmitDisabled = false
                               } 
@@ -450,7 +450,7 @@
                               this.isButtonSubmitDisabled = false
                           }
                   }).catch(err => { 
-                    console.log("ERROR SERVERSIDE VALIDATION USER-ID | Server Sedang Sibuk")
+                    console.log("ERROR SERVERSIDE VALIDATION USER-ID")
                     this.isButtonSubmitDisabled = false
                   })
                 },
