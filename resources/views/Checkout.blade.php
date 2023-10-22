@@ -168,7 +168,7 @@
                         </div>
                     </div>
                     <hr class="dashed_border mt-3 mb-1">
-                    <div class="detail_status_transaction grid md:grid-cols-2 grid-cols-7 gap-2 mt-2">
+                    <div class="detail_status_payment_transaction grid md:grid-cols-2 grid-cols-7 gap-2 mt-2">
                         <div class="title_player_id text-slate-300 md:col-span-1 col-span-3">
                             <p>Status Pembayaran</p>
                         </div>
@@ -188,6 +188,30 @@
                                 'text-green-600':   detail_trx.transaction_payment_status   === 'Success',
                             }"
                              x-text="detail_trx.transaction_payment_status === 'Pending' ? 'Menunggu Pembayaran' : (detail_trx.transaction_payment_status === 'Expired' ? 'Kadaluarsa' : (detail_trx.transaction_payment_status === 'Failure') ? 'Pembayaran Gagal' : 'Pembayaran Berhasil')"></p>
+                            </button>
+                        </div>
+                    </div>
+                    <hr class="dashed_border mt-3 mb-1">
+                    <div class="detail_status_order_transaction grid md:grid-cols-2 grid-cols-7 gap-2 mt-2">
+                        <div class="title_player_id text-slate-300 md:col-span-1 col-span-3">
+                            <p>Status Pesanan</p>
+                        </div>
+                        <div class="status_order md:text-base text-sm md:col-span-1 col-span-4">
+                            <button type="button" class="text-white md:py-1 md:px-2 px-1 rounded font-semibold" 
+                            :class="{
+                                'bg-yellow-100 border-solid border-2 border-yellow-500 text-yellow-600':  detail_trx.transaction_order_status   === 'Waiting',
+                                'bg-rose-100 border-solid border-2 border-rose-500 text-rose-600':    detail_trx.transaction_order_status   === 'Failure',
+                                'bg-green-100 border-solid border-2 border-green-500 text-green-600':   detail_trx.transaction_order_status   === 'Success',
+                                'bg-blue-100 border-solid border-2 border-blue-500 text-blue-600':   detail_trx.transaction_order_status   === 'Process',
+                            }">
+                            <p
+                             :class="{
+                                'text-yellow-600':  detail_trx.transaction_order_status   === 'Waiting',
+                                'text-rose-600':    detail_trx.transaction_order_status   === 'Failure',
+                                'text-green-600':   detail_trx.transaction_order_status   === 'Success',
+                                'text-blue-600':   detail_trx.transaction_order_status    === 'Process',
+                            }"
+                             x-text="detail_trx.transaction_order_status === 'Waiting' ? 'Menunggu Pembayaran Berhasil' : (detail_trx.transaction_order_status === 'Process' ? 'Pesanan Sedang Diproses' : (detail_trx.transaction_order_status === 'Failure') ? 'Pesanan Gagal Di Proses' : 'Pesanan Berhasil Di Proses')"></p>
                             </button>
                         </div>
                     </div>

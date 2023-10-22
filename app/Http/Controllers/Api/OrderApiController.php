@@ -12,6 +12,7 @@ use App\Services\CheckIDGames\CheckIDGames;
 use App\Services\PaymentGateway\Midtrans\MidtransServices;
 use App\Services\PaymentGateway\Tripay\TripayServices;
 use App\Services\PaymentGateway\Xendit\XenditServices;
+use App\Services\Whatsapp\WhatsappService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -44,6 +45,11 @@ class OrderApiController extends BaseApiController
         }
         $this->services->init();
     }
+
+    // public function testWA() {
+    //   $wa = WhatsappService::sendToCustomer('083834819552', []);
+    //   return $this->success_response('Berhasil Dikirim', 200, $wa);
+    // }
 
     public function checkUsernameGame(Request $request) {
       $codeGame = $request->code_game;
@@ -78,7 +84,7 @@ class OrderApiController extends BaseApiController
           $orderCheckout = $this->services->checkout($request->all());
           $chargeOrder = $this->services->chargeOrder($orderCheckout);
           $saveToTrx = self::saveToTransaction($chargeOrder);
-
+          $sendNotifToCustomer = WhatsappService::sendToCustomer($request->phone_number, $orderCheckout);
           DB::commit();
           return $this->success_response('Checkout Berhasil Ditambahkan, Silahkan Lakukan Pembayaran.', 201, $orderCheckout->invoice);
         } catch (\Exception $e) {
@@ -161,7 +167,7 @@ class OrderApiController extends BaseApiController
         'transaction_time'    =>  $chargeOrder['transaction_time'],
         'transaction_expired' =>  $chargeOrder['expiry_time'],
         'transaction_payment_status'  =>  ucfirst($chargeOrder['transaction_status']),
-        'transaction_order_status'    =>  'Pending',
+        'transaction_order_status'    =>  'Waiting',
         'gross_amount'        =>  $chargeOrder['gross_amount'],
         'qr_code_url'         =>  $url,
         'va_number'           =>  $va_number,

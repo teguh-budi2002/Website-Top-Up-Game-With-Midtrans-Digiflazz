@@ -82,6 +82,10 @@ class HomeController extends Controller
   }
 
   public function checkoutProduct($invoice) {
+    $checkOrderIsExist = Transaction::where('invoice', $invoice)->exists();
+    if (!$checkOrderIsExist) {
+      return redirect('/');
+    }
 
     return view('Checkout', [
       'invoice' => $invoice

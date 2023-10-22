@@ -25,6 +25,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::get('get-token', [TokenController::class, 'token'])->withoutMiddleware('api.security');
+        Route::post('wa', [OrderApiController::class, 'testWA'])->withoutMiddleware('api.security');
 
 // URL Callback Payment Method
 Route::post('notification-callback', [OrderApiController::class, 'httpNotifCallback'])->withoutMiddleware(['api.security', 'api.refresh_token']); 
@@ -32,7 +33,8 @@ Route::post('notification-callback', [OrderApiController::class, 'httpNotifCallb
 // URL Callback Marketplace
 Route::prefix('marketplace')->group(function() {
     // URL Callback When The Payment Transaction Successfully Paid
-    Route::post('/digilfazz/transaction', [MarketplaceApiController::class, 'transactionTopUpDigiflazz'])->withoutMiddleware(['api.security', 'api.refresh_token']);;
+    Route::post('/transaction', [MarketplaceApiController::class, 'transactionTopUpMarketplace'])->withoutMiddleware(['api.security', 'api.refresh_token']);
+    Route::post('/callback', [MarketplaceApiController::class, 'callbackMarketplace'])->withoutMiddleware(['api.security', 'api.refresh_token']);
 });  
 
 Route::middleware(['api.refresh_token', 'api.security'])->group(function() {
