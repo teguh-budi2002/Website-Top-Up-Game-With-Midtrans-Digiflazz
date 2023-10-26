@@ -63,10 +63,8 @@
     <script>
         // Loading Init Page
         window.addEventListener('load', function () {
-            setTimeout(() => {
-                const loader = document.querySelector('.loading');
-                loader ? loader.classList.add('hidden') : null;
-            }, 500);
+            const loader = document.querySelector('.loading');
+            loader ? loader.classList.add('hidden') : null;
         });
 
     </script>

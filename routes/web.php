@@ -46,6 +46,10 @@ Route::prefix('dashboard')->group(function () {
 
   //Product
   Route::resource('product', ProductController::class);
+  Route::get('add-image-item-on-product/{product_id}', [ProductController::class, 'addImgItemOnProduct']);
+  Route::patch('add-image-item-on-product/process/{product_id}', [ProductController::class, 'addImgItemOnProductProcess']);
+  Route::get('change-image-on-product/{product_id}', [ProductController::class, 'changeImageProduct']);
+  Route::patch('change-image-on-product/process/{product_id}', [ProductController::class, 'changeImageProductProcess']);
   Route::delete('delete-checked-products', [ProductController::class, 'deleteManyResource']);
   Route::patch('published-product/{product_id}', [ProductController::class, 'publishProduct']);
   Route::patch('unpublished-product/{product_id}', [ProductController::class, 'unpublishProduct']);

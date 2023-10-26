@@ -16,20 +16,30 @@ use App\Models\Provider;
 
 class ProductController extends Controller
 {
+    public function index() {
+        
+    }
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function addImgItemOnProduct($product_id)
     {
-        //
+        $product = Product::select("id", "product_name")->whereId($product_id )->first();
+        return view("dashboard.views.manage_product.add_item_image_on_product", ["product" => $product]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function addImgItemOnProductProcess(Request $request, $product_id)
     {
-        //
+        $img_item = $request->file("item_img");
+        $filename = $img_item->getClientOriginalName();
+
+        $dataOldImg = Product::select("id", "item_img")->whereId($product_id)->first();
+        $deleteOldImage = self::deleteOldImage($dataOldImg, public_path("storage/item/" . $request->product_name . "/" . $dataOldImg->item_img));
+        if ($img_item) {
+            $putImgIntoStorage = Storage::putFileAs('/public/item/' . $request->product_name . "/", $img_item, $filename);
+        }
+        $updateProduct = Product::whereId($product_id)->update(["item_img"=> $filename]);
+        return redirect("dashboard/products")->with("update_success","Added Image For Item Product Successfully");
     }
 
     /**
@@ -40,7 +50,6 @@ class ProductController extends Controller
         $validation = $request->validated();
         $img_product = $request->file('img_url');
         $filename = $img_product->getClientOriginalName();
-        $path = "product/" . $request->product_name . "/";
 
         if (!$validation) {
             return redirect()->back()->withErrors($validation);
@@ -88,6 +97,32 @@ class ProductController extends Controller
         }
         Product::whereId($id)->update($validation);
         return redirect('some-view')->with('update_success', 'Product Updated Successfully');
+    }
+
+    public function changeImageProduct($product_id) 
+    {
+        $product = Product::select("id", "product_name", "img_url")->whereId($product_id )->first();
+        return view("dashboard.views.manage_product.change_image_on_product", ["product" => $product]);
+    }
+
+    public function changeImageProductProcess(Request $request, $product_id) 
+    {
+        $file = $request->file("img_url");
+        $filename = $file->getClientOriginalName();
+        $path = "/public/product/" . $request->product_name . '/';
+
+        $dataOldImg = Product::select("id", "img_url")->whereId($product_id)->first();
+        $deleteOldImage = self::deleteOldImage($dataOldImg, public_path("storage/product/" . $request->product_name . "/" . $dataOldImg->img_url));
+
+         if ($file) {            
+            $putImgIntoStorage = Storage::putFileAs($path, $file, $filename);
+        }
+        
+        $updateProduct = Product::whereId($product_id)->update([
+            "img_url" => $filename,
+            "is_testing" => 0
+        ]);
+        return redirect("dashboard/products")->with("update_success","Added Image For Item Product Successfully");
     }
 
     /**

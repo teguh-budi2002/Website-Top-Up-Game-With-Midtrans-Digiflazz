@@ -1,11 +1,12 @@
-<div x-data="handleTableProducts()"  class="w-full h-full overflow-hidden p-4 mt-2">
+<div x-data="handleTableProducts()" class="w-full h-full overflow-hidden p-4 mt-2">
     <div class="w-full h-fit bg-white dark:bg-darker shadow-lg rounded-sm">
         <div class="grid md:grid-cols-2 grid-cols-1 border-b dark:border-primary-darker">
 
             {{-- Search Product --}}
             @include('dashboard.views.manage_product.search_product')
 
-            <div class="px-5 py-4 border-b dark:border-primary-darker md:flex md:items-center md:justify-end md:space-x-3 space-y-2">
+            <div
+                class="px-5 py-4 border-b dark:border-primary-darker md:flex md:items-center md:justify-end md:space-x-3 space-y-2">
                 <div>
                     <button x-show="showBtn" x-transition.duration.500ms
                         class="w-fit bg-red-500 hover:bg-red-600 text-white md:p-1.5 md:px-4 p-1 px-2 md:mt-2 mt-0 rounded cursor-pointer"
@@ -25,16 +26,18 @@
                     </button>
                 </div>
             </div>
-            
+
         </div>
         <div class="px-5 py-4">
             @foreach ($categories as $category)
-                <a href="?category_id={{ $category->id }}" class="bg-primary-100 rounded-md w-fit h-auto p-2 text-xs font-semibold text-primary">{{ $category->name_category }}</a>
+            <a href="?category_id={{ $category->id }}"
+                class="bg-primary-100 rounded-md w-fit h-auto p-2 text-xs font-semibold text-primary">{{ $category->name_category }}</a>
             @endforeach
         </div>
 
         {{-- Modal ADD PRODUCT Component --}}
-        <x-dashboard.form-modal actionUrl="dashboard/product" enctype="multipart/form-data" modalId="add_product" modalToggle="add_product">
+        <x-dashboard.form-modal actionUrl="dashboard/product" enctype="multipart/form-data" modalId="add_product"
+            modalToggle="add_product">
             <x-slot:modalHeader>
                 Add Product
             </x-slot:modalHeader>
@@ -45,11 +48,12 @@
                 </label>
                 <select name="category_id" class="p-2" id="categoryProduct" style="box-shadow: none;padding: 8px">
                     @foreach ($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->name_category }}</option>
+                    <option value="{{ $category->id }}">{{ $category->name_category }}</option>
                     @endforeach
                 </select>
                 <div class="image_for_product">
-                    <label for="custom_bg_product" class="block mt-3 text-slate-600 dark:text-primary-dark text-sm">Add Photo Into Product</label>
+                    <label for="custom_bg_product" class="block mt-3 text-slate-600 dark:text-primary-dark text-sm">Add
+                        Photo Into Product</label>
                     <div x-data="previewImage()">
                         <label class="cursor-pointer" for="custombgImg">
                             <div
@@ -105,22 +109,24 @@
                     </tr>
                 </thead>
 
-                <tbody class="text-sm text-primary dark:text-primary-light divide-y divide-gray-100 dark:divide-primary">
+                <tbody
+                    class="text-sm text-primary dark:text-primary-light divide-y divide-gray-100 dark:divide-primary">
                     @if (count($products))
                     @foreach ($products as $product)
                     <tr>
                         <td class="p-2">
-                            <input type="checkbox" autocomplete="off" name="checked_record_ids" x-model="selectedRecord" 
-                                id="selected_items"
-                                @change="updateBtnVisibillity()"
+                            <input type="checkbox" autocomplete="off" name="checked_record_ids" x-model="selectedRecord"
+                                id="selected_items" @change="updateBtnVisibillity()"
                                 class="w-4 h-4 text-blue-600 bg-gray-100 rounded focus:ring-blue-500 dark:focus:ring-blue-600 focus:ring-2 dark:bg-primary-dark cursor-pointer"
                                 value="{{ $product->id }}" />
                         </td>
                         <td class="p-2">
                             @if ($product->is_testing)
-                                <img src="{{ asset($product->img_url) }}" class="w-10 h-10 rounded mx-auto" alt="">
+                            <img src="{{ asset($product->img_url) }}" class="w-10 h-10 rounded mx-auto" alt="">
                             @else
-                                <img class="w-10 h-10 rounded mx-auto" src="{{ asset('/storage/product/' . $product->product_name . '/' . $product->img_url) }}" alt="image_{{ $product->product_name }}">
+                            <img class="w-10 h-10 rounded mx-auto"
+                                src="{{ asset('/storage/product/' . $product->product_name . '/' . $product->img_url) }}"
+                                alt="image_{{ $product->product_name }}">
                             @endif
                         </td>
                         <td class="p-2">
@@ -130,7 +136,8 @@
                         </td>
                         <td class="p-2">
                             <div>
-                                <button type="button" class="w-fit h-auto p-1 bg-primary-50 font-semibold text-primary text-xs rounded-md">
+                                <button type="button"
+                                    class="w-fit h-auto p-1 bg-primary-50 font-semibold text-primary text-xs rounded-md">
                                     {{ $product->category->name_category }}
                                 </button>
                             </div>
@@ -143,13 +150,20 @@
                             {{-- Info Item Modal Component --}}
                             <x-dashboard.info-modal modalId="showInfoItems{{ $product->id }}" titleModal="INFO ITEM">
                                 <x-slot:info>
+                                <a href="{{ URL('dashboard/add-image-item-on-product/' . $product->id) }}" data-popover-target="popover-add-item-img"
+                                    data-popover-placement="bottom" class="py-1.5 px-4 rounded-md bg-primary text-white">
+                                    <span>Add or Change Items Image On Product</span>
+                                    <i class="fa-regular fa-images fa-lg"></i>
+                                </a>
                                     @if ($product->items->count())
                                     <div class="flex items-center gap-2 flex-wrap">
                                         @foreach ($product->items as $item)
                                         <div
-                                            class="items w-[200px] h-[100px] bg-gray-100/30 flex flex-col justify-center items-center space-y-2 rounded-md p-2 border border-gray-400 border-solid cursor-pointer">
-                                            <p class="font-semibold capitalize">{{ $item->nominal }} -
-                                                {{ $item->item_name }}</p>
+                                            class="items w-[200px] {{ $product->item_img ? 'h-[130px]' : 'h-[100px]' }} bg-gray-100/30 flex flex-col justify-center items-center space-y-2 rounded-md p-2 border border-gray-400 border-solid cursor-pointer">
+                                            <p class="font-semibold capitalize">{{ $item->nominal }} - {{ $item->item_name }}</p>
+                                            @if ($product->item_img)
+                                            <img src="{{ asset('/storage/item/' . $product->product_name . "/" . $product->item_img) }}" class="w-auto h-8" alt="item image">
+                                            @endif
                                             <p class="text-xs">Harga</p>
                                             <p class="text-sm text-rose-600">Rp. {{ Cash($item->price, 2) }}</p>
                                         </div>
@@ -157,7 +171,8 @@
                                     </div>
                                     @else
                                     <p class="text-2xl uppercase dark:text-primary-light">Product of
-                                        <span class="text-red-400">{{ $product->product_name }}</span> don't have any items yet.
+                                        <span class="text-red-400">{{ $product->product_name }}</span> don't have any
+                                        items yet.
                                     </p>
                                     @endif
                                 </x-slot:info>
@@ -204,7 +219,8 @@
                         </td>
                         <td class="p-2">
                             <div class="text-center">
-                                <button class="py-1 px-6 rounded {{ $product->published ? 'bg-green-500' : 'bg-rose-500' }} font-medium text-white">{{ $product->published ? 'PUBLISHED' : 'UNPUBLISHED' }}</button>
+                                <button
+                                    class="py-1 px-6 rounded {{ $product->published ? 'bg-green-500' : 'bg-rose-500' }} font-medium text-white">{{ $product->published ? 'PUBLISHED' : 'UNPUBLISHED' }}</button>
                             </div>
                         </td>
                         <td class="p-2">
@@ -218,62 +234,78 @@
                                     data-modal-target="add_item_on_product{{ $product->id }}"
                                     data-modal-toggle="add_item_on_product{{ $product->id }}"
                                     data-popover-placement="bottom" type="button">
-                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 hover:text-blue-600">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
-                                  </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="w-5 h-5 hover:text-blue-600">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+                                    </svg>
                                 </button>
-                                <div data-popover id="popover-add-items" role="tooltip"
+                                <div data-popover-id="popover-add-items" role="tooltip"
                                     class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border dark:border-primary-dark rounded opacity-0 dark:text-white dark:bg-primary-dark">
                                     <div class="px-3 py-2 text-center">
                                         <p>Add Items On Product</p>
                                     </div>
                                     <div data-popper-arrow></div>
                                 </div>
+                                <a href="{{ URL('dashboard/change-image-on-product/' . $product->id) }}" data-popover-target="popover-change-img-product"
+                                    data-popover-placement="bottom">
+                                    <i class="fa-regular fa-images fa-lg"></i>
+                                </a>
+                                <div data-popover id="popover-change-img-product" role="tooltip"
+                                    class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border dark:border-primary-dark rounded opacity-0 dark:text-white dark:bg-primary-dark">
+                                    <div class="px-3 py-2 text-center">
+                                        <p>Change Image On Product</p>
+                                    </div>
+                                    <div data-popper-arrow></div>
+                                </div>
                                 @if ($product->published)
-                                  <form action="{{ URL("dashboard/unpublished-product/" . $product->id) }}" method="POST">
-                                      @csrf
-                                      @method('PATCH')
-                                      <button data-popover-target="popover-bottom-unpublished"
-                                          data-popover-placement="bottom" type="submit"
-                                          class="mt-1.5 relative">
-                                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-rose-500 -rotate-45">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
-                                          </svg>
-                                          <i class="fa-solid fa-ban fa-2xl absolute inset-0 top-2.5 -left-1 opacity-70 text-rose-400"></i>
-                                      </button>
-                                      <div data-popover id="popover-bottom-unpublished" role="tooltip"
-                                          class="absolute z-10 invisible inline-block w-fit text-xs text-white transition-opacity duration-300 bg-rose-400 rounded shadow-sm opacity-0">
-                                          <div class="px-2 py-1">
-                                              <p>Unpublish Now</p>
-                                          </div>
-                                          <div data-popper-arrow></div>
-                                      </div>
-                                  </form>
+                                <form action="{{ URL("dashboard/unpublished-product/" . $product->id) }}" method="POST">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button data-popover-target="popover-bottom-unpublished"
+                                        data-popover-placement="bottom" type="submit" class="mt-1.5 relative">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor"
+                                            class="w-5 h-5 text-rose-500 -rotate-45">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                                        </svg>
+                                        <i
+                                            class="fa-solid fa-ban fa-2xl absolute inset-0 top-2.5 -left-1 opacity-70 text-rose-400"></i>
+                                    </button>
+                                    <div data-popover id="popover-bottom-unpublished" role="tooltip"
+                                        class="absolute z-10 invisible inline-block w-fit text-xs text-white transition-opacity duration-300 bg-rose-400 rounded shadow-sm opacity-0">
+                                        <div class="px-2 py-1">
+                                            <p>Unpublish Now</p>
+                                        </div>
+                                        <div data-popper-arrow></div>
+                                    </div>
+                                </form>
                                 @else
-                                  <form action="{{ URL("dashboard/published-product/" . $product->id) }}" method="POST">
-                                      @csrf
-                                      @method('PATCH')
-                                      <button data-popover-target="popover-bottom-published"
-                                          data-popover-placement="bottom" type="submit"
-                                          class="mt-1.5">
-                                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-green-500">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
-                                          </svg>
-                                      </button>
-                                      <div data-popover id="popover-bottom-published" role="tooltip"
-                                          class="absolute z-10 invisible inline-block w-fit text-xs text-white transition-opacity duration-300 bg-green-400 rounded shadow-sm opacity-0">
-                                          <div class="px-2 py-1">
-                                              <p>Publish Now</p>
-                                          </div>
-                                          <div data-popper-arrow></div>
-                                      </div>
-                                  </form>
+                                <form action="{{ URL("dashboard/published-product/" . $product->id) }}" method="POST">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button data-popover-target="popover-bottom-published"
+                                        data-popover-placement="bottom" type="submit" class="mt-1.5">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-green-500">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                                        </svg>
+                                    </button>
+                                    <div data-popover id="popover-bottom-published" role="tooltip"
+                                        class="absolute z-10 invisible inline-block w-fit text-xs text-white transition-opacity duration-300 bg-green-400 rounded shadow-sm opacity-0">
+                                        <div class="px-2 py-1">
+                                            <p>Publish Now</p>
+                                        </div>
+                                        <div data-popper-arrow></div>
+                                    </div>
+                                </form>
                                 @endif
                                 <button type="button" data-modal-target="deleteProductModal{{ $product->id }}"
                                     data-modal-toggle="deleteProductModal{{ $product->id }}">
-                                    <svg class="w-5 h-5 text-rose-400 hover:text-rose-600"
-                                        fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg">
+                                    <svg class="w-5 h-5 text-rose-400 hover:text-rose-600" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
                                         </path>
@@ -285,20 +317,22 @@
                                     <x-slot:info>
                                         <h2 class="text-3xl text-red-400 dark:text-primary-light text-center">WARNING!
                                         </h2>
-                                        <p class="dark:text-white text-lg">By deleting a product, The items in product also will be deleted.</p>
+                                        <p class="dark:text-white text-lg">By deleting a product, The items in product
+                                            also will be deleted.</p>
                                     </x-slot:info>
                                     <x-slot name="footer">
                                         <form action="{{ URL('dashboard/product/' . $product->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
-                                                class="py-2.5 px-6 bg-red-600 hover:bg-red-400 transition rounded text-white">Yes, Delete</button>
+                                                class="py-2.5 px-6 bg-red-600 hover:bg-red-400 transition rounded text-white">Yes,
+                                                Delete</button>
                                         </form>
                                     </x-slot>
                                 </x-dashboard.info-modal>
                             </div>
-                            {{-- Form Modal ADD ITEMS Component --}}
-                            <x-dashboard.form-modal actionUrl="dashboard/item/store"
+                            {{-- Form Modal ADD ITEMS --}}
+                            <x-dashboard.form-modal actionUrl="dashboard/item/store" enctype="multipart/form-data"
                                 modalId="add_item_on_product{{ $product->id }}"
                                 modalToggle="add_item_on_product{{ $product->id }}">
                                 <x-slot:modalHeader>
@@ -306,14 +340,14 @@
                                 </x-slot:modalHeader>
                                 <x-slot:inputBox>
                                     @if ($product->items->count())
-                                        @foreach ($product->items->take(1) as $item)
-                                        <x-form.input type="text" inputName="item_name"
-                                            value="{{ old('item_name', $item->item_name) }}" name="item_name"
-                                            label="Insert Name of Item" />
-                                        @endforeach
+                                    @foreach ($product->items->take(1) as $item)
+                                    <x-form.input type="text" inputName="item_name"
+                                        value="{{ old('item_name', $item->item_name) }}" name="item_name"
+                                        label="Insert Name of Item" />
+                                    @endforeach
                                     @else
-                                        <x-form.input type="text" inputName="item_name" name="item_name"
-                                            label="Insert Name of Item" />
+                                    <x-form.input type="text" inputName="item_name" name="item_name"
+                                        label="Insert Name of Item" />
                                     @endif
                                     <x-form.input type="text" inputName="code_item" name="code_item"
                                         label="Insert Code Item" />
@@ -328,7 +362,8 @@
                     @endforeach
                     @else
                     <div class="mt-2 mb-3">
-                        <p class="text-2xl text-rose-400 text-center uppercase dark:text-primary-light">The product hasn't been
+                        <p class="text-2xl text-rose-400 text-center uppercase dark:text-primary-light">The product
+                            hasn't been
                             created yet
                         </p>
                     </div>
@@ -338,7 +373,7 @@
         </div>
     </div>
 </div>
- @push('dashboard-js')
+@push('dashboard-js')
 <script>
     new SlimSelect({
         select: '#categoryProduct'
@@ -346,13 +381,14 @@
 
     function handleTableProducts() {
         return {
-            showBtn: false, 
+            showBtn: false,
             selectedRecord: [],
-            
+
             updateBtnVisibillity() {
                 this.showBtn = this.selectedRecord.length > 0
             },
         }
     }
+
 </script>
 @endpush

@@ -24,8 +24,11 @@ class WebsiteController extends Controller
 
         if ($img) {
             $filename = $img->getClientOriginalName();
-            $path = "page/custom_bg_image/" . $slug . "/";				
-						$this->deleteOldImage($path, $filename, $slug);
+            $path = "page/custom_bg_image/" . $slug . "/";
+            $customField = CustomField::select("id", "bg_img_on_order_page")->wherepageSlug($slug)->first();
+            if ($customField) {
+              $deleteOldCustomBgImage = self::deleteOldImage($customField, public_path("storage/" . $customField->bg_img_on_order_page));
+            }				
 
             $putImgIntoStorage = Storage::putFileAs('/public/page/custom_bg_image/' . $slug . "/", $img, $filename);
         }
@@ -45,15 +48,4 @@ class WebsiteController extends Controller
 
 				return redirect()->back()->with('success-custom-field', 'Custom Field Has Been Addedd Successfully');
     }
-
-		protected function deleteOldImage($path, $filename, $slug) {
-				$customField = CustomField::select("id", "bg_img_on_order_page")->wherepageSlug($slug)->first();
-				if (!is_null($customField) && !is_null($customField->bg_img_on_order_page)) {
-					//Check If Any Old BG Image
-					if ($customField->bg_img_on_order_page != $path . $filename) {
-						// Delete Old Image from Storage
-						$deleteOldImg = Storage::disk('public')->delete($customField->bg_img_on_order_page);
-					}
-				}
-		}
 }

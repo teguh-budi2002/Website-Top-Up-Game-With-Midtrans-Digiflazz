@@ -27,11 +27,13 @@ class NotificationController extends Controller
         $file = $request->file('notif_img');
         $filename = null;
         $oldFile = $request->old_notif_img;
-
+        $notifImg = Notification::select("id", "notif_img")->where('notif_slug', $request->notif_slug)->first();
         if ($file) {
             $filename = $file->getClientOriginalName();
-            $path = "page/notification/";				
-            $this->deleteOldImage($request->notif_slug);
+            $path = "page/notification/";
+            if ($notifImg) {
+              self::deleteOldImage($notifImg, public_path("storage/page/notification/" . $notifImg->notif_img));
+            }				
 
             $putImgIntoStorage = Storage::putFileAs('/public/page/notification/', $file, $filename);
         }
@@ -53,16 +55,6 @@ class NotificationController extends Controller
     }
    
   }
-
-  protected function deleteOldImage($slug) {
-      $notifImg = Notification::select("id", "notif_img")->where('notif_slug', $slug)->first();
-      if (!is_null($notifImg)) {
-        $fileToDelete = public_path("storage/page/notification/" . $notifImg->notif_img);
-        if (file_exists($fileToDelete) && is_file($fileToDelete)) {
-              $deleteOldImgNotif = unlink(public_path("storage/page/notification/" . $notifImg->notif_img));
-        }
-      }
-	}
 
   public function displayNotif($slug) {
     if (!Notification::whereNotifSlug($slug)->first()) {

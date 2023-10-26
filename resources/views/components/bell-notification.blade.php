@@ -47,9 +47,12 @@
                         </div>
                         <template x-if="notif.type_notif === 'popup'">
                           <div  x-show="openNotifModalPopup && notif.id === modalId"
-                                x-transition:enter="motion-safe:ease-out duration-300"
+                                x-transition:enter="motion-safe:ease-out duration-100"
                                 x-transition:enter-start="opacity-0 scale-90"
                                 x-transition:enter-end="opacity-100 scale-100"
+                                x-transition:leave="motion-safe:ease-in duration-100"
+                                x-transition:leave-start="opacity-100 scale-100"
+                                x-transition:leave-end="opacity-0 scale-90"
                                 class="w-full fixed inset-0 -left-2 z-50 flex items-center justify-center bg-primary-slate-light/60">
                               {{-- MODAL --}}
                               <div class="w-full max-w-xl h-auto px-6 py-4 mx-auto text-left bg-white rounded shadow"

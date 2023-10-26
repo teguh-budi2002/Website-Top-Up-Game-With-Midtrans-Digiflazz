@@ -13,4 +13,8 @@ class Item extends Model
     public function discount() {
         return $this->hasOne(DiscountProduct::class);
     }
+
+    public function product() { 
+        return $this->belongsTo(Product::class);
+    }
 }

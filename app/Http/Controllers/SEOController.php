@@ -39,7 +39,9 @@ class SEOController extends Controller
           $file = $request->logo_favicon;
           $logoFaviconName = $file->getClientOriginalName();
           $path = "/public/seo/logo/favicon/";
-          $this->deleteOldImageFavicon($dataSeo);
+          if ($dataSeo) {
+            $this->deleteOldImage($dataSeo, public_path("storage/seo/logo/favicon/" . $dataSeo->logo_favicon));
+          }
 
           $putLogoFaviconIntoStorage = Storage::putFileAs($path, $file, $logoFaviconName);
       }
@@ -48,7 +50,9 @@ class SEOController extends Controller
           $file = $request->logo_website;
           $logoWebsiteName = $file->getClientOriginalName();
           $path = "/public/seo/logo/website/";
-          $this->deleteOldImageWebsite($dataSeo);
+          if ($dataSeo) {
+            $this->deleteOldImage($dataSeo, "storage/seo/logo/website/" . $dataSeo->logo_website);
+          }
 
           $putLogoWebsiteIntoStorage = Storage::putFileAs($path, $file, $logoWebsiteName);
       }
@@ -72,24 +76,5 @@ class SEOController extends Controller
 
       return redirect()->back()->with('seo-failed', 'ERROR ON SERVERSIDE: ' . $th->getMessage());
     }
-  }
-
-  protected function deleteOldImageFavicon($dataSeo) {
-      if (!is_null($dataSeo)) {
-        $fileToDelete = public_path("storage/seo/logo/favicon/" . $dataSeo->logo_favicon);
-        if (file_exists($fileToDelete) && is_file($fileToDelete)) {
-              $deleteOldImgFavicon = unlink(public_path("storage/seo/logo/favicon/" . $dataSeo->logo_favicon));
-
-        }
-      }
-  }
-  protected function deleteOldImageWebsite($dataSeo) {
-      if (!is_null($dataSeo)) {
-        $fileToDelete = public_path("storage/seo/logo/website/" . $dataSeo->logo_website);
-        if (file_exists($fileToDelete) && is_file($fileToDelete)) {
-          // Delete Old Image from Storage
-          $deleteOldImgWebsite = unlink($fileToDelete);
-        }
-      }
   }
 }

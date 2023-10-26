@@ -950,9 +950,8 @@
 
                 fileChosen(event) {
                     this.fileToDataUrl(event, (src) => (this.imageUrl = src));
-                    console.log(event)
                 },
-
+                
                 fileToDataUrl(event, callback) {
                     if (!event.target.files.length) return;
 

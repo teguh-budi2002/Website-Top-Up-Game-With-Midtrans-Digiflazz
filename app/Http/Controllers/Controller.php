@@ -17,4 +17,14 @@ class Controller extends BaseController
             return redirect()->back()->with($keyMessage, $message);
         } 
     }
+
+    public static function deleteOldImage($dataOldImg, $path) {
+        if (!is_null($dataOldImg)) {
+            $fileToDelete = $path;
+            if (file_exists($fileToDelete) && is_file($fileToDelete)) {
+                $deleteOldImg = unlink($fileToDelete);
+
+            }
+        }
+    }
 }

@@ -80,7 +80,7 @@
                         {{-- #1a1919 --}}
                         {{-- #222224 --}}
                         {{-- bg-[#25262b] --}}
-                        <div class="form_wrapper w-full h-fit sm:p-8 p-4 rounded-xl md:shadow-lg shadow-slate-200 bg-primary-slate">
+                        <div class="form_wrapper w-full h-fit sm:p-8 p-4 rounded-xl md:shadow-2xl shadow-slate-200 bg-primary-slate">
                             <form @submit.prevent="checkingValidationForm" method="POST">
                                 <div class="add_player_id bg-primary-slate-light/70 border-2 border-primary-cyan-light text-white border-solid w-full p-4 rounded-lg">
                                     <div class="step_one flex justify-between items-center mb-3">
@@ -122,40 +122,74 @@
                                             class="w-full bg-red-300 rounded text-red-700 p-1.5 font-normal"
                                             role="errorItemMessage"></p>
                                     </div>
-                                    <ul class="list-none flex flex-wrap justify-center mx-0 items-center gap-3 mt-3">
-                                        @foreach ($product->items as $item)
-                                        <li>
-                                            @if ($item->discount)
-                                                @php
-                                                    $initialPrice = $item->discount->price_after_discount * 0.007 + $item->discount->price_after_discount;
-                                                    $roundedPrice = ceil($initialPrice / 500) * 500;
-                                                @endphp
-                                                <div @click.prevent="activeItem = {{ $item->id }}; data.itemSelected = '{{ $item->item_name }}'; data.itemNominal = '{{ $item->nominal }}'; initialPrice = {{ $item->discount->price_after_discount }}; selectedItemProduct()"
-                                                    :class="{ 'bg-slate-600 border-2 border-solid border-primary-cyan-light': activeItem === {{ $item->id }}, 'bg-primary-slate hover:bg-slate-500/90 border-2 border-white text-white': activeItem !== {{ $item->id }} }"
-                                                    class="items sm:w-[180px] w-[150px] sm:h-[100px] h-[120px] flex flex-col justify-center items-center space-y-1 rounded-md sm:p-2 p-1 cursor-pointer"
-                                                    data-item-id="{{ $item->id }}">
-                                                    <p class="font-semibold capitalize sm:text-base text-sm">{{ $item->nominal }} -
-                                                        {{ $item->item_name }}</p>
-                                                    <p class="text-xs text-rose-500 line-through">Rp. {{ Cash($item->price, 2) }}</p>
-                                                    <p class="text-sm text-teal-400 ">Rp. {{ Cash($item->discount->price_after_discount, 2) }}</p>
+                                    @if ($product->items->contains('discount', '>', '0'))
+                                    <div class="special_offer mt-2 pb-4 border-b border-solid border-primary-cyan-light/80">
+                                        <p class="uppercase mb-3 font-semibold text-yellow-300">Penawaran Special &#128293;</p>
+                                        <div class="grid md:grid-cols-3 grid-cols-2 gap-3">
+                                        @foreach ($product->items as $itemDiscount)
+                                            @if ($itemDiscount->discount)
+                                            @php
+                                                $initialPrice = $itemDiscount->discount->price_after_discount * 0.007 + $itemDiscount->discount->price_after_discount;
+                                                $roundedPrice = ceil($initialPrice / 500) * 500;
+                                            @endphp
+                                            <div @click.prevent="activeItem = {{ $itemDiscount->id }}; data.itemSelected = '{{ $itemDiscount->item_name }}'; data.itemNominal = '{{ $itemDiscount->nominal }}'; initialPrice = {{ $itemDiscount->discount->price_after_discount }}; selectedItemProduct()"  :class="{ 'bg-slate-600 border-2 border-solid border-primary-cyan-light': activeItem === {{ $itemDiscount->id }}, 'bg-primary-slate hover:bg-slate-500/90 border-2 border-white text-white': activeItem !== {{ $itemDiscount->id }} }" class="w-full h-[120px] p-2.5 bg-primary-slate hover:bg-slate-500/90 cursor-pointer border-2 border-solid border-white rounded-md relative group">
+                                                <div class="relative -top-6">
+                                                    <img src="{{ asset('/img/special_offer.png') }}" :class="{ 'grayscale-0' : activeItem === {{ $itemDiscount->id }} }" class="absolute w-full h-16 grayscale group-hover:grayscale-0 transition duration-150" alt="special_offer">
+                                                    <p :class="{ 'text-yellow-400' : activeItem === {{ $itemDiscount->id }} }" class="text-slate-400 group-hover:text-yellow-400 absolute sm:left-[73px] left-11 top-6 text-xs font-semibold transition duration-150">
+                                                    {{ $itemDiscount->discount->type_discount === 'discount_flat' ? 
+                                                            (
+                                                            $itemDiscount->discount->discount_flat >= 1000000 ? 
+                                                                (strval(floor($itemDiscount->discount->discount_flat / 1000000)) . "JT") :
+                                                                (
+                                                                $itemDiscount->discount->discount_flat >= 1000 ?
+                                                                    (strval(floor($itemDiscount->discount->discount_flat / 1000)) . "K") :
+                                                                    strval($itemDiscount->discount->discount_flat)
+                                                                )
+                                                            ) :
+                                                            ($itemDiscount->discount->discount_fixed . "%")
+                                                    }} OFF</p>
                                                 </div>
-                                            @else
+                                                <div class="flex items-center justify-between mt-8">
+                                                    <div class="left_item space-y-1">
+                                                        <p class="text-sm">{{ $itemDiscount->nominal }} - {{ $itemDiscount->item_name }}</p>
+                                                        <p class="text-sm text-teal-400">Rp. {{ Cash($itemDiscount->discount->price_after_discount, 2) }}</p>
+                                                        <p class="text-[10px] text-rose-500 line-through">Rp. {{ Cash($itemDiscount->price, 2) }}</p>
+                                                    </div>
+                                                    @if ($itemDiscount->product->item_img)
+                                                    <div class="right_item">
+                                                        <img src="{{ asset('/storage/item/' . $itemDiscount->product->product_name . "/" . $itemDiscount->product->item_img) }}" :class="{ 'grayscale-0' : activeItem === {{ $itemDiscount->id }} }"  class="w-auto h-8 grayscale contrast-200 group-hover:grayscale-0  transition duration-150" alt="logo_img_item">
+                                                    </div> 
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            @endif
+                                        @endforeach
+                                        </div>
+                                    </div>
+                                    @endif
+                                    <div class="list_normal_item mt-3">
+                                        <div class="grid sm:grid-cols-3 grid-cols-2 gap-3">
+                                        @foreach ($product->items as $item)
+                                            @if (!$item->discount)                                                
                                                 @php
                                                     $initialPrice = $item->price * 0.007 + $item->price;
                                                     $roundedPrice = ceil($initialPrice / 500) * 500;
                                                 @endphp
                                                 <div @click.prevent="activeItem = {{ $item->id }}; data.itemSelected = '{{ $item->item_name }}'; data.itemNominal = '{{ $item->nominal }}'; initialPrice = {{ $item->price }}; selectedItemProduct()"
                                                     :class="{ 'bg-slate-600 border-2 border-solid border-primary-cyan-light': activeItem === {{ $item->id }}, 'bg-primary-slate hover:bg-slate-500/90 border-2 border-solid border-white text-white': activeItem !== {{ $item->id }} }"
-                                                    class="items sm:w-[180px] w-[150px] sm:h-[100px] h-[120px] flex flex-col justify-center items-center space-y-2 rounded-lg sm:p-2 p-1 cursor-pointer"
+                                                    class="items sw-full {{ $item->product->item_img ? 'sm:h-[130px] h-[120px]' : 'sm:h-[100px] h-[100px]' }} grid auto-rows-fr gap-4 rounded-lg sm:p-2 p-1 cursor-pointer group"
                                                     data-item-id="{{ $item->id }}">
-                                                    <p class="font-semibold capitalize sm:text-base text-sm">{{ $item->nominal }} -
+                                                    <p class="font-semibold capitalize sm:text-base text-sm text-center">{{ $item->nominal }} -
                                                         {{ $item->item_name }}</p>
-                                                    <p class="text-sm text-teal-400">Rp. {{ Cash($roundedPrice, 2) }}</p>
+                                                    @if ($item->product->item_img)
+                                                    <img src="{{ asset('/storage/item/' . $item->product->product_name . "/" . $item->product->item_img) }}" :class="{ 'grayscale-0' : activeItem === {{ $item->id }} }" class="w-auto h-8 mx-auto grayscale contrast-200 group-hover:grayscale-0 transition duration-150" alt="logo_img_item">
+                                                    @endif
+                                                    <p class="text-sm text-teal-400 text-center">Rp. {{ Cash($roundedPrice, 2) }}</p>
                                                 </div>
                                             @endif
-                                        </li>
                                         @endforeach
-                                    </ul>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="payment__type mt-5 bg-primary-slate-light/70 border-2 border-primary-cyan-light text-white border-solid w-full p-4 rounded-lg"
                                     x-show="activeItem !== null" x-transition:enter="transition duration-300"

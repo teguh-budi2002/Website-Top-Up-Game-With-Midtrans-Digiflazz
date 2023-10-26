@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             $table->string('img_url')->after('product_name');
+            $table->string('item_img')->after("img_url")->nullable();
         });
     }
 
