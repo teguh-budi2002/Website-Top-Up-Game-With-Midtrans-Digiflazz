@@ -68,9 +68,9 @@ Manage Discount Product
                         </template>  
                     </select>
                   </div>
-                  <div class="name_item space-y-2 mt-3">
+                  <div  class="name_item space-y-2 mt-3">
                     <label for="item_product" class="block text-sm font-semibold text-slate-600 dark:text-primary-darker">Item Product</label>
-                    <select name="item_id"x-model="selectedItem" @change="updateNormalPrice" id="item_product" style="box-shadow: none;padding: 8px">
+                    <select name="item_id" class="w-full rounded-md border-slate-300 focus:border-slate-300 p-3" x-model="selectedItem" @change="updateNormalPrice" id="item_product" style="box-shadow: none;padding: 8px">
                       <option value="" selected disabled>Select Item Product</option>
                       <template x-if="items.length">
                         <template x-for="item in items" :key="item.id">
@@ -133,12 +133,6 @@ Manage Discount Product
         }
     })
 
-    new SlimSelect({
-        select: '#item_product',
-        settings: {
-            placeholderText: 'Select Item Product',
-        }
-    })
     function handleDiscountProduct() {
       return {
         discountType: '',
@@ -191,6 +185,7 @@ Manage Discount Product
               if(res.status == 200) {
                 this.items = res.data.data
               }
+              
             }).catch(err => {
                 console.log(err)
             })
