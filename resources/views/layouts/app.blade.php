@@ -56,13 +56,13 @@
             {{ $slot }}
         </main>
     </div>
-    <footer class="{{ Request::is('order/*') ? 'bg-[#0F0F0F]' : 'bg-primary-slate' }}">
+    <footer class="{{ Request::is('order/*') ? 'bg-[#0F0F0F]' : 'bg-primary-slate' }} -mt-1">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#353349" fill-opacity="1" d="M0,128L48,128C96,128,192,128,288,112C384,96,480,64,576,80C672,96,768,160,864,186.7C960,213,1056,203,1152,186.7C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>
-        <div class="w-full h-auto bg-primary-slate-light">
+        <div class="w-full h-auto bg-primary-slate-light lg:-mt-20 md:-mt-15 -mt-2">
             <div class="footer_content flex justify-center">
-                <div class="w-11/12 p-4 mb-20 -mt-28">
-                    <div class="grid grid-cols-3 gap-3">
-                        <div class="w-3/4 flex flex-col items-start justify-between space-y-10">
+                <div class="w-11/12 p-4 mb-20">
+                    <div class="grid sm:grid-cols-3 grid-cols-1 gap-3">
+                        <div class="md:w-3/4 w-full flex flex-col items-start justify-between space-y-10">
                            <img src="{{ asset('/img/logo_with_bg.png') }}" class="w-16 h-16 rounded-md" alt="logo_website">
                            <p class="text-white capitalize">Layanan Website Top Up Game,Voucher, Dll Termurah Se Indonesia legal 100% aman & terpercaya</p>
                            <div class="social_media flex items-center space-x-5">
@@ -77,10 +77,10 @@
                                 </a>
                            </div>
                            <div class="copyright">
-                            <p class="text-slate-400">&#169; {{ Carbon\Carbon::now()->format('Y') }} - {{ app('seo_data')->name_of_the_company }}. All Rights Reserved.</p>
+                            <p class="text-slate-400 md:text-base text-sm">&#169; {{ Carbon\Carbon::now()->format('Y') }} - {{ app('seo_data')->name_of_the_company }}. All Rights Reserved.</p>
                            </div>
                         </div>
-                        <div class="col-span-2 grid grid-cols-3">
+                        <div class="col-span-2 grid md:grid-cols-3 grid-cols-2 gap-5">
                             <div>
                                 <p class="text-primary-cyan-light">Sitemap</p>
                                 <div class="mt-5 flex flex-col space-y-3">
