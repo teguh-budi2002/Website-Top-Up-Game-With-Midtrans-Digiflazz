@@ -16,8 +16,7 @@
 @endpush
     <div class="w-full h-full overflow-x-hidden bg-[#0F0F0F]" x-data="handleOrder()">
         <div class="relative z-[9999] md:block hidden">
-            <div
-                class="breadcrumbs w-80 h-auto p-1 pb-2 px-3 bg-primary-slate-light/90 border-0 border-solid border-b border-r border-primary-cyan-light absolute">
+            <div class="breadcrumbs w-80 h-auto p-1 pb-2 px-3 bg-primary-slate-light/90 border-0 border-solid border-b-2 border-r border-primary-cyan-light absolute">
                 <ul class="list-none flex items-center space-x-2 text-sm font-semibold">
                     <li class="flex items-center space-x-2">
                         <a href="{{ Route('home') }}"
@@ -44,11 +43,11 @@
             alt="{{ asset('/storage/' . $custom_field->bg_img_on_order_page) }}">
         @else
         <img src="https://source.unsplash.com/random/1920x800"
-            class="w-full md:h-[700px] h-[300px] object-cover bg-no-repeat bg-top z-10 absolute md:top-[114px] top-[85px]"
+            class="w-full md:h-[700px] h-[300px] object-cover bg-no-repeat bg-top z-10 absolute lg:top-[114px] md:top-[124px] top-[85px]"
             alt="random_img">
         @endif
         <div class="container__shadaow w-full md:h-[900px] h-[400px] absolute overflow-x-hidden z-20 bg-white"></div>
-        <section class="content w-full h-full md:mx-10 mx-0 z-50 relative">
+        <section class="content w-full h-full z-50 relative">
         {{-- Custom Modal Invalid user ID --}}
         <div @keydown.escape="showInvalidUserIDModal = false">
             <div class="fixed inset-0 z-50 flex items-center justify-center bg-primary-slate/80 overflow-auto" x-show="showInvalidUserIDModal"
@@ -75,12 +74,13 @@
         </div>
             @include('mobile.header_order_mobile')
             <div class="wrapper_grid">
-                <div class="grid md:grid-cols-2 grid-cols-1 md:gap-5 gap-1">
-                    <div class="left_section md:mt-52 mt-5 md:mb-10 mb-0">
+                <div class="grid lg:grid-cols-2 grid-cols-1 lg:gap-5 gap-1 md:mx-10 mx-0">
+                    <div class="left_section lg:mt-52 md:mt-20 mt-5 md:mb-10 mb-0">
                         {{-- #1a1919 --}}
                         {{-- #222224 --}}
                         {{-- bg-[#25262b] --}}
-                        <div class="form_wrapper w-full h-fit sm:p-8 p-4 rounded-xl md:shadow-2xl shadow-slate-200 bg-primary-slate">
+                        {{-- #222121 RECEMMENDED!!! --}}
+                        <div class="form_wrapper w-full h-fit sm:p-8 p-4 rounded-xl md:shadow-2xl shadow-slate-200 bg-[#1b1d1beb]">
                             <form @submit.prevent="checkingValidationForm" method="POST">
                                 <div class="add_player_id bg-primary-slate-light/70 border-2 border-primary-cyan-light text-white border-solid w-full p-4 rounded-lg">
                                     <div class="step_one flex justify-between items-center mb-3">
@@ -125,17 +125,17 @@
                                     @if ($product->items->contains('discount', '>', '0'))
                                     <div class="special_offer mt-2 pb-4 border-b border-solid border-primary-cyan-light/80">
                                         <p class="uppercase mb-3 font-semibold text-yellow-300">Penawaran Special &#128293;</p>
-                                        <div class="grid md:grid-cols-3 grid-cols-2 gap-3">
+                                        <div class="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-3">
                                         @foreach ($product->items as $itemDiscount)
                                             @if ($itemDiscount->discount)
                                             @php
                                                 $initialPrice = $itemDiscount->discount->price_after_discount * 0.007 + $itemDiscount->discount->price_after_discount;
                                                 $roundedPrice = ceil($initialPrice / 500) * 500;
                                             @endphp
-                                            <div @click.prevent="activeItem = {{ $itemDiscount->id }}; data.itemSelected = '{{ $itemDiscount->item_name }}'; data.itemNominal = '{{ $itemDiscount->nominal }}'; initialPrice = {{ $itemDiscount->discount->price_after_discount }}; selectedItemProduct()"  :class="{ 'bg-slate-600 border-2 border-solid border-primary-cyan-light': activeItem === {{ $itemDiscount->id }}, 'bg-primary-slate hover:bg-slate-500/90 border-2 border-white text-white': activeItem !== {{ $itemDiscount->id }} }" class="w-full h-[120px] p-2.5 bg-primary-slate hover:bg-slate-500/90 cursor-pointer border-2 border-solid border-white rounded-md relative group">
+                                            <div @click.prevent="activeItem = {{ $itemDiscount->id }}; data.itemSelected = '{{ $itemDiscount->item_name }}'; data.itemNominal = '{{ $itemDiscount->nominal }}'; initialPrice = {{ $itemDiscount->discount->price_after_discount }}; selectedItemProduct()"  :class="{ 'bg-slate-600 border-2 border-solid border-primary-cyan-light': activeItem === {{ $itemDiscount->id }}, 'bg-primary-slate hover:bg-slate-500/90 border-2 border-white text-white': activeItem !== {{ $itemDiscount->id }} }" class="w-full sm:h-[120px] h-[135px] p-2.5 bg-primary-slate hover:bg-slate-500/90 cursor-pointer border-2 border-solid border-white rounded-md relative group">
                                                 <div class="relative -top-6">
-                                                    <img src="{{ asset('/img/special_offer.png') }}" :class="{ 'grayscale-0' : activeItem === {{ $itemDiscount->id }} }" class="absolute w-full h-16 grayscale group-hover:grayscale-0 transition duration-150" alt="special_offer">
-                                                    <p :class="{ 'text-yellow-400' : activeItem === {{ $itemDiscount->id }} }" class="text-slate-400 group-hover:text-yellow-400 absolute sm:left-[73px] left-11 top-6 text-xs font-semibold transition duration-150">
+                                                    <img src="{{ asset('/img/special_offer.webp') }}" :class="{ 'grayscale-0' : activeItem === {{ $itemDiscount->id }} }" class="absolute w-full h-16 grayscale group-hover:grayscale-0 transition duration-150" alt="special_offer">
+                                                    <p :class="{ 'text-yellow-400' : activeItem === {{ $itemDiscount->id }} }" class="text-slate-400 group-hover:text-yellow-400 absolute top-8 text-xs font-semibold transition duration-150" style="transform: translate(-50%, -50%); left: 50%">
                                                     {{ $itemDiscount->discount->type_discount === 'discount_flat' ? 
                                                             (
                                                             $itemDiscount->discount->discount_flat >= 1000000 ? 
@@ -168,6 +168,7 @@
                                     </div>
                                     @endif
                                     <div class="list_normal_item mt-3">
+                                        <p class="uppercase mb-3 font-semibold text-white">harga normal</p>
                                         <div class="grid sm:grid-cols-3 grid-cols-2 gap-3">
                                         @foreach ($product->items as $item)
                                             @if (!$item->discount)                                                
@@ -335,7 +336,7 @@
                             </form>
                         </div>
                     </div>
-                    <div class="right_section md:mt-52 mt-0 md:mx-0 mx-4 mb-10">
+                    <div class="right_section lg:mt-52 mt-0 md:mx-0 mx-4 sm:mb-20 mb-10">
                         <div class="wrapper">
                             <div
                                 class="top_section md:block hidden border-0 border-b border-solid border-slate-500 pb-4 mr-20">

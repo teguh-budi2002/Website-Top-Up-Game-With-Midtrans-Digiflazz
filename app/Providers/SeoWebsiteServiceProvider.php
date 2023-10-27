@@ -18,7 +18,7 @@ class SeoWebsiteServiceProvider extends ServiceProvider
     
             $this->app->singleton('seo_data', function () use ($seoData) {
                 return $seoData ?? (object)[
-                    'name_of_the_company'   => 'Lapak Murah',
+                    'name_of_the_company'   => 'Guh SHOP',
                     'keyword'               => 'Top Up Game Murah, Joki Mobile Legend dan Layanan Booster Social Media, Instant 24 Jam, Mobile Legends, Diamond Mobile Legends, Free Fire, DM FF,  Mobile, PUBGM, Genshin Impact, CODM, Valorant, Wild Rift',
                     'description'           => 'Website Top Up Termurah Se-Indonesia.',
                     'logo_favicon'          => '',
