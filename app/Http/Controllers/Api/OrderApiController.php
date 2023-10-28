@@ -84,7 +84,7 @@ class OrderApiController extends BaseApiController
           $orderCheckout = $this->services->checkout($request->all());
           $chargeOrder = $this->services->chargeOrder($orderCheckout);
           $saveToTrx = self::saveToTransaction($chargeOrder);
-          $sendNotifToCustomer = WhatsappService::sendToCustomer($request->phone_number, $orderCheckout);
+          // $sendNotifToCustomer = WhatsappService::sendToCustomer($request->phone_number, $orderCheckout);
           DB::commit();
           return $this->success_response('Checkout Berhasil Ditambahkan, Silahkan Lakukan Pembayaran.', 201, $orderCheckout->invoice);
         } catch (\Exception $e) {

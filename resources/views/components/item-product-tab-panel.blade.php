@@ -3,24 +3,22 @@
           @foreach ($categories as $category)
           <div class="w-full md:pb-2 pb-1 cursor-pointer text-center m-0"
               @click.prevent="isPanelActive = '{{ $category->id }}'; getProductsByCategory('{{ $category->id }}')"
-              :class="{'md:border-b-2 border-b-0 border-solid border-cyan-300' : isPanelActive === '{{ $category->id }}' }">
-              <div class="category_panel font-semibold text-cyan-700 hover:text-cyan-300 transition-colors duration-200 md:text-base text-xs"
-                  :class="{ 'text-cyan-300': isPanelActive === '{{ $category->id }}' }">
+              :class="{'md:border-b-2 border-b-0 border-solid dark:border-cyan-300 border-violet-500' : isPanelActive === '{{ $category->id }}' }">
+              <div class="category_panel font-semibold md:text-base group text-xs dark:text-cyan-700 text-violet-300">
                   @if ($category->name_category === 'Mobile Games')
-                  <i class="fas fa-regular fa-gamepad fa-lg mr-1 md:inline-block block md:text-left text-center md:mb-0 mb-5"
-                      :class="{ 'text-cyan-300': isPanelActive === '{{ $category->id }}' }"></i>
+                  <i class="fas fa-regular fa-gamepad fa-lg mr-1 group-hover:text-violet-500 dark:group-hover:text-cyan-300 transition-colors duration-200 md:inline-block block md:text-left text-center md:mb-0 mb-5"
+                      :class="{ 'dark:text-cyan-300 text-violet-500': isPanelActive === '{{ $category->id }}' }"></i>
                   @elseif ($category->name_category === 'PC Games')
-                  <i class="fas fa-reguler fa-desktop fa-lg mr-1 md:inline-block block md:text-left text-center md:mb-0 mb-5"
-                      :class="{ 'text-cyan-300': isPanelActive === '{{ $category->id }}' }"></i>
+                  <i class="fas fa-reguler fa-desktop fa-lg mr-1 group-hover:text-violet-500 dark:group-hover:text-cyan-300 transition-colors duration-200 md:inline-block block md:text-left text-center md:mb-0 mb-5"
+                      :class="{ 'dark:text-cyan-300 text-violet-500': isPanelActive === '{{ $category->id }}' }"></i>
                   @elseif ($category->name_category === 'Voucher')
-                  <i class="fas fa-reguler fa-ticket fa-lg mr-1 md:inline-block block md:text-left text-center md:mb-0 mb-5"
-                      :class="{ 'text-cyan-300': isPanelActive === '{{ $category->id }}' }"></i>
+                  <i class="fas fa-reguler fa-ticket fa-lg mr-1 group-hover:text-violet-500 dark:group-hover:text-cyan-300 transition-colors duration-200 md:inline-block block md:text-left text-center md:mb-0 mb-5"
+                      :class="{ 'dark:text-cyan-300 text-violet-500': isPanelActive === '{{ $category->id }}' }"></i>
                   @elseif ($category->name_category === 'Pulsa')
-                  <i class="fas fa-reguler fa-phone fa-lg mr-1 md:inline-block block md:text-left text-center md:mb-0 mb-5"
-                      :class="{ 'text-cyan-300': isPanelActive === '{{ $category->id }}' }"></i>
+                  <i class="fas fa-reguler fa-phone fa-lg mr-1 group-hover:text-violet-500 dark:group-hover:text-cyan-300 transition-colors duration-200 md:inline-block block md:text-left text-center md:mb-0 mb-5"
+                      :class="{ 'dark:text-cyan-300 text-violet-500': isPanelActive === '{{ $category->id }}' }"></i>
                   @endif
-                  <span
-                      :class="{ 'text-cyan-300': isPanelActive === '{{ $category->id }}' }">{{ $category->name_category }}</span>
+                  <p class="dark:group-hover:text-cyan-300 group-hover:text-violet-500 transition-colors duration-200" :class="{ 'dark:text-cyan-300 text-violet-500': isPanelActive === '{{ $category->id }}' }">{{ $category->name_category }}</p>
               </div>
           </div>
           @endforeach
@@ -35,7 +33,7 @@
         <div :class="{'grid sm:grid-cols-5 grid-cols-2 gap-3' : productNotFound === false}">
             <template x-if="!productNotFound">
                 <template x-for="product in productByCategory" :key="product.id">
-                    <div class="item_box group w-full bg-primary-slate-light/90 border-2 border-solid border-primary-slate hover:border-primary-cyan-light rounded-xl text-center transition-all duration-300" x-show="isPanelActive"
+                    <div class="item_box group w-full dark:bg-primary-slate-light/90 bg-white shadow-lg dark:border-2 dark:border-solid dark:border-primary-slate dark:hover:border-primary-cyan-light rounded-xl text-center transition-all duration-300" x-show="isPanelActive"
                         x-transition:enter="transition ease-out duration-1500"
                         x-transition:enter-start="opacity-0 scale-75" x-transition:enter-end="opacity-100 scale-100">
                         <a :href="'order/' + product.slug" class="no-underline">
@@ -48,7 +46,7 @@
                                     class="w-full rounded-t-md" alt="logo product [DEV]">
                             </template>
                             <span
-                                class="block pb-5 pt-3 capitalize text-primary-cyan-light/80 group-hover:text-cyan-300 transition-colors duration-200"
+                                class="block pb-5 pt-3 capitalize dark:text-primary-cyan-light/80 text-violet-600 group-hover:text-violet-400 dark:group-hover:text-cyan-300 transition-colors duration-200"
                                 x-text="product.product_name"></span>
                         </a>
                     </div>

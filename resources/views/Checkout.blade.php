@@ -1,12 +1,12 @@
 <x-app-layout>
-    <div class="bg-primary-slate h-full w-full" x-data="handlePurchaseOrder()">
+    <div class="bg-white dark:bg-primary-slate h-full w-full" x-data="handlePurchaseOrder()">
         <div class="md:block hidden">
             <div
-                class="breadcrumbs w-80 h-auto p-1 pb-2 px-3 bg-primary-slate border-0 border-solid border-b border-r border-primary-cyan-light">
+                class="breadcrumbs w-80 h-auto p-1 pb-2 px-3 bg-violet-100 shadow-md dark:bg-primary-slate-light border-0 border-solid border-b border-r dark:border-primary-cyan-light border-violet-500">
                 <ul class="list-none flex items-center space-x-2 text-sm font-semibold">
                     <li class="flex items-center space-x-2">
                         <a href="{{ Route('home') }}"
-                            class="text-gray-200 hover:text-gray-400 transition-colors duration-150 no-underline">Home</a>
+                            class="dark:text-slate-200 text-slate-800 hover:text-slate-500 dark:hover:text-slate-400 transition-colors duration-150 no-underline">Home</a>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="w-4 h-4 text-gray-400">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
@@ -14,7 +14,7 @@
                     </li>
                     <li class="flex items-center space-x-2">
                         <span
-                            class="text-gray-200 hover:text-gray-400 transition-colors duration-150 no-underline cursor-pointer">Checkout</span>
+                            class="dark:text-slate-200 text-slate-800 hover:text-slate-500 dark:hover:text-slate-400 transition-colors duration-150 no-underline cursor-pointer">Checkout</span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="w-4 h-4 text-gray-400">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
@@ -25,7 +25,7 @@
         </div>
         <main class="w-full h-full min-h-screen">
             <div class="w-full flex justify-center items-center">
-                <div x-show="isLoading" class="loading__animation w-fit h-auto p-6 rounded-md mt-20 bg-primary-slate-light/80">
+                <div x-show="isLoading" class="loading__animation w-fit h-auto p-6 rounded-md mt-20 bg-slate-50 dark:bg-primary-slate-light/80">
                     <svg class="cart" role="img" aria-label="Shopping cart line animation" viewBox="0 0 128 128"
                         width="128px" height="128px" xmlns="http://www.w3.org/2000/svg">
                         <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="8">
@@ -52,7 +52,7 @@
                         Kamu.</p>
                 </div>
                 <div x-show="!isLoading" x-cloak
-                    class="box__invoice mt-10 mb-10 sm:w-5/6 md:w-3/4 w-11/12 h-auto p-6 bg-primary-slate-light/80 border border-solid border-black rounded-lg">
+                    class="box__invoice mt-10 mb-10 sm:w-5/6 md:w-3/4 w-11/12 h-auto p-6 bg-gradient-to-tr from-violet-100 via-violet-200 to-white dark:bg-gradient-to-tr dark:from-primary-slate-light/80 dark:to-primary-slate-light/80 border-2 border-solid border-violet-500 dark:border-black rounded-lg">
                     <div class="header_inv flex items-center justify-between md:flex-row flex-col">
                         <div class="left_section flex items-start space-x-2">
                             @if (app('seo_data')->logo_website)
@@ -63,19 +63,19 @@
                                 alt="logo_website">
                             @endif
                             <div class="store_name_and_logo md:text-start text-center">
-                                <p class="text-2xl font-bold text-slate-300">{{ app('seo_data')->name_of_the_company }}</p>
-                                <p class="text-xs text-slate-100">{{ app('seo_data')->description }}</p>
+                                <p class="text-2xl font-bold text-violet-700 dark:text-slate-300">{{ app('seo_data')->name_of_the_company }}</p>
+                                <p class="text-xs text-violet-400 dark:text-slate-100">{{ app('seo_data')->description }}</p>
                             </div>
                         </div>
-                        <p class="font-extrabold text-slate-300 text-4xl md:mt-0 mt-4">INVOICE</p>
+                        <p class="font-extrabold text-violet-700 dark:text-slate-300 text-4xl md:mt-0 mt-4">INVOICE</p>
                     </div>
-                    <p class="font-extrabold text-xl md:mt-10 mt-8 text-slate-100">DETAIL PESANAN</p>
+                    <p class="font-extrabold text-xl md:mt-10 mt-8 text-violet-500 dark:text-slate-300">DETAIL PESANAN</p>
                     <hr class="dashed_border mt-5 mb-1">
                     <div class="detail_invoice grid md:grid-cols-2 grid-cols-7 gap-2">
-                        <div class="title_inv text-slate-300 md:col-span-1 col-span-2">
+                        <div class="title_inv text-violet-700 dark:text-slate-300 md:col-span-1 col-span-2">
                             <p>Invoice</p>
                         </div>
-                        <div class="description_inv text-slate-100 md:text-base text-sm md:col-span-1 col-span-5">
+                        <div class="description_inv text-violet-500 dark:text-slate-100 md:text-base text-sm md:col-span-1 col-span-5">
                             <div class="flex items-center space-x-1">
                                 <p class="font-semibold">:</p>
                                 <p id="invoice-order" class="font-semibold" x-text="detail_order.invoice"></p>
@@ -87,20 +87,20 @@
                     </div>
                     <hr class="dashed_border mt-1 mb-1">
                     <div class="detail_create_trx grid md:grid-cols-2 grid-cols-7 gap-2">
-                        <div class="title_inv text-slate-300 md:col-span-1 col-span-2">
+                        <div class="title_inv text-violet-700 dark:text-slate-300 md:col-span-1 col-span-2">
                             <p>Tanggal</p>
                         </div>
-                        <div class="description_create_inv text-slate-100 md:text-base text-sm md:col-span-1 col-span-5">
+                        <div class="description_create_inv text-violet-500 dark:text-slate-100 md:text-base text-sm md:col-span-1 col-span-5">
                             <p class="font-semibold">: <span x-text="detail_order.created_at"></span></p>
                         </div>
                     </div>
                     <hr class="dashed_border mt-2 mb-1">
                     <div class="detail_customer grid md:grid-cols-2 grid-cols-7 gap-2">
-                        <div class="title_inv text-slate-300 md:col-span-1 col-span-2">
+                        <div class="title_inv text-violet-700 dark:text-slate-300 md:col-span-1 col-span-2">
                             <p>No. HP</p>
                         </div>
                         <div class="description_inv md:col-span-1 col-span-5">
-                            <p class="text-slate-100 md:text-base text-sm font-semibold ">:
+                            <p class="text-violet-500 dark:text-slate-100 md:text-base text-sm font-semibold ">:
                                 <span x-text="detail_order.number_phone ? detail_order.number_phone : 'Keterangan No HP Tidak Dicantumkan'"></span>
                             </p>
                         </div>
@@ -150,16 +150,16 @@
                     </div>
                     <hr class="dashed_border mt-3 mb-1">
                     <div class="detail_player_id grid md:grid-cols-2 grid-cols-7 gap-2">
-                        <div class="title_player_id text-slate-300 md:col-span-1 col-span-2">
+                        <div class="title_player_id text-violet-700 dark:text-slate-300 md:col-span-1 col-span-2">
                             <p>Game ID</p>
                         </div>
                         <div class="description_player_id md:col-span-1 col-span-5">
-                            <p class="text-slate-100 md:text-base text-sm font-semibold">: <span x-text="detail_order.player_id && detail_order.zone_id ? `${detail_order.player_id} - (${detail_order.zone_id})` : `${detail_order.player_id}`"></span></p>
+                            <p class="text-violet-500 dark:text-slate-100 md:text-base text-sm font-semibold">: <span x-text="detail_order.player_id && detail_order.zone_id ? `${detail_order.player_id} - (${detail_order.zone_id})` : `${detail_order.player_id}`"></span></p>
                         </div>
                     </div>
                     <hr class="dashed_border mt-2 mb-3">
                     <div class="detail_payment grid md:grid-cols-2 grid-cols-7 gap-2">
-                        <div class="title_payment text-slate-300 md:col-span-1 col-span-3">
+                        <div class="title_payment text-violet-700 dark:text-slate-300 md:col-span-1 col-span-3">
                             <p>Pembayaran</p>
                         </div>
                         <div class="description_payment bg-white w-fit rounded p-1 md:col-span-1 col-span-4">
@@ -169,7 +169,7 @@
                     </div>
                     <hr class="dashed_border mt-3 mb-1">
                     <div class="detail_status_payment_transaction grid md:grid-cols-2 grid-cols-7 gap-2 mt-2">
-                        <div class="title_player_id text-slate-300 md:col-span-1 col-span-3">
+                        <div class="title_player_id text-violet-700 dark:text-slate-300 md:col-span-1 col-span-3">
                             <p>Status Pembayaran</p>
                         </div>
                         <div class="status_payment md:text-base text-sm md:col-span-1 col-span-4">
@@ -193,7 +193,7 @@
                     </div>
                     <hr class="dashed_border mt-3 mb-1">
                     <div class="detail_status_order_transaction grid md:grid-cols-2 grid-cols-7 gap-2 mt-2">
-                        <div class="title_player_id text-slate-300 md:col-span-1 col-span-3">
+                        <div class="title_player_id text-violet-700 dark:text-slate-300 md:col-span-1 col-span-3">
                             <p>Status Pesanan</p>
                         </div>
                         <div class="status_order md:text-base text-sm md:col-span-1 col-span-4">
@@ -217,19 +217,19 @@
                     </div>
                     <hr class="dashed_border mt-3 mb-3">
                     <div class="expired_order grid md:grid-cols-2 grid-cols-7 gap-2 mt-2">
-                        <div class="text_expirder_order text-slate-300 md:col-span-1 col-span-3">
+                        <div class="text_expirder_order text-violet-700 dark:text-slate-300 md:col-span-1 col-span-3">
                             <p>Bayar Sebelum</p>
                         </div>
                         <div class="description_expired_order md:col-span-1 col-span-4">
                             <div class="right_item flex items-center sm:space-x-2 space-x-1">
                                 <div
-                                    class="minutes w-fit text-center p-1 px-2 bg-primary-slate-light flex items-center sm:space-x-2 space-x-1 rounded">
+                                    class="minutes w-fit text-center p-1 px-2 dark:bg-primary-slate-light bg-violet-100 flex items-center sm:space-x-2 space-x-1 rounded">
                                     <p class="text-rose-400 font-semibold" x-text="countdown.minutes"></p>
                                     <p class="text-slate-500 font-semibold">Menit</p>
                                 </div>
-                                <p class="font-extrabold text-primary-slate-light">:</p>
+                                <p class="font-extrabold dark:text-primary-slate-light text-violet-100">:</p>
                                 <div
-                                    class="minutes w-fit text-center p-1 px-2 bg-primary-slate-light flex items-center sm:space-x-2 space-x-1 rounded">
+                                    class="minutes w-fit text-center p-1 px-2 dark:bg-primary-slate-light bg-violet-100 flex items-center sm:space-x-2 space-x-1 rounded">
                                     <p class="text-rose-400 font-semibold" x-text="countdown.seconds"></p>
                                     <p class="text-slate-500 font-semibold">Detik</p>
                                 </div>
@@ -238,19 +238,19 @@
                     </div>
                     <hr class="dashed_border mt-3 mb-1">
                     <div class="barcode mt-5">
-                        <p class="font-extrabold text-xl text-slate-300">PEMBAYARAN</p>
-                        <p class="md:text-sm text-xs text-slate-300">Silahkan scan QR Code berikut untuk melanjutkan pembayaran</p>
+                        <p class="font-extrabold text-xl text-violet-500 dark:text-slate-300">PEMBAYARAN</p>
+                        <p class="md:text-sm text-xs text-violet-500 dark:text-slate-300">Silahkan scan QR Code berikut untuk melanjutkan pembayaran</p>
                         <img :src="`${detail_trx.qr_code_url}`" class="object-cover w-48 h-48 rounded-md mt-3 md:mx-0 mx-auto"
                             alt="QR Code">
                     </div>
                     <div class="intruction_payment mt-5">
-                        <p class="font-extrabold text-xl text-slate-300">INTRUKSI PEMBAYARAN</p>
+                        <p class="font-extrabold text-xl text-violet-500 dark:text-slate-300">INTRUKSI PEMBAYARAN</p>
                         <div class="mt-5 mb-3 text-white">
                             <div class="accordion-1 md:w-2/3 w-full text-left">
                                 <button
-                                    class="w-full flex items-center justify-between bg-primary-slate-light p-4 px-4 rounded-t-md"
+                                    class="w-full flex items-center justify-between bg-slate-50 dark:bg-primary-slate-light p-4 px-4 rounded-t-md"
                                     @click="selectedAccordion = (selectedAccordion === 1) ? null : 1">
-                                    <span class=" font-bold capitalize">cara bayar aplikasi dengan Go-jek</span>
+                                    <span class="text-slate-600 dark:text-white font-bold capitalize">cara bayar aplikasi dengan Go-jek</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="w-6 h-6"
                                         :class="{'rotate-180 transition-transform transform origin-center duration-150' : selectedAccordion === 1}">
@@ -264,17 +264,19 @@
                                     x-transition:leave="transition duration-150"
                                     x-transition:leave="opacity-20 transform translate-y-0"
                                     x-transition:leave-end="opacity-0 transform -translate-y-4" x-cloak
-                                    class=" bg-primary-slate-light p-3 px-6 h-auto">
+                                    class=" bg-slate-50 dark:bg-primary-slate-light p-3 px-6 h-auto">
                                     <ul class="list-disc mx-6 font-semibold">
-                                        <li>Download atau Screenshot foto GoPay QRIS diatas</li>
+                                        <li>
+                                            <p class="text-slate-600 dark:text-white">Download atau Screenshot foto GoPay QRIS diatas</p>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
                             <div class="accordion-2 md:w-2/3 w-full mt-4 text-left">
                                 <button
-                                    class="w-full flex items-center justify-between bg-primary-slate-light p-4 px-4 rounded-t-md"
+                                    class="w-full flex items-center justify-between bg-slate-50 dark:bg-primary-slate-light p-4 px-4 rounded-t-md"
                                     @click="selectedAccordion = (selectedAccordion === 2) ? null : 2">
-                                    <span class=" font-bold capitalize">cara bayar aplikasi dengan Gopay</span>
+                                    <span class="text-slate-600 dark:text-white font-bold capitalize">cara bayar aplikasi dengan Gopay</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="w-6 h-6"
                                         :class="{'rotate-180 transition duration-150' : selectedAccordion === 2}">
@@ -288,9 +290,11 @@
                                     x-transition:leave="transition duration-150"
                                     x-transition:leave="opacity-20 transform translate-y-0"
                                     x-transition:leave-end="opacity-0 transform -translate-y-4" x-cloak
-                                    class=" bg-primary-slate-light p-3 px-6 h-auto">
+                                    class=" bg-slate-50 dark:bg-primary-slate-light p-3 px-6 h-auto">
                                     <ul class="list-disc mx-6 font-semibold">
-                                        <li>Download atau Screesnhot Barcode GoPay QRIS diatas</li>
+                                        <li>
+                                            <p class="text-slate-600 dark:text-white">Download atau Screesnhot Barcode GoPay QRIS diatas</p>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
