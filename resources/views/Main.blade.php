@@ -42,7 +42,7 @@
                 </div>
 
                 {{-- Item Box --}}
-                <x-item-product-box access-api-token="{{ $token }}"/>
+                <x-item-product-fav-box access-api-token="{{ $token }}"/>
             </div>
         </section>
 

@@ -3,7 +3,7 @@
         <div class="top_section md:mt-0 mt-32 border-0 border-b border-solid dark:border-slate-500 border-violet-500 pb-4">
             @if (!$product->is_testing)
                 <img src="{{ asset('/storage/product/' . $product->product_name . '/' . $product->img_url) }}"
-                    class="w-28 h-28 rounded-full border-2 border-solid border-primary-cyan-light"
+                    class="w-28 h-28 rounded-full border-2 border-solid border-violet-500 dark:border-primary-cyan-light"
                     alt="logo {{ $product->product_name }}">
             @else
                 <img src="{{ asset($product->img_url) }}" class="w-28 h-28 rounded-full border-2 border-solid border-primary-cyan-light" alt="Logo Product [DEV]">

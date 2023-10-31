@@ -31,5 +31,5 @@
       @if ($initAlpine)
           x-init="{{ $initAlpine }}"
       @endif
-      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 placeholder-violet-400 dark:placeholder-gray-400 {{ $inputClass }}" placeholder="{{ $placeholder }}" autocomplete="off">
+      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-500 placeholder-violet-700 dark:placeholder-gray-400 {{ $inputClass }}" placeholder="{{ $placeholder }}" autocomplete="off">
 </div>

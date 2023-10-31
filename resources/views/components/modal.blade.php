@@ -10,7 +10,7 @@
         </div>
         {{-- Modal Footer --}}
         <div
-            class="border-primary-cyan-light absolute left-0 mt-5 w-full rounded-b-md border-0 border-t border-solid bg-white dark:bg-primary-slate p-2">
+            class="dark:border-primary-cyan-light border-violet-500 absolute left-0 mt-5 w-full rounded-b-md border-0 border-t border-solid bg-white dark:bg-primary-slate p-2">
             <div class="text-primary-cyan flex items-center space-x-1 text-xs">
                 <div class="esc_kbod flex h-6 w-8 items-center justify-center rounded bg-white shadow-md p-1.5 leading-relaxed">
                     <span class="esc font-semibold">esc</span>

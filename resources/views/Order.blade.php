@@ -33,30 +33,32 @@
         @endif
         <div class="bg-gradient-to-b from-transparent via-violet-300 to-violet-100 dark:bg-gradient-to-b dark:from-transparent dark:via-[#1D1B1B] dark:to-[#0F0F0F] bg-cover from- w-full md:h-[900px] h-[400px] absolute overflow-x-hidden z-20"></div>
         <section class="content w-full h-full z-50 relative">
-        {{-- Custom Modal Invalid user ID --}}
-        <div @keydown.escape="showInvalidUserIDModal = false">
-            <div class="fixed inset-0 z-[9999999] flex items-center justify-center bg-primary-slate/80 overflow-auto" x-show="showInvalidUserIDModal"
-                    x-transition:enter="motion-safe:ease-out duration-300"
-                    x-transition:enter-start="opacity-0 scale-90"
-                    x-transition:enter-end="opacity-100 scale-100"
-                    x-transition:leave="motion-safe:ease-in duration-300"
-                    x-transition:leave-start="opacity-100 scale-100"
-                    x-transition:leave-end="opacity-0 scale-90">
-                <div class="sm:w-3/4 w-11/12 max-w-3xl sm:px-4 px-1 py-4 sm:mx-auto mx-4 text-left bg-gradient-to-br from-violet-100 via-violet-200 to-white dark:bg-primary-slate-light border-2 border-solid border-violet-500 dark:border-primary-cyan-light rounded-lg" @click.away="showInvalidUserIDModal = false">
-                    <div class="title">
-                        <h5 class="text-center text-3xl text-rose-500 max-w-none">PERHATIAN</h5>
-                    </div>
-                    <div class="text-center mt-5 mb-5">
-                      <template x-if="errMessTooManyAttemptReq">
-                          <p class="text-lg text-slate-600 dark:text-slate-300" x-text="errMessTooManyAttemptReq"></p>
-                      </template>
-                      <template x-if="!errMessTooManyAttemptReq">
-                          <p class="sm:text-lg text-sm text-slate-600 dark:text-slate-300">User ID Dengan <span class="text-violet-500 dark:text-primary-cyan-light" x-text="data.player_id && data.zone_id ? `${data.player_id} - (${data.zone_id})` : data.player_id === '' ? '??????' : `${data.player_id}`"></span> Tidak Ditemukan!</p>
-                      </template>
+            <template x-teleport="body">
+                {{-- Custom Modal Invalid user ID --}}
+                <div @keydown.escape="showInvalidUserIDModal = false">
+                    <div class="fixed inset-0 z-[9999999] flex items-center justify-center bg-primary-slate/80 overflow-auto" x-show="showInvalidUserIDModal"
+                            x-transition:enter="motion-safe:ease-out duration-300"
+                            x-transition:enter-start="opacity-0 scale-90"
+                            x-transition:enter-end="opacity-100 scale-100"
+                            x-transition:leave="motion-safe:ease-in duration-300"
+                            x-transition:leave-start="opacity-100 scale-100"
+                            x-transition:leave-end="opacity-0 scale-90">
+                        <div class="sm:w-3/4 w-11/12 max-w-3xl sm:px-4 px-1 py-4 sm:mx-auto mx-4 text-left bg-gradient-to-br from-violet-100 via-violet-200 to-white dark:bg-gradient-tr dark:from-primary-slate-light dark:to-primary-slate-light border-2 border-solid border-violet-500 dark:border-primary-cyan-light rounded-lg" @click.away="showInvalidUserIDModal = false">
+                            <div class="title">
+                                <h5 class="text-center text-3xl text-rose-500 max-w-none">PERHATIAN</h5>
+                            </div>
+                            <div class="text-center mt-5 mb-5">
+                              <template x-if="errMessTooManyAttemptReq">
+                                  <p class="text-lg text-slate-600 dark:text-slate-300" x-text="errMessTooManyAttemptReq"></p>
+                              </template>
+                              <template x-if="!errMessTooManyAttemptReq">
+                                  <p class="sm:text-lg text-sm text-slate-600 dark:text-slate-300">User ID Dengan <span class="text-violet-500 dark:text-primary-cyan-light" x-text="data.player_id && data.zone_id ? `${data.player_id} - (${data.zone_id})` : data.player_id === '' ? '??????' : `${data.player_id}`"></span> Tidak Ditemukan!</p>
+                              </template>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </template>
             @include('mobile.header_order_mobile')
             <div class="wrapper_grid">
                 <div class="grid lg:grid-cols-2 grid-cols-1 lg:gap-5 gap-1 md:mx-10 mx-0">
@@ -65,7 +67,7 @@
                         {{-- #222224 --}}
                         {{-- bg-[#25262b] --}}
                         {{-- #222121 RECEMMENDED!!! --}}
-                        <div class="form_wrapper w-full h-fit sm:p-8 p-4 rounded-xl shadow-lg md:dark:shadow-2xl dark:shadow-slate-200 bg-white dark:bg-[#1b1d1beb]">
+                        <div class="form_wrapper w-full h-fit sm:p-8 p-4 rounded-xl shadow-lg xdark:shadow-md dark:shadow-slate-500 bg-white dark:bg-[#1b1d1beb]">
                             <form @submit.prevent="checkingValidationForm" method="POST">
                                 <div class="add_player_id bg-gradient-to-l from-violet-100 via-violet-200 to-white dark:bg-gradient-to-l dark:from-primary-slate-light/70 dark:to-primary-slate-light/70  border-2 border-violet-500 dark:border-primary-cyan-light text-white border-solid w-full p-4 rounded-lg">
                                     <div class="step_one flex justify-between items-center mb-3">
@@ -117,7 +119,7 @@
                                                 $initialPrice = $itemDiscount->discount->price_after_discount * 0.007 + $itemDiscount->discount->price_after_discount;
                                                 $roundedPrice = ceil($initialPrice / 500) * 500;
                                             @endphp
-                                            <div @click.prevent="activeItem = {{ $itemDiscount->id }}; data.itemSelected = '{{ $itemDiscount->item_name }}'; data.itemNominal = '{{ $itemDiscount->nominal }}'; initialPrice = {{ $itemDiscount->discount->price_after_discount }}; selectedItemProduct()"  :class="{ 'dark:bg-slate-600 bg-violet-500 border-2 border-solid border-violet-500 dark:border-primary-cyan-light': activeItem === {{ $itemDiscount->id }}, 'bg-violet-300 hover:bg-violet-500 dark:bg-primary-slate dark:hover:bg-slate-500/90 border-2 border-solid border-violet-500 dark:border-slate-50 text-white': activeItem !== {{ $itemDiscount->id }} }" class="w-full sm:h-[120px] h-[135px] p-2.5 cursor-pointer rounded-md relative group">
+                                            <div @click.prevent="activeItem = {{ $itemDiscount->id }}; data.itemSelected = '{{ $itemDiscount->item_name }}'; data.itemNominal = '{{ $itemDiscount->nominal }}'; initialPrice = {{ $itemDiscount->discount->price_after_discount }}; selectedItemProduct()"  :class="{ 'dark:bg-slate-600 bg-violet-500 border-2 border-solid border-violet-500 dark:border-primary-cyan-light': activeItem === {{ $itemDiscount->id }}, 'bg-violet-50 hover:bg-violet-500 dark:bg-primary-slate dark:hover:bg-slate-500/90 border-2 border-solid border-violet-500 dark:border-slate-50 text-white': activeItem !== {{ $itemDiscount->id }} }" class="w-full sm:h-[120px] h-[135px] p-2.5 cursor-pointer rounded-md relative group">
                                                 <div class="relative -top-6">
                                                     <img src="{{ asset('/img/special_offer.webp') }}" :class="{ 'grayscale-0' : activeItem === {{ $itemDiscount->id }} }" class="absolute w-full h-16 grayscale group-hover:grayscale-0 transition duration-150" alt="special_offer">
                                                     <p :class="{ 'text-yellow-400' : activeItem === {{ $itemDiscount->id }} }" class="text-slate-400 group-hover:text-yellow-400 absolute top-8 text-xs font-semibold transition duration-150" style="transform: translate(-50%, -50%); left: 50%">
@@ -137,8 +139,8 @@
                                                 <div class="flex items-center justify-between mt-8">
                                                     <div class="left_item space-y-1">
                                                         <p class="text-sm text-violet-800 group-hover:text-white dark:text-white" :class="{'text-white' : activeItem === {{ $itemDiscount->id }}}">{{ $itemDiscount->nominal }} - {{ $itemDiscount->item_name }}</p>
-                                                        <p class="text-sm text-violet-100 dark:text-teal-400">Rp. {{ Cash($itemDiscount->discount->price_after_discount, 2) }}</p>
-                                                        <p class="text-[10px] line-through" :class="{'text-rose-400 dark:text-rose-500' : activeItem === {{ $itemDiscount->id }}, 'text-violet-900 group-hover:text-violet-200 dark:text-rose-500 dark:group-hover:text-rose-500' : activeItem !== {{ $itemDiscount->id }} }">Rp. {{ Cash($itemDiscount->price, 2) }}</p>
+                                                        <p class="text-sm" :class="{'text-violet-100 dark:text-teal-400' : activeItem === {{ $itemDiscount->id }}, 'text-violet-500 group-hover:text-violet-100 dark:text-teal-400 dark:group-hover:text-teal-400' : activeItem !== {{ $itemDiscount->id }} }">Rp. {{ Cash($itemDiscount->discount->price_after_discount, 2) }}</p>
+                                                        <p class="text-[10px] line-through" :class="{'text-rose-300 dark:text-rose-500' : activeItem === {{ $itemDiscount->id }}, 'text-rose-500 group-hover:text-rose-300 dark:text-rose-500 dark:group-hover:text-rose-500' : activeItem !== {{ $itemDiscount->id }} }">Rp. {{ Cash($itemDiscount->price, 2) }}</p>
                                                     </div>
                                                     @if ($itemDiscount->product->item_img)
                                                     <div class="right_item">
@@ -162,14 +164,14 @@
                                                     $roundedPrice = ceil($initialPrice / 500) * 500;
                                                 @endphp
                                                 <div @click.prevent="activeItem = {{ $item->id }}; data.itemSelected = '{{ $item->item_name }}'; data.itemNominal = '{{ $item->nominal }}'; initialPrice = {{ $item->price }}; selectedItemProduct()"
-                                                    :class="{ 'dark:bg-slate-600 bg-violet-500 border-2 border-solid border-violet-500 dark:border-primary-cyan-light': activeItem === {{ $item->id }}, 'bg-violet-300 hover:bg-violet-500 dark:bg-primary-slate dark:hover:bg-slate-500/90 border-2 border-solid border-violet-500 dark:border-slate-50 text-white': activeItem !== {{ $item->id }} }"
+                                                    :class="{ 'dark:bg-slate-600 bg-violet-500 border-2 border-solid border-violet-500 dark:border-primary-cyan-light': activeItem === {{ $item->id }}, 'bg-violet-50 hover:bg-violet-500 dark:bg-primary-slate dark:hover:bg-slate-500/90 border-2 border-solid border-violet-500 dark:border-slate-50 text-white': activeItem !== {{ $item->id }} }"
                                                     class="items sw-full {{ $item->product->item_img ? 'sm:h-[130px] h-[120px]' : 'sm:h-[100px] h-[100px]' }} grid auto-rows-fr gap-4 rounded-lg sm:p-2 p-1 cursor-pointer group"
                                                     data-item-id="{{ $item->id }}">
                                                     <p class="font-semibold capitalize text-violet-800 group-hover:text-white dark:text-white sm:text-base text-sm text-center" :class="{'text-white' : activeItem === {{ $item->id }} }">{{ $item->nominal }} - {{ $item->item_name }}</p>
                                                     @if ($item->product->item_img)
                                                     <img src="{{ asset('/storage/item/' . $item->product->product_name . "/" . $item->product->item_img) }}" :class="{ 'grayscale-0' : activeItem === {{ $item->id }} }" class="w-auto h-8 mx-auto grayscale contrast-200 group-hover:grayscale-0 transition duration-150" alt="logo_img_item">
                                                     @endif
-                                                    <p class="text-sm text-violet-100 dark:text-teal-400 text-center">Rp. {{ Cash($roundedPrice, 2) }}</p>
+                                                    <p class="text-sm text-center" :class="{'text-violet-100 dark:text-teal-400' : activeItem === {{ $item->id }}, 'text-violet-500 group-hover:text-violet-100 dark:text-teal-400 dark:group-hover:text-teal-400' : activeItem !== {{ $item->id }} }">Rp. {{ Cash($roundedPrice, 2) }}</p>
                                                 </div>
                                             @endif
                                         @endforeach
@@ -288,11 +290,11 @@
                                         x-transition:enter="transition-transform ease-in duration-300 transform"
                                         x-transition:enter-start="translate-y-full"
                                         x-transition:enter-end="translate-y-0"
-                                        class="fixed left-0 bottom-0 w-full h-28 rounded-t-lg bg-violet-400 dark:bg-[#68D9A1] p-3">
+                                        class="fixed left-0 bottom-[75px] w-full h-28 rounded-t-lg bg-violet-400 dark:bg-[#68D9A1] p-3">
                                         <div class="w-full h-full flex items-center justify-between">
                                             <div class="detail_order">
                                                 <div class="flex items-center space-x-1 mb-1">
-                                                    <p class="text-white dark:text-slate-400" x-text="data.itemNominal"></p>
+                                                    <p class="text-white dark:text-teal-700" x-text="data.itemNominal"></p>
                                                     <p class="text-white dark:text-slate-400">-</p>
                                                     <p class="text-sm text-white dark:text-teal-900" x-text="data.itemSelected"></p>
                                                 </div>
@@ -308,12 +310,12 @@
                                             </div>
                                             <div class="btn_checkout_submit_mobile">
                                                 <button type="submit" :disabled="isButtonSubmitDisabled"
-                                                    class="py-3 px-10 rounded-lg bg-violet-500 hover:bg-violet-300 disabled:bg-violet-300 dark:bg-teal-500 dark:hover:bg-teal-300 dark:disabled:bg-teal-400 text-white disabled:text-violet-100 dark:disabled:text-teal-100 cursor-pointer disabled:cursor-not-allowed border-0">
+                                                    class="py-3 px-3 rounded-lg bg-violet-500 hover:bg-violet-300 disabled:bg-violet-300 dark:bg-teal-500 dark:hover:bg-teal-300 dark:disabled:bg-teal-400 text-white disabled:text-violet-100 dark:disabled:text-teal-100 cursor-pointer disabled:cursor-not-allowed border-0">
                                                     <template x-if="isButtonSubmitDisabled">
                                                         <span>Pesanan Di Proses</span>
                                                     </template>
                                                     <template x-if="!isButtonSubmitDisabled">
-                                                        <div class="flex justify-center items-center space-x-2">
+                                                        <div class="flex justify-center items-center space-x-2 text-xs">
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-white">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
                                                             </svg>

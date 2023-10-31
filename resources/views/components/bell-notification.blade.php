@@ -2,15 +2,15 @@
     <button class="notif__bell relative" :disabled="isBellNotifOpen"
         @click="isBellNotifOpen = true; getNotifications()">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-            class="w-8 h-8 p-1 rounded-full text-violet-600 hover:text-white dark:text-white hover:bg-violet-500 transition-colors duration-200 cursor-pointer">
+            class="w-8 h-8 p-1 rounded-full text-violet-600 hover:text-white dark:text-white hover:bg-violet-500 dark:hover:bg-primary-slate transition-colors duration-200 cursor-pointer">
             <path stroke-linecap="round" stroke-linejoin="round"
                 d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
         </svg>
         <div class="absolute right-1.5 top-1.5 w-2 h-2 rounded-full bg-rose-500"></div>
     </button>
-    <div class="triangle__notif__bell bg-slate-200 w-5 h-5" x-show="isBellNotifOpen" x-cloak x-transition:enter.delay.130ms
+    <div class="triangle__notif__bell bg-white w-5 h-5" x-show="isBellNotifOpen" x-cloak x-transition:enter.delay.130ms
         x-transition:leave.delay.50ms></div>
-    <div class="notif__dropdown absolute md:top-24 top-20 md:right-32 right-1 bg-gradient-to-b from-slate-200 to-slate-400 md:w-[480px] w-11/12 p-1 rounded-lg z-[9999] no-scrollbar shadow-lg"
+    <div class="notif__dropdown absolute md:top-24 top-20 md:right-32 right-1 bg-white md:w-[480px] w-11/12 p-1 rounded-lg z-[9999] no-scrollbar shadow-lg"
         :class="isLoading ? 'h-[140px]' : 'h-[300px] min-h-max overflow-y-scroll'" x-show="isBellNotifOpen" x-cloak
         x-transition:enter.duration.400ms x-transition:leave.delay.50ms>
         <div class="header__notif flex justify-between items-center px-4 text-slate-700 dark:text-slate-600 mt-3">
@@ -30,7 +30,7 @@
             <div class="body__notif" x-show="!isLoading" x-cloak>
                 <template x-for="notif in notifications" :key="notif.id">
                     <div @click.prevent="alertNotif = true; handleNotifRead(notif.id); isNotifPopupOrRedirect(notif.type_notif, notif.id, notif.notif_slug)"
-                        class="notification flex justify-between items-center space-x-2 mt-3 p-4 mb-2 no-underline group hover:bg-primary-slate-light rounded transition-colors duration-200 cursor-pointer">
+                        class="notification flex justify-between items-center space-x-2 mt-3 p-4 mb-2 no-underline group hover:bg-violet-500 dark:hover:bg-primary-slate-light rounded transition-colors duration-200 cursor-pointer">
                         <div>
                             <img :src="`/storage/page/notification/${notif.notif_img}`"
                                 class="w-28 h-auto object-cover rounded-sm" alt="">
@@ -90,111 +90,3 @@
         </template>
     </div>
 </div>
-@push('js-custom')
-<script>
-    function handleNotification() {
-        return {
-            isBellNotifOpen: false,
-            alertNotif: JSON.parse(localStorage.getItem('ALERT_NOTIF')) || [],
-            hasUnreadNotif: false,
-            notifications: [],
-            isLoading: false,
-            page: 1,
-            hasMorePages: true,
-            openNotifModalPopup: false,
-            modalId: 0,
-
-            init() {
-
-            },
-
-            checkNotifAlreadyReadOrNot() {
-                const alertNotif = JSON.parse(localStorage.getItem('ALERT_NOTIF')) || [];
-                const notifications = this.notifications
-                const notificationID = {};
-                if (notifications.length) {
-                    notifications.forEach(notif => {
-                        notificationID[notif.id] = {
-                            id: notif.id
-                        }
-                    });
-                }
-
-                alertNotif.forEach(alert => {
-                    const notif = notificationID[alert.notif_id];
-                    if (notif) {
-                        setTimeout(() => {
-                            let hiddenDot = document.querySelector(`[data-notif-id="${notif.id}"]`);
-                            hiddenDot.classList.add('invisible')
-                        }, 1);
-                    }
-                })
-            },
-
-            handleNotifRead(notifId) {
-                const alertNotif = JSON.parse(localStorage.getItem('ALERT_NOTIF')) || [];
-
-                // Check Existing Notif
-                const notifExists = alertNotif.some(alert => alert.notif_id === notifId);
-                if (!notifExists) {
-                    alertNotif.push({
-                        notif_id: notifId,
-                        is_open: true
-                    });
-
-                    let hiddenDot = document.querySelector(`[data-notif-id="${notifId}"]`);
-                    hiddenDot.classList.add('invisible')
-                    localStorage.setItem("ALERT_NOTIF", JSON.stringify(alertNotif));
-                }
-            },
-
-            getNotifications() {
-                this.isLoading = true
-                axios.get("/api/get-token").then(res => {
-                    const token = res.data.data
-
-                    axios.get(`/api/notifications/get-notifications?page=${this.page}`, {
-                        headers: {
-                            'X-Custom-Token': token
-                        }
-                    }).then(res => {
-                        if (res.status == 200) {
-                            const response = res.data.data
-                            this.notifications.push(...response.data);
-                            this.checkNotifAlreadyReadOrNot()
-                            this.isLoading = false
-                            if (response.next_page_url) {
-                                this.page++
-                            } else {
-                                this.hasMorePages = false
-                            }
-
-                        }
-                    }).catch(err => {
-                        this.isLoading = false
-                    })
-                })
-            },
-
-            isNotifPopupOrRedirect(type_notif, notif_id, notif_slug) {
-                if (type_notif === 'redirect') {
-                    window.location.replace(`/notifikasi/${notif_slug}`)
-                } else if (type_notif === 'popup') {
-                    this.modalId = notif_id
-                    this.openNotifModalPopup = true
-                }
-            },
-
-            truncateString(str, limit = 10) {
-                if (str.length <= limit) {
-                    return str
-                } else {
-                    return str.substring(0, limit) + '...'
-                }
-            }
-
-        }
-    }
-
-</script>
-@endpush
