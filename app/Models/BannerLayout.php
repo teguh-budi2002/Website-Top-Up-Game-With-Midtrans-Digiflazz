@@ -12,10 +12,6 @@ class BannerLayout extends Model
     use HasFactory;
     protected $guarded = ['id'];
 
-    // protected $casts = [
-    //     'img_url' => Json::class
-    // ];
-
     /** 
      * Getter : Convert JSON Into Array
      * 

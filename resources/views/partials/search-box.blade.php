@@ -42,7 +42,7 @@
                 autofocus placeholder="Cari Games Yang Kamu Inginkan" autocomplete="off">
 
             <div x-show="noRecentSearch" class="mt-3 text-center">
-                <p class="text-slate-600 dark:text-white">Apa Yang Ingin Kamu Cari?</p>
+                <p class="text-slate-600 dark:text-white md:text-base text-sm">Apa Yang Ingin Kamu Cari?</p>
             </div>
 
             <div x-show="isLoading" class="mt-4 mb-2">
@@ -63,8 +63,8 @@
                 <template x-for="result in resultSearch" :key="result.id">
                     <a :href="`/order/${result.slug}`"
                         @click="setRecentSearch({url: $event.currentTarget.getAttribute('href'), name: result.product_name})"
-                        class="result_search bg-violet-500 hover:bg-violet-300 dark:bg-primary-slate  h-auto w-full flex cursor-pointer items-center justify-between rounded-md p-2 mt-3 transition dark:hover:bg-cyan-300 text-xl font-medium no-underline dark:text-primary-cyan text-white">
-                        <span x-text=" result.product_name" class="result_tabs"></span>
+                        class="result_search bg-violet-500 hover:bg-violet-300 dark:bg-primary-slate  h-auto w-full flex cursor-pointer items-center justify-between rounded-md p-2 mt-3 transition dark:hover:bg-primary-slate-light text-xl font-medium no-underline dark:text-primary-cyan-light text-white">
+                        <span x-text=" result.product_name" class="result_tabs md:text-base text-sm"></span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="h-6 w-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -81,7 +81,7 @@
                         d="M15.5 4.8c2 3 1.7 7-1 9.7h0l4.3 4.3-4.3-4.3a7.8 7.8 0 01-9.8 1m-2.2-2.2A7.8 7.8 0 0113.2 2.4M2 18L18 2">
                     </path>
                 </svg>
-                <p class="text-slate-600 dark:text-white">Pencarian <span class="font-semibold text-red-500" x-text="search"></span> tidak ditemukan.</p>
+                <p class="text-slate-600 dark:text-white md:text-base text-sm">Pencarian <span class="font-semibold text-red-500" x-text="search"></span> tidak ditemukan.</p>
             </div>
             <div class="flex items-center space-x-2 mt-3">
                 <span class="text-sm dark:text-primary-cyan-light text-violet-500">Recent</span>
@@ -90,8 +90,8 @@
             <div class="recent__search">
                 <template x-for="(recent, index) in recentSearch" :key="recent.id">
                     <a :href="`{{ env('APP_URL') }}${recent.url}`" x-show="recent" :data-id="recent.id"
-                        class="recent_search bg-violet-500 hover:bg-violet-300 dark:bg-primary-slate h-auto w-full flex cursor-pointer items-center justify-between rounded-md p-2 mt-3 dark:hover:bg-cyan-300 text-xl font-medium no-underline text-white dark:text-primary-cyan z-50">
-                        <span x-text="recent.name" class="result_tabs "></span>
+                        class="recent_search bg-violet-500 hover:bg-violet-300 dark:bg-primary-slate h-auto w-full flex cursor-pointer items-center justify-between rounded-md p-2 mt-3 dark:hover:bg-primary-slate-light text-xl font-medium no-underline text-white dark:text-primary-cyan-light z-50">
+                        <span x-text="recent.name" class="result_tabs md:text-base text-sm"></span>
                         <svg @click.prevent="deleteRecentSearch(recent.id)" xmlns="http://www.w3.org/2000/svg"
                             fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                             class="w-6 h-6 p-0.5 hover:rounded-full hover:bg-red-400 hover:text-white">
@@ -103,127 +103,8 @@
         </x-modal>
     </div>
 </div>
-
 @push('js-custom')
 <script>
-    function liveSearch() {
-        return {
-            search: '',
-            isLoading: false,
-            resultSearch: [],
-            noRecentSearch: true,
-            notFound: false,
-            isOpen: false,
-            recentSearch: [],
-            init() {
-                // INIT LOCALSTORAGE KEY
-                // Get the value from localStorage
-                let recentSearchArr = JSON.parse(localStorage.getItem('__SEARCH__'));
-
-                // Check if the value exists and if it is an array
-                if (!recentSearchArr || !Array.isArray(recentSearchArr)) {
-                    // If it doesn't exist or is not an array, set an empty array as the default value
-                    recentSearchArr = [];
-
-                    // Save the default array to localStorage
-                    localStorage.setItem('__SEARCH__', JSON.stringify(recentSearchArr));
-                }
-
-                this.loadRecentSearches();
-            },
-
-            debounceSearch() {
-                clearTimeout(this.debounceTimeout);
-                this.debounceTimeout = setTimeout(() => {
-                    this.performSearch();
-                }, 500);
-            },
-
-            performSearch() {
-                this.isLoading = true
-                if (this.search.length > 0) {
-                    this.noRecentSearch = false
-                    let params = new URLSearchParams({
-                        search_product: this.search
-                    });
-                    
-                    axios.get(`/api/find-product-with-livesearch?${params.toString()}`)
-                    .then(response => {
-                        if (response.data.code !== 404) {
-                            this.isLoading = false
-                            this.notFound = false
-                            this.resultSearch = response.data.data;
-                        } else {
-                            // resultSearch will be empty array when product not found
-                            this.isLoading = false
-                            this.resultSearch = [];
-                            this.notFound = true
-                        }
-                    }).catch(err => {
-                        console.log("ERROR in Server Side")
-                    })
-                } else {
-                    this.isLoading = false
-                    this.notFound = false
-                    this.noRecentSearch = true
-                    this.resultSearch = [];
-                }
-            },
-
-            setRecentSearch(result) {
-                let recentSearch = JSON.parse(localStorage.getItem('__SEARCH__')) || [];
-
-                // Check If Old Recent Search Is Same With Result Will Return NULL
-                let oldRecentName = null
-                recentSearch.map(val => {
-                    oldRecentName = val.name
-                });
-                if (oldRecentName === result.name) {
-                    return null
-                }
-
-                recentSearch.push({
-                    id: Math.random() * 1000000,
-                    url: result.url,
-                    name: result.name,
-                    isRecent: true,
-                    isDeleted: false,
-                    timestamp: Date.now()
-                });
-
-                localStorage.setItem('__SEARCH__', JSON.stringify(recentSearch));
-                // noRecentSearch will be FALSE when user click result search
-                this.noRecentSearch = false
-                // update recentSearch
-                this.recentSearch = recentSearch;
-            },
-
-            loadRecentSearches() {
-                const storedSearches = localStorage.getItem('__SEARCH__');
-                this.recentSearch = storedSearches ? JSON.parse(storedSearches) : [];
-            },
-
-            deleteRecentSearch(id) {
-                let recentSearchStorage = JSON.parse(localStorage.getItem('__SEARCH__')) || []
-                let recentSearchID = id
-
-                // Apply animation to the item being deleted
-                let deletedItem = document.querySelector(`[data-id="${id}"]`);
-                deletedItem.style.transition = 'opacity 0.5s, transform 0.5s';
-                deletedItem.style.opacity = '0';
-                deletedItem.style.transform = 'translateX(-80%)';
-
-                setTimeout(() => {
-                    let newVal = recentSearchStorage.filter((item) => item.id !== id)
-                    localStorage.setItem('__SEARCH__', JSON.stringify(newVal));
-
-                    // Update recentSearch Immediately
-                    this.recentSearch = newVal;
-                }, 500)
-
-            }
-        }
-    }
-
+function liveSearch(){return{search:"",isLoading:!1,resultSearch:[],noRecentSearch:!0,notFound:!1,isOpen:!1,recentSearch:[],init(){let e=JSON.parse(localStorage.getItem("__SEARCH__"));e&&Array.isArray(e)||(e=[],localStorage.setItem("__SEARCH__",JSON.stringify(e))),this.loadRecentSearches()},debounceSearch(){clearTimeout(this.debounceTimeout),this.debounceTimeout=setTimeout((()=>{this.performSearch()}),500)},performSearch(){if(this.isLoading=!0,this.search.length>0){this.noRecentSearch=!1;let e=new URLSearchParams({search_product:this.search});axios.get(`/api/find-product-with-livesearch?${e.toString()}`).then((e=>{404!==e.data.code?(this.isLoading=!1,this.notFound=!1,this.resultSearch=e.data.data):(this.isLoading=!1,this.resultSearch=[],this.notFound=!0)})).catch((e=>{console.log("ERROR in Server Side")}))}else this.isLoading=!1,this.notFound=!1,this.noRecentSearch=!0,this.resultSearch=[]},setRecentSearch(e){let t=JSON.parse(localStorage.getItem("__SEARCH__"))||[],a=null;if(t.map((e=>{a=e.name})),a===e.name)return null;t.push({id:1e6*Math.random(),url:e.url,name:e.name,isRecent:!0,isDeleted:!1,timestamp:Date.now()}),localStorage.setItem("__SEARCH__",JSON.stringify(t)),this.noRecentSearch=!1,this.recentSearch=t},loadRecentSearches(){const e=localStorage.getItem("__SEARCH__");this.recentSearch=e?JSON.parse(e):[]},deleteRecentSearch(e){let t=JSON.parse(localStorage.getItem("__SEARCH__"))||[],a=document.querySelector(`[data-id="${e}"]`);a.style.transition="opacity 0.5s, transform 0.5s",a.style.opacity="0",a.style.transform="translateX(-80%)",setTimeout((()=>{let a=t.filter((t=>t.id!==e));localStorage.setItem("__SEARCH__",JSON.stringify(a)),this.recentSearch=a}),500)}}}
 </script>
 @endpush

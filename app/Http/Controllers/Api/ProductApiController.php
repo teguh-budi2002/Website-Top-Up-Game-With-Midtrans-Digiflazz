@@ -25,10 +25,12 @@ class ProductApiController extends BaseApiController
 
     public function getProductByCategory(Request $request) {
       try {
-        $page = (int) $request->page;
         $productByCategory = DB::table('products')
                                 ->select("id", "category_id", "product_name", "img_url", "slug", "is_testing")
-                                ->whereCategoryId($request->category_id)
+                                ->when($request->category_id != 1, function ($query) use ($request) {
+                                    $query->where("category_id", $request->category_id);
+                                })
+                                // ->whereCategoryId($request->category_id)
                                 ->where('published', 1)
                                 ->orderBy('id')
                                 ->paginate(10)

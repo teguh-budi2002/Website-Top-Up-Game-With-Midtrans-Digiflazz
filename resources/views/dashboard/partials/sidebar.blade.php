@@ -123,7 +123,7 @@
                                 d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                     </span>
-                    <span class="ml-3 text-sm"> Authentication </span>
+                    <span class="ml-3 text-sm">Manage Users</span>
                     <span aria-hidden="true" class="ml-auto">
                         <!-- active class 'rotate-180' -->
                         <svg class="w-4 h-4 transition-transform transform" :class="{ 'rotate-180': open }"
@@ -132,24 +132,18 @@
                         </svg>
                     </span>
                 </a>
-                <div x-show="open" class="mt-2 space-y-2 px-7" role="menu" aria-label="Authentication">
-                    <!-- active & hover classes 'text-gray-700 dark:text-light' -->
-                    <!-- inActive classes 'text-gray-400 dark:text-gray-400' -->
-                    <a href="auth/register.html" role="menuitem"
+                <div x-show="open" class="mt-2 ml-2 space-y-2 px-7" role="menu" aria-label="Authentication">
+                    <a href="{{ URL('dashboard/users') }}" role="menuitem"
                         class="block p-2 text-sm text-gray-400 transition-colors duration-200 rounded-md dark:hover:text-light hover:text-gray-700">
-                        Register
+                        Users
                     </a>
-                    <a href="auth/login.html" role="menuitem"
+                    <a href="{{ URL('dashboard/add-user') }}" role="menuitem"
                         class="block p-2 text-sm text-gray-400 transition-colors duration-200 rounded-md dark:hover:text-light hover:text-gray-700">
-                        Login
+                        Manually Add User
                     </a>
                     <a href="auth/forgot-password.html" role="menuitem"
                         class="block p-2 text-sm text-gray-400 transition-colors duration-200 rounded-md dark:hover:text-light hover:text-gray-700">
-                        Forgot Password
-                    </a>
-                    <a href="auth/reset-password.html" role="menuitem"
-                        class="block p-2 text-sm text-gray-400 transition-colors duration-200 rounded-md dark:hover:text-light hover:text-gray-700">
-                        Reset Password
+                        Change Password
                     </a>
                 </div>
             </div>
@@ -205,6 +199,14 @@
                         <a href="{{ URL('dashboard/settings/notifications') }}" role="menuitem"
                             class="block p-2 text-sm text-gray-400 transition-colors duration-200 rounded-md dark:text-gray-400 dark:hover:text-light hover:text-gray-700">
                             Notification
+                        </a>
+                    </div>
+                </div>
+                <div x-show="open" x-transition.duration.500ms class="mt-2 ml-2 space-y-2" role="menu" aria-label="Layouts">
+                    <div x-show="open" class="mt-2 space-y-2 px-7" role="menu" arial-label="Components">
+                        <a href="{{ URL('dashboard/settings/social-media') }}" role="menuitem"
+                            class="block p-2 text-sm text-gray-400 transition-colors duration-200 rounded-md dark:text-gray-400 dark:hover:text-light hover:text-gray-700">
+                            Social Media
                         </a>
                     </div>
                 </div>

@@ -1,11 +1,14 @@
 <div class="w-full flex justify-center">
-    <div class="md:w-3/4 w-11/12 flex items-center justify-between">
+    <div class="md:w-3/4 w-11/12 flex md:overflow-x-auto overflow-x-scroll items-center justify-between custom-scrollbar">
           @foreach ($categories as $category)
-          <div class="w-full md:pb-2 pb-1 cursor-pointer text-center m-0"
+          <div class="md:w-full w-2/5 md:pb-2 pb-1 cursor-pointer text-center m-0 md:flex-shrink flex-shrink-0"
               @click.prevent="isPanelActive = '{{ $category->id }}'; getProductsByCategory('{{ $category->id }}')"
               :class="{'md:border-b-2 border-b-0 border-solid dark:border-cyan-300 border-violet-500' : isPanelActive === '{{ $category->id }}' }">
               <div class="category_panel font-semibold md:text-base group text-xs dark:text-cyan-700 text-violet-300">
-                  @if ($category->name_category === 'Mobile Games')
+                  @if ($category->name_category === 'All Categories')
+                  <i class="fas fa-regular fa-layer-group fa-lg mr-1 group-hover:text-violet-500 dark:group-hover:text-cyan-300 transition-colors duration-200 md:inline-block block md:text-left text-center md:mb-0 mb-5"
+                      :class="{ 'dark:text-cyan-300 text-violet-500': isPanelActive === '{{ $category->id }}' }"></i>
+                  @elseif ($category->name_category === 'Mobile Games')
                   <i class="fas fa-regular fa-gamepad fa-lg mr-1 group-hover:text-violet-500 dark:group-hover:text-cyan-300 transition-colors duration-200 md:inline-block block md:text-left text-center md:mb-0 mb-5"
                       :class="{ 'dark:text-cyan-300 text-violet-500': isPanelActive === '{{ $category->id }}' }"></i>
                   @elseif ($category->name_category === 'PC Games')
@@ -30,7 +33,7 @@
 @foreach ($categories as $category)
 <div class="body__panel mt-5 mb-5 flex justify-center" x-show="isPanelActive == '{{ $category->id }}' && !isLoading">
     <div class="md:w-3/4 w-11/12 h-auto">
-        <div :class="{'grid sm:grid-cols-5 grid-cols-2 gap-3' : productNotFound === false}">
+        <div :class="{'grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-3 grid-cols-2 gap-3' : productNotFound === false}">
             <template x-if="!productNotFound">
                 <template x-for="product in productByCategory" :key="product.id">
                     <div class="item_box group w-full dark:bg-primary-slate-light/90 bg-white shadow-lg dark:border-2 dark:border-solid dark:border-primary-slate dark:hover:border-primary-cyan-light rounded-xl text-center transition-all duration-300" x-show="isPanelActive"

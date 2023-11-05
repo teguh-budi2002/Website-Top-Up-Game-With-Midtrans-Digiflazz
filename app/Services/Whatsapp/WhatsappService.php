@@ -6,8 +6,20 @@ use GuzzleHttp\Client;
 
 class WhatsappService {
   protected static $endpoint = 'https://api.fonnte.com/send';
+  public static $typeNotif;
+  public static $detailNotif;
 
-  public static function sendToCustomer($phone_number, $detail_order) {
+  public static function typeNotif($type) {
+      self::$typeNotif = $type;
+      return new static(); 
+  }
+
+  public static function setData($data) { 
+      self::$detailNotif = $data;
+      return new static();
+  }
+
+  function sendToCustomer($phone_number) {
     try {
       $client = new Client();
       $response = $client->request('POST', self::$endpoint, [ 
@@ -16,7 +28,7 @@ class WhatsappService {
         ],
         'json'  => [
           'target' => $phone_number,
-          'message' => self::formatMessage($detail_order),
+          'message' => self::message(),
           'countryCode' => '62',
           'delay' => '120',
         ]
@@ -29,29 +41,62 @@ class WhatsappService {
     // return $decodeResponse;
   }
 
-  private static function formatMessage($detail_order) {
-    $invoice = $detail_order->invoice;
-    $product = $detail_order->product->product_name;
-    $item = $detail_order->item->nominal . '-' . $detail_order->item->item_name;
-    $total_amount = $detail_order->total_amount;
-    $payment_type = strtoupper($detail_order->payment->payment_name);
+  private static function message() {
+    $dataNotif = self::$detailNotif;
+    $typeNotif = self::$typeNotif;
 
-$message = "Terimakasih telah melakukan pembelian menggunakan layanan *Guh SHOP | Lapak Murah*.
+    if ($typeNotif === 'order_created') {
+      return self::formatMessageOrder($dataNotif);
+    } elseif ($typeNotif === "user_created") { 
+      return self::formatMessageAddUser($dataNotif);
+    }
+  }
 
-Mohon segera selesaikan pembayaran agar item yang dibeli dapat di proses dengan otomatis.
+  private static function formatMessageOrder($order) { 
+      $invoice = $order->invoice;
+      $product = $order->product->product_name;
+      $item = $order->item->nominal . '-' . $order->item->item_name;
+      $total_amount = $order->total_amount;
+      $payment_type = strtoupper($order->payment->payment_name);
+  
+  $message = "Terimakasih telah melakukan pembelian menggunakan layanan *Guh SHOP | Lapak Murah*.
+  
+  Mohon segera selesaikan pembayaran agar item yang dibeli dapat di proses dengan otomatis.
+  
+  **INVOICE : $invoice**
+  **Produk  : $product**
+  **Item    : $item**
+  **Total Harga   : $total_amount**
+  **Metode Pembayaran : $payment_type**
+  
+  Jika Anda memiliki pertanyaan atau memerlukan bantuan, silakan hubungi kami di nomer ini.
+  
+  Detail transaksi :
+  https://paspayment.com/checkout/INV201023BFQNZHKNWG
+  
+  *Guh SHOP | Lapak Murah*";
+  
+      return $message;
+  }
 
-**INVOICE : $invoice**
-**Produk  : $product**
-**Item    : $item**
-**Total Harga   : $total_amount**
-**Metode Pembayaran : $payment_type**
+  private static function formatMessageAddUser($data) { 
+    $userUsername = $data['username'];
+    $userPassword = $data["password"];
+    $userFullname = $data['fullname'];
+    $role = $data['role_id'];
+    $url = $role == 3 ? env('APP_URL') . '/login/member' : env('APP_URL') . '/login/dashboard-main';
 
-Jika Anda memiliki pertanyaan atau memerlukan bantuan, silakan hubungi kami di nomer ini.
+    $message = "Hello, **$userFullname** terimakasih telah mendaftar menjadi bagian dari perusahaan kami, berikut adalah username dan password kamu.
+    Username: **$userUsername**
+    Passowrd: **$userPassword**
 
-Detail transaksi :
-https://paspayment.com/checkout/INV201023BFQNZHKNWG
+    Mohon untuk tidak membagikan data pribadi kamu terhadap siapapun, jika pengguna melakukan pelanggaran maka admin berhak untuk **ME-NONAKTIFKAN** akun kamu.
 
-*Guh SHOP | Lapak Murah*";
+    Untuk mengakses halaman Dashboard, silakan kunjungi $url untuk melakukan login.
+    Harap mengganti password lama dengan password yang baru.
+
+    Hormat kami, *Guh SHOP | Lapak Murah*
+    ";
 
     return $message;
   }

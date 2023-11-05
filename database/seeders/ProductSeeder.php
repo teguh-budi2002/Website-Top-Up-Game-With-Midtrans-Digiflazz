@@ -15,7 +15,7 @@ class ProductSeeder extends Seeder
     {
         // Product::factory(87)->create();
         Product::create([
-            'category_id' => 2,
+            'category_id' => 3,
             'product_name' => 'Valorant',
             'code_product' => 'VALORANT',
             'slug' => 'valorant',
@@ -24,7 +24,7 @@ class ProductSeeder extends Seeder
         ]);
 
         Product::create([
-            'category_id' => 1,
+            'category_id' => 2,
             'product_name' => 'Call Of Duty Mobile [CODM]',
             'code_product' => 'CALL_OF_DUTY',
             'slug' => 'call-of-duty',
@@ -33,7 +33,7 @@ class ProductSeeder extends Seeder
         ]);
 
         Product::create([
-            'category_id' => 1,
+            'category_id' => 2,
             'product_name' => 'Mobile Legends',
             'code_product' => 'MOBILE_LEGENDS',
             'slug' => 'mobile-legends',

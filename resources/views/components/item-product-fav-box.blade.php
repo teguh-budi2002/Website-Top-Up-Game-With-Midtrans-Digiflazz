@@ -34,33 +34,6 @@
 </div>
 @push('js-custom')
 <script>
-function handleGetProducts() {
-  return {
-    favoriteProducts: [],
-    showImg: false,
-    isLoading: false,
-    
-    init() {
-      this.getProducts()
-    },
-    
-    getProducts() {
-      this.isLoading = true
-      axios.get('/api/get-products', {
-        headers: {
-          'X-Custom-Token': '{{ $accessApiToken }}'
-        }
-      })
-      .then(res => {
-        const dataProducts = res.data.data
-        this.favoriteProducts.push(...dataProducts)
-        this.isLoading = false
-      }).catch(err => {
-        this.isLoading = false
-        console.log("ERROR SERVERSIDE: ".err.response)
-      })
-    },
-  }
-}
+function handleGetProducts(){return{favoriteProducts:[],showImg:!1,isLoading:!1,init(){this.getProducts()},getProducts(){this.isLoading=!0,axios.get("/api/get-products",{headers:{"X-Custom-Token":"{{ $accessApiToken }}"}}).then((t=>{const s=t.data.data;this.favoriteProducts.push(...s),this.isLoading=!1})).catch((t=>{this.isLoading=!1,console.log("ERROR SERVERSIDE: ".err.response)}))}}}
 </script>
 @endpush

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\LogoutController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DashboardController;
@@ -14,6 +16,8 @@ use App\Http\Controllers\PaymentFeeController;
 use App\Http\Controllers\PaymentGatewayProviderController;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\SEOController;
+use App\Http\Controllers\SocialMediaController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\WebsiteController;
 
 /*
@@ -32,7 +36,13 @@ Route::get('order/{slug}', [HomeController::class, 'orderProduct'])->name('order
 Route::get('checkout/{invoice}', [HomeController::class, 'checkoutProduct'])->name('checkout');
 Route::get('notifikasi/{slug}', [NotificationController::class, 'displayNotif'])->name('notification');
 
-Route::prefix('dashboard')->group(function () {
+// Authentication CEO Owner && Admin
+Route::get('login/dashboard-main', [LoginController::class, 'loginDashboardMainPage'])->name('login');
+Route::post('login/process', [LoginController::class, 'loginDashboardMainPageProcess'])->name('login.dashboard.main.process');
+Route::post('logout', [LogoutController::class, 'logout'])->name('logout');
+
+Route::middleware(['canAccessDashboard'])->prefix('dashboard')->group(function () {
+  
   Route::get('/', [DashboardController::class, 'index']);
   Route::get('/website/order-page/setting', [DashboardController::class, 'manage_website']);
   Route::get('/products', [DashboardController::class, 'manage_product_pages']);
@@ -40,6 +50,10 @@ Route::prefix('dashboard')->group(function () {
   Route::get('/payment-fee', [DashboardController::class, 'manage_payment_fee']);
   Route::get('/discount', [DashboardController::class, 'manage_discount']);
   Route::get('/list-discount', [DashboardController::class, 'list_product_discount']);
+
+  // Manage User
+  Route::get('users', [DashboardController::class, 'manage_user']);
+  Route::get('add-user', [UserController::class, 'manage_add_user']);
 
   // Custom Order Page
   Route::post('order-page/setting', [WebsiteController::class, 'settingCustomOrderPage']);
@@ -111,5 +125,8 @@ Route::prefix('dashboard')->group(function () {
 
     Route::get('notifications', [DashboardController::class, 'manage_notification']);
     Route::post('/notifications/add-or-update-notif', [NotificationController::class, 'addOrUpdateNotif']);
+    
+    Route::get('social-media', [DashboardController::class, 'manage_social_media']);
+    Route::post('/social-media/add-or-update-social-media', [SocialMediaController::class, 'addOrUpdateSocialMedia']);
   });
 });

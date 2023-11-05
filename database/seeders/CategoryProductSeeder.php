@@ -14,6 +14,10 @@ class CategoryProductSeeder extends Seeder
     public function run(): void
     {
         CategoryProduct::create([
+            'name_category' =>  'All Categories',
+        ]);
+
+        CategoryProduct::create([
             'name_category' =>  'Mobile Games',
         ]);
 

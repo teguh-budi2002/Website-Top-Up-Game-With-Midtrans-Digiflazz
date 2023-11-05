@@ -18,50 +18,6 @@
 @push('js-custom')
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
-    const swiper = new Swiper('.swiper', {
-        direction: 'horizontal',
-        // loop: true,
-        effect: 'coverflow',
-        speed: 700,
-        centeredSlides: true,
-        slidesPerView: 'auto',
-        initialSlide: 1,
-        centeredSlides: true,
-        grabCursor: true,
-        lazyLoadingInPrevNext: true,
-        coverflowEffect: {
-            rotate: 0,
-            // stretch: 400,
-            depth: 200,
-            slideShadows: true,
-        },
-    });
-    // swiper.slideNext();
-
-    function handleBanner() {
-        return {
-            activeSlides: 1,
-            imgUrls: [],
-            init() {
-                this.getBanner();
-            },
-
-            getBanner() {
-                axios.get('/api/layout/banner', {
-                        headers: {
-                            'X-Custom-Token': '{{ $accessApiToken }}'
-                        }
-                    })
-                    .then(res => {
-                        const banner = res.data.banner.img_url
-                        this.imgUrls.push(...banner)
-                    }).catch(err => {
-                        this.imgUrls = []
-                    })
-
-            }
-        }
-    }
-
+const swiper=new Swiper(".swiper",{direction:"horizontal",effect:"coverflow",speed:700,centeredSlides:!0,slidesPerView:"auto",initialSlide:1,centeredSlides:!0,grabCursor:!0,coverflowEffect:{rotate:0,depth:200,slideShadows:!0}});function handleBanner(){return{activeSlides:1,imgUrls:[],init(){this.getBanner()},getBanner(){axios.get("/api/layout/banner",{headers:{"X-Custom-Token":"{{ $accessApiToken }}"}}).then((e=>{const i=e.data.banner.img_url;this.imgUrls.push(...i)})).catch((e=>{this.imgUrls=[]}))}}}swiper.slideNext();
 </script>
 @endpush

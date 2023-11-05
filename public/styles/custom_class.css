@@ -45,6 +45,23 @@ body {
     }
 }
 
+.breadcrumbs {
+    clip-path: polygon(0% 0%, 100% 0%, 88% 100%, 0% 100%);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+[x-cloak] {
+    display: none;
+}
+
 .triangle__notif__bell {
     position: absolute;
     right: 185px;
@@ -361,4 +378,18 @@ body {
 
 .discount_flashsale {
     clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 51% 90%, 0% 100%);
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 5px;
+    height: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #e4e2e2;
 }

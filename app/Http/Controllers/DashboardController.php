@@ -7,6 +7,8 @@ use App\Models\Notification;
 use App\Models\PaymentFee;
 use App\Models\PaymentGatewayProvider;
 use App\Models\Product;
+use App\Models\RoleUser;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Repositories\Product\ProductRepository;
@@ -184,6 +186,46 @@ class DashboardController extends Controller
       return view('dashboard.views.manage_provider.main', [ 
         'providers' => $providers,
         'oldProvider' => $oldProvider 
+      ]);
+    }
+
+    public function manage_social_media() {
+      $socialMedia = DB::table('social_media')
+                        ->select('id', 'instagram', 'whatsapp', 'email', 'facebook')
+                        ->first(); 
+      return view('dashboard.views.manage_social_media.main', [
+        'social_media' => $socialMedia
+      ]);
+    }
+
+    public function manage_user(Request $request) {
+      $columnMap = [
+          'online_user' => 'status_online',
+          'offline_user' => 'status_online',
+          'active_user' => 'status_active',
+          'deactive_user' => 'status_active',
+      ];
+
+      $getAllUsers = User::select('id', 'fullname', 'email', 'phone_number', 'username', 'ip_user', 'status_active', 'status_online', 'last_seen', 'role_id', 'created_at')
+                          ->when($request->has('role_id'), function ($query) use ($request) { 
+                              $query->where('role_id', $request->query('role_id'));
+                          })
+                          ->when($request->input('search_user'), function ($query) use ($request) {
+                              $query->where('fullname', 'LIKE', '%' . $request->input('search_user') . '%')
+                                    ->orWhere('username', 'LIKE', '%' . $request->input('search_user') . '%');
+                          })
+                          ->when($request->has('filter-by'), function ($query) use ($columnMap, $request) { 
+                             if (isset($columnMap[$request->query('filter-by')])) {
+                                  $query->where($columnMap[$request->query('filter-by')], ($request->query('filter-by') === 'online_user' || $request->query('filter-by') === 'active_user') ? 1 : 0);
+                              }
+                          })
+                          ->with('role:id,role_name')
+                          ->paginate(20);
+
+                          $getRoleNames = RoleUser::select('id', 'role_name')->get();
+      return view('dashboard.views.manage_user.main', [
+        'users' => $getAllUsers,
+        'roles' => $getRoleNames
       ]);
     }
 }

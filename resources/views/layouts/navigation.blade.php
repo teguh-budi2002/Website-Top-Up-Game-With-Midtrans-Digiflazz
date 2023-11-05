@@ -3,9 +3,9 @@
         <a href="{{ URL('/') }}">
             @if (app('seo_data')->logo_website)
             <img src="{{ asset('/storage/seo/logo/website/' . app('seo_data')->logo_website) }}"
-                class="w-16 h-16 rounded-md" alt="logo_website">
+                class="md:w-auto md:h-16 w-auto h-12 rounded" alt="logo_website">
             @else
-            <img src="{{ asset('/img/logo_with_bg.png') }}" class="w-16 h-16 rounded-md" alt="logo_website">
+            <img src="{{ asset('/img/logo_with_bg.png') }}" class="md:w-auto md:h-16 w-auto h-12 rounded" alt="logo_website">
             @endif
         </a>
     </div>
@@ -30,30 +30,30 @@
 </nav>
 <div class="mobile_nav_bottom fixed bottom-0 w-full h-20 p-2 bg-violet-400 dark:bg-primary-slate md:hidden block z-[99999]">
     <div class="flex items-center justify-around space-x-2 space-y-2">
-        <a href="" class="text-center">
+        <a href="{{ URL('/') }}" class="text-center">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-11 h-11 text-white">
+                stroke="currentColor" class="w-8 h-8 text-white">
                 <path stroke-linecap="round" stroke-linejoin="round"
                     d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
             </svg>
         </a>
-        <div x-data="handleDarkmode()" class="relative">
+        <div x-data="handleDarkmode()" class="relative bg-slate-50 dark:bg-primary-slate-light rounded-md p-2 shadow-md">
             <input type="checkbox" :checked="isDark" value="" @click="toggleDarkmode(event)" class="absolute w-10 h-16 opacity-0 cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor"
-                class="w-10 h-10 text-yellow-300 mx-auto mt-2 block dark:hidden">
+                class="w-8 h-8 text-yellow-400 mx-auto block dark:hidden">
                 <path stroke-linecap="round" stroke-linejoin="round"
                     d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
             </svg>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor"
-                class="w-10 h-10 dark:text-cyan-500 mx-auto mt-2 hidden dark:block">
+                class="w-8 h-8 dark:text-cyan-500 mx-auto hidden dark:block">
                 <path stroke-linecap="round" stroke-linejoin="round"
                     d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
             </svg>
         </div>
-        <a href="" class="text-center">
-            <i class="fa-solid fa-file-invoice fa-2xl text-white"></i>
+        <a href="{{ URL('lacak-pesanan') }}" class="text-center">
+            <i class="fa-solid fa-file-invoice fa-xl text-white"></i>
         </a>
     </div>
 </div>
